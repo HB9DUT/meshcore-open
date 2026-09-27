@@ -275,10 +275,13 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
           frame = buildSendTelemetryReq(widget.contact.publicKey);
         }
       }
-      _awaitingSent = true;
+      // A local self request gets no respCodeSent, so any that arrives belongs
+      // to another send and must not replace the 5s self timeout.
+      _awaitingSent = !widget.isSelf;
       await connector.sendFrame(frame);
     } catch (e) {
       _awaitingSent = false;
+      _statusTimeout?.cancel();
       if (mounted) {
         setState(() {
           _isLoading = false;

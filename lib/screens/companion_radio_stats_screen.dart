@@ -79,10 +79,15 @@ class _CompanionRadioStatsScreenState extends State<CompanionRadioStatsScreen> {
         title: Text(l10n.radioStats_screenTitle),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.thermostat),
-            tooltip: l10n.contact_telemetry,
-            onPressed: () => pushSelfTelemetryScreen(context),
+          Selector<MeshCoreConnector, bool>(
+            selector: (_, c) => c.isConnected,
+            builder: (context, connected, _) => IconButton(
+              icon: const Icon(Icons.thermostat),
+              tooltip: l10n.contact_telemetry,
+              onPressed: connected
+                  ? () => pushSelfTelemetryScreen(context)
+                  : null,
+            ),
           ),
         ],
       ),
