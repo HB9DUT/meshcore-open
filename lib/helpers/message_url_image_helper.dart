@@ -23,7 +23,7 @@ class MessageUrlImageHelper {
   static http.Client? httpClient;
 
   static final RegExp _pyxPattern = RegExp(
-    r'''https?://pyx\.li/\?i=([^\s<>'"`]+)''',
+    r'''https?://pyx\.li/\?i=([A-Za-z0-9_-]+)''',
     caseSensitive: false,
   );
 
@@ -63,10 +63,7 @@ class MessageUrlImageHelper {
 
     final pyxMatch = _pyxPattern.firstMatch(trimmed);
     if (pyxMatch != null) {
-      return _extractFromUrl(
-        _trimBoundary(pyxMatch.group(0)!),
-        RegExp(r'''<img[^>]+src=["']([^"']+)["']''', caseSensitive: false),
-      );
+      return 'https://pyx.li/i/${pyxMatch.group(1)!}.jpg';
     }
 
     final ipfsUrlMatch = _ipfsUrlPattern.firstMatch(trimmed);

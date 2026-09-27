@@ -157,7 +157,7 @@ class ChannelMessage {
         return null;
       }
 
-      int pathLen;
+      int? pathLen;
       int txtType;
       int? packetPathHashWidth;
       Uint8List pathBytes = Uint8List(0);
@@ -169,20 +169,24 @@ class ChannelMessage {
         reader.skipBytes(1); // Skip reserved byte
         channelIdx = reader.readByte();
         final pathByte = reader.readUInt8();
-        // pathByte packs: top 2 bits = hash width mode, low 6 bits = hop count
-        packetPathHashWidth = ((pathByte & 0xC0) >> 6) + 1;
-        final hopCount = pathByte & 0x3F;
-        pathLen = hopCount;
-        // If a path is present, read hopCount * width bytes
-        if (hasPath && hopCount > 0) {
-          final totalPathBytes = hopCount * packetPathHashWidth;
-          pathBytes = reader.readBytes(totalPathBytes);
+        // 0xFF = direct-routed; hop count is not reported.
+        if (pathByte != 0xFF) {
+          // pathByte packs: top 2 bits = hash width mode, low 6 bits = hop count
+          packetPathHashWidth = ((pathByte & 0xC0) >> 6) + 1;
+          final hopCount = pathByte & 0x3F;
+          pathLen = hopCount;
+          // If a path is present, read hopCount * width bytes
+          if (hasPath && hopCount > 0) {
+            final totalPathBytes = hopCount * packetPathHashWidth;
+            pathBytes = reader.readBytes(totalPathBytes);
+          }
         }
         // After consuming optional path bytes, read the text type byte.
         txtType = reader.readByte();
       } else {
         channelIdx = reader.readByte();
-        pathLen = reader.readInt8();
+        final pathByte = reader.readUInt8();
+        pathLen = pathByte == 0xFF ? null : pathByte & 0x3F;
         txtType = reader.readByte();
       }
       final timestampRaw = reader.readUInt32LE();
@@ -238,6 +242,7 @@ class ChannelMessage {
     String? originalText,
     String? translatedLanguageCode,
     String? translationModelId,
+    ChannelMessage? replyTo,
   }) {
     return ChannelMessage(
       senderKey: null,
@@ -246,6 +251,9 @@ class ChannelMessage {
       originalText: originalText,
       translatedLanguageCode: translatedLanguageCode,
       translationModelId: translationModelId,
+      replyToMessageId: replyTo?.messageId,
+      replyToSenderName: replyTo?.senderName,
+      replyToText: replyTo?.text,
       timestamp: DateTime.now(),
       isOutgoing: true,
       status: ChannelMessageStatus.pending,
@@ -318,7 +326,12 @@ class ChannelMessage {
       final emoji = entry.key;
       for (final senderName in entry.value) {
         reactionList.add(
-          ReactionInfo(targetHash: hash, emoji: emoji, senderName: senderName),
+          ReactionInfo(
+            targetHash: hash, // won't be used for anything
+            emoji: emoji,
+            senderName: senderName,
+            hashType: HashType.ours, // also not used for anything
+          ),
         );
       }
     }

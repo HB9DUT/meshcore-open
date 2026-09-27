@@ -558,7 +558,9 @@ class UsbSerialService {
       return;
     }
     if (data is ByteData) {
-      _ingestRawBytes(data.buffer.asUint8List());
+      _ingestRawBytes(
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+      );
       return;
     }
     _addFrameError(
@@ -571,7 +573,11 @@ class UsbSerialService {
   }
 
   void _handleSerialDone() {
+    final wasConnected = _status == UsbSerialStatus.connected;
     unawaited(disconnect());
+    if (wasConnected) {
+      _addFrameError(StateError('USB serial connection closed'));
+    }
   }
 
   void _ingestRawBytes(Uint8List bytes) {
