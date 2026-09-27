@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../models/app_settings.dart';
+import '../models/image_codec_support.dart';
 import '../models/translation_support.dart';
 import '../storage/prefs_manager.dart';
 import '../utils/app_logger.dart';
@@ -12,6 +13,14 @@ class AppSettingsService extends ChangeNotifier {
   AppSettings _settings = AppSettings();
 
   AppSettings get settings => _settings;
+
+  int resolvedGpsIntervalSeconds(Map<String, String>? deviceCustomVars) {
+    final deviceValue = int.tryParse(deviceCustomVars?['gps_interval'] ?? '');
+    if (deviceValue != null && deviceValue >= 0) {
+      return deviceValue;
+    }
+    return _settings.gpsIntervalSeconds;
+  }
 
   String batteryChemistryForDevice(String deviceId) {
     final stored = _settings.batteryChemistryByDeviceId[deviceId];
@@ -96,6 +105,10 @@ class AppSettingsService extends ChangeNotifier {
     await updateSettings(_settings.copyWith(mapShowGuessedLocations: value));
   }
 
+  Future<void> setMapClusterNodes(bool value) async {
+    await updateSettings(_settings.copyWith(mapClusterNodes: value));
+  }
+
   Future<void> setEnableMessageTracing(bool value) async {
     await updateSettings(_settings.copyWith(enableMessageTracing: value));
   }
@@ -109,6 +122,25 @@ class AppSettingsService extends ChangeNotifier {
     final safeMax = minZoom <= maxZoom ? maxZoom : minZoom;
     await updateSettings(
       _settings.copyWith(mapCacheMinZoom: safeMin, mapCacheMaxZoom: safeMax),
+    );
+  }
+
+  Future<void> setMapRasterSourceId(String value) async {
+    await updateSettings(_settings.copyWith(mapRasterSourceId: value));
+  }
+
+  Future<void> setMapTileEndpointId(String value) async {
+    await updateSettings(_settings.copyWith(mapTileEndpointId: value));
+  }
+
+  Future<void> setMapTileApiKey(String? value) async {
+    final normalized = value?.trim();
+    await updateSettings(
+      _settings.copyWith(
+        mapTileApiKey: (normalized == null || normalized.isEmpty)
+            ? null
+            : normalized,
+      ),
     );
   }
 
@@ -126,6 +158,28 @@ class AppSettingsService extends ChangeNotifier {
 
   Future<void> setNotifyOnNewAdvert(bool value) async {
     await updateSettings(_settings.copyWith(notifyOnNewAdvert: value));
+  }
+
+  Future<void> setAutoSendZeroHopAdvertOnGpsUpdate(bool value) async {
+    await updateSettings(
+      _settings.copyWith(autoSendZeroHopAdvertOnGpsUpdate: value),
+    );
+  }
+
+  Future<void> setGpsIntervalSeconds(
+    int value, {
+    Future<void> Function(int value)? writeToDevice,
+  }) async {
+    await updateSettings(_settings.copyWith(gpsIntervalSeconds: value));
+    if (writeToDevice == null) return;
+    try {
+      await writeToDevice(value);
+    } catch (e) {
+      appLogger.warn(
+        'Failed to write GPS interval to device: $e',
+        tag: 'AppSettings',
+      );
+    }
   }
 
   Future<void> setAutoRouteRotationEnabled(bool value) async {
@@ -154,6 +208,18 @@ class AppSettingsService extends ChangeNotifier {
 
   Future<void> setMaxMessageRetries(int value) async {
     await updateSettings(_settings.copyWith(maxMessageRetries: value));
+  }
+
+  Future<void> setChannelMinHopsEnabled(bool value) async {
+    await updateSettings(_settings.copyWith(channelMinHopsEnabled: value));
+  }
+
+  Future<void> setChannelMinHops(int value) async {
+    await updateSettings(_settings.copyWith(channelMinHops: value));
+  }
+
+  Future<void> setChannelMinHopsRetries(int value) async {
+    await updateSettings(_settings.copyWith(channelMinHopsRetries: value));
   }
 
   Future<void> setThemeMode(String value) async {
@@ -229,6 +295,57 @@ class AppSettingsService extends ChangeNotifier {
 
   Future<void> setJumpToOldestUnread(bool value) async {
     await updateSettings(_settings.copyWith(jumpToOldestUnread: value));
+  }
+
+  Future<void> setImageMessagesEnabled(bool value) async {
+    await updateSettings(_settings.copyWith(imageMessagesEnabled: value));
+  }
+
+  /// See [AppSettings.imageProcessAutomatically]. `main.dart` mirrors this into
+  /// `ReceivedImageStore.processAutomatically` on every settings change; the
+  /// store applies it to future arrivals only, so flipping it does not
+  /// retroactively decode a backlog.
+  Future<void> setImageProcessAutomatically(bool value) async {
+    await updateSettings(_settings.copyWith(imageProcessAutomatically: value));
+  }
+
+  // ---- neural image codec (AEIC-SE) ---------------------------------------
+
+  Future<void> setImageCodecEnabled(bool value) async {
+    await updateSettings(_settings.copyWith(imageCodecEnabled: value));
+  }
+
+  Future<void> setImageCodecSelectedModelId(String? value) async {
+    await updateSettings(_settings.copyWith(imageCodecSelectedModelId: value));
+  }
+
+  Future<void> setImageCodecModelSourceUrl(String? value) async {
+    await updateSettings(_settings.copyWith(imageCodecModelSourceUrl: value));
+  }
+
+  /// [value] is an [AeicRatePoint.wireValue], not an enum index.
+  Future<void> setImageCodecRatePoint(int value) async {
+    await updateSettings(_settings.copyWith(imageCodecRatePoint: value));
+  }
+
+  Future<void> setImageCodecDownloadedModels(
+    List<ImageCodecModelRecord> value,
+  ) async {
+    await updateSettings(_settings.copyWith(imageCodecDownloadedModels: value));
+  }
+
+  /// Writes the whole block in one persist, which is what
+  /// `ImageCodecService` does on every preference change.
+  Future<void> setImageCodecPreferences(ImageCodecPreferences value) async {
+    await updateSettings(
+      _settings.copyWith(
+        imageCodecEnabled: value.enabled,
+        imageCodecSelectedModelId: value.selectedModelId,
+        imageCodecModelSourceUrl: value.modelSourceUrl,
+        imageCodecRatePoint: value.ratePoint,
+        imageCodecDownloadedModels: value.downloadedModels,
+      ),
+    );
   }
 
   Future<void> setTranslationEnabled(bool value) async {

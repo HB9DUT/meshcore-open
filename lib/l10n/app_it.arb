@@ -140,6 +140,7 @@
   "settings_infoStatus": "Stato",
   "settings_infoBattery": "Batteria",
   "settings_infoPublicKey": "Chiave Pubblica",
+  "settings_publicKeyCopied": "Chiave pubblica copiata",
   "settings_infoContactsCount": "Numero di contatti",
   "settings_infoChannelCount": "Numero di canali",
   "settings_presets": "Preset",
@@ -191,7 +192,7 @@
   "appSettings_messageNotificationsSubtitle": "Mostra notifica all'arrivo di nuovi messaggi",
   "appSettings_channelMessageNotifications": "Notifiche Messaggi Canale",
   "appSettings_channelMessageNotificationsSubtitle": "Mostra notifica all'arrivo di messaggi nel canale",
-  "appSettings_advertisementNotifications": "Notifiche Pubblicitarie",
+  "appSettings_advertisementNotifications": "Notifiche degli Annunci",
   "appSettings_advertisementNotificationsSubtitle": "Mostra notifica quando vengono scoperti nuovi nodi",
   "appSettings_messaging": "Messaggi",
   "appSettings_clearPathOnMaxRetry": "Cancella percorso al massimo dei tentativi",
@@ -240,6 +241,19 @@
   "appSettings_last6Hours": "Ultimi 6 ore",
   "appSettings_last24Hours": "Ultime 24 ore",
   "appSettings_lastWeek": "La settimana scorsa",
+  "appSettings_rasterTileSource": "Sorgente tile raster",
+  "appSettings_stadiaEndpoint": "Endpoint Stadia",
+  "appSettings_stadiaApiKey": "Chiave API Stadia",
+  "appSettings_stadiaApiKeyRequired": "Obbligatoria per usare Stadia Maps",
+  "appSettings_stadiaApiKeyConfigured": "Configurata: {maskedKey}",
+  "@appSettings_stadiaApiKeyConfigured": {
+    "placeholders": {
+      "maskedKey": {
+        "type": "String"
+      }
+    }
+  },
+  "appSettings_stadiaApiKeyDialogDescription": "Inserisci la chiave API di Stadia Maps. Questa app la usa per le richieste di tile raster.",
   "appSettings_offlineMapCache": "Cache Mappa Offline",
   "appSettings_noAreaSelected": "Nessun'area selezionata",
   "appSettings_areaSelectedZoom": "Area selezionata (zoom {minZoom}-{maxZoom})",
@@ -538,6 +552,7 @@
       }
     }
   },
+  "chat_selectSendAction": "Seleziona azione di invio",
   "chat_sendGif": "Invia GIF",
   "chat_reply": "Rispondi",
   "chat_addReaction": "Aggiungi Reazione",
@@ -834,6 +849,56 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "mapCache_cachedTilesLabel": "Cached tiles",
+  "mapCache_cachedTileSummaryLabel": "Cached tile summary",
+  "mapCache_bulkDownloadDisabledForSource": "Offline bulk downloads are disabled for {source}.",
+  "@mapCache_bulkDownloadDisabledForSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_bulkDownloadDisabledInConfig": "Offline bulk downloads are disabled for {source} in this app configuration.",
+  "@mapCache_bulkDownloadDisabledInConfig": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_summarySource": "Source: {source}",
+  "@mapCache_summarySource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_summaryCachedTilesForSource": "Cached tiles for source: {count}",
+  "@mapCache_summaryCachedTilesForSource": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapCache_summaryCachedInSelection": "Cached in selected area/zoom: {count}",
+  "@mapCache_summaryCachedInSelection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapCache_summaryApproxCacheSize": "Approx cache size: {size}",
+  "@mapCache_summaryApproxCacheSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
       }
     }
   },
@@ -1158,7 +1223,7 @@
   "repeater_loopDetectModerate": "Moderato",
   "repeater_loopDetectStrict": "Rigido",
   "repeater_dutyCycle": "Ciclo di lavoro",
-  "repeater_dutyCycleHelper": "Percentuale massima di utilizzo dello spazio pubblicitario",
+  "repeater_dutyCycleHelper": "Percentuale massima di airtime",
   "repeater_dutyCyclePercent": "{percent}%",
   "@repeater_dutyCyclePercent": {
     "placeholders": {
@@ -1170,12 +1235,12 @@
   "repeater_ownerInfo": "Informazioni sull'operatore",
   "repeater_ownerInfoHelper": "Metadati pubblici per questo ripetitore",
   "repeater_refreshOwnerInfo": "Aggiorna le informazioni sull'operatore",
-  "repeater_floodMax": "Massimo numero di salti in caso di inondazione",
+  "repeater_floodMax": "Numero massimo di salti in flood",
   "repeater_floodMaxHelper": "Numero massimo di pacchetti che un flusso può attraversare (0-64)",
   "repeater_advancedSettings": "Avanzato",
   "repeater_advancedSettingsSubtitle": "Manopole di regolazione per operatori esperti",
   "repeater_pathHashMode": "Modalità di hashing del percorso",
-  "repeater_pathHashModeHelper": "Byte utilizzati per codificare l'ID di questo ripetitore nei tag per il rilevamento del percorso/loop. 0=1 byte (256 ID, fino a 64 salti), 1=2 byte (65.000 ID, fino a 32 salti), 2=3 byte (16 milioni di ID, fino a 21 salti). Le versioni 1.13 e precedenti utilizzano percorsi multi-byte: è necessario attivare la rete prima di utilizzare questa funzionalità (a partire dalla versione 1.14).",
+  "repeater_pathHashModeHelper": "Byte utilizzati per codificare l'ID di questo ripetitore nei tag di percorso flood/rilevamento loop. 0=1 byte (256 ID, fino a 64 salti), 1=2 byte (65.000 ID, fino a 32 salti), 2=3 byte (16 milioni di ID, fino a 21 salti). Il firmware precedente alla v1.14 usava sempre percorsi a 1 byte; v1.14 e versioni successive possono essere configurate per percorsi a 2 o 3 byte.",
   "repeater_txDelay": "Ritardo a Flood, TX",
   "repeater_txDelayHelper": "Riassegnare lo spazio tra i pacchetti per gestire il traffico intenso, come un moltiplicatore del tempo di trasmissione (da 0 a 2, valore predefinito 0,5). Un valore più alto significa meno collisioni, ma una trasmissione più lenta.",
   "repeater_directTxDelay": "Ritardo diretto TX",
@@ -1185,8 +1250,8 @@
   "repeater_agcResetInterval": "Intervallo di ripristino di AGC",
   "repeater_agcResetIntervalHelper": "Con quale frequenza è necessario resettare il controllo automatico del guadagno per ripristinare il funzionamento dopo un'interruzione. Impostare su secondi, ridotti a multipli di 4. Disattivare la reimpostazione periodica.",
   "repeater_actionsTitle": "Azioni",
-  "repeater_sendAdvert": "Inviare annuncio relativo alle inondazioni",
-  "repeater_sendAdvertSubtitle": "Trasmettere un annuncio pubblicitario relativo alle inondazioni attraverso la rete.",
+  "repeater_sendAdvert": "Invia annuncio flood",
+  "repeater_sendAdvertSubtitle": "Trasmettere un annuncio flood attraverso la rete.",
   "repeater_sendAdvertZeroHop": "Inviare un annuncio senza intermediari",
   "repeater_sendAdvertZeroHopSubtitle": "Trasmettere un annuncio a un solo hop (senza ripetitori)",
   "repeater_clockSync": "Sincronizza l'orologio ora",
@@ -1275,7 +1340,7 @@
   "repeater_cliQuickVersion": "Versione",
   "repeater_cliQuickAdvertise": "Annuncia",
   "repeater_cliQuickClock": "Orologio",
-  "repeater_cliHelpAdvert": "Invia un pacchetto pubblicitario",
+  "repeater_cliHelpAdvert": "Invia un pacchetto di annuncio",
   "repeater_cliHelpReboot": "Riavvia il dispositivo. (nota, potresti ottenere 'Timeout' che è normale)",
   "repeater_cliHelpClock": "Mostra l'ora corrente per l'orologio di ciascun dispositivo.",
   "repeater_cliHelpPassword": "Imposta una nuova password di amministratore per il dispositivo.",
@@ -1285,16 +1350,16 @@
   "repeater_cliHelpSetTx": "Imposta la potenza di trasmissione LoRa in dBm (riavvia per applicare).",
   "repeater_cliHelpSetRepeat": "Abilita o disabilita il ruolo del ripetitore per questo nodo.",
   "repeater_cliHelpSetAllowReadOnly": "(Server stanza) Se 'on', allora l'accesso con una password vuota sarà consentito, ma non sarà possibile pubblicare nella stanza. (solo lettura).",
-  "repeater_cliHelpSetFloodMax": "Imposta il numero massimo di salti per i pacchetti di inondazione in entrata (se >= max, il pacchetto non viene inoltrato)",
+  "repeater_cliHelpSetFloodMax": "Imposta il numero massimo di salti per i pacchetti flood in entrata (se >= max, il pacchetto non viene inoltrato)",
   "repeater_cliHelpSetIntThresh": "Imposta il Limite di Interferenza (in dB). Il valore predefinito è 14. Imposta su 0 per disabilitare il rilevamento delle interferenze del canale.",
   "repeater_cliHelpSetAgcResetInterval": "Imposta l'intervallo per resettare il controllore Automatico del Guadagno. Imposta su 0 per disabilitare.",
   "repeater_cliHelpSetMultiAcks": "Abilita o disabilita la funzione 'double ACKs'.",
-  "repeater_cliHelpSetAdvertInterval": "Imposta l'intervallo del timer in minuti per inviare un pacchetto di pubblicità locale (senza salto). Imposta su 0 per disabilitare.",
-  "repeater_cliHelpSetFloodAdvertInterval": "Imposta l'intervallo del timer in ore per inviare un pacchetto pubblicitario di massa. Imposta su 0 per disabilitare.",
+  "repeater_cliHelpSetAdvertInterval": "Imposta l'intervallo del timer in minuti per inviare un pacchetto di annuncio locale (senza salto). Imposta su 0 per disabilitare.",
+  "repeater_cliHelpSetFloodAdvertInterval": "Imposta l'intervallo del timer in ore per inviare un pacchetto di annuncio flood. Imposta su 0 per disabilitare.",
   "repeater_cliHelpSetGuestPassword": "Imposta/aggiorna la password dell'ospite. (per ripetitori, gli accessi degli ospiti possono inviare la richiesta \"Get Stats\")",
   "repeater_cliHelpSetName": "Imposta il nome dell'annuncio.",
-  "repeater_cliHelpSetLat": "Imposta la latitudine della mappa pubblicitaria. (gradi decimali)",
-  "repeater_cliHelpSetLon": "Imposta la longitudine della mappa pubblicitaria. (gradi decimali)",
+  "repeater_cliHelpSetLat": "Imposta la latitudine della mappa dell'annuncio. (gradi decimali)",
+  "repeater_cliHelpSetLon": "Imposta la longitudine della mappa dell'annuncio. (gradi decimali)",
   "repeater_cliHelpSetRadio": "Imposta completamente nuovi parametri radio e li salva nelle preferenze. Richiede un comando \"reboot\" per l'applicazione.",
   "repeater_cliHelpSetRxDelay": "Impostazioni (experimental) base (deve essere > 1 per l'effetto) per applicare un leggero ritardo ai pacchetti ricevuti, in base alla forza del segnale/punteggio. Imposta a 0 per disabilitare.",
   "repeater_cliHelpSetTxDelay": "Imposta un fattore moltiplicativo sul tempo di trasmissione dei pacchetti in modalità flood e su un sistema a slot casuali, per ritardarne l'inoltro (riducendo la probabilità di collisioni).",
@@ -1313,7 +1378,7 @@
   "repeater_cliHelpLogErase": "Elimina i log del pacchetto dal file system.",
   "repeater_cliHelpNeighbors": "Mostra un elenco di altri nodi repeater ricevuti tramite annunci zero-hop. Ogni riga è id-prefisso-esadecimale:timestamp:snr-volte-4",
   "repeater_cliHelpNeighborRemove": "Rimuove la prima corrispondenza in base al prefisso (esadecimale) della pubkey, dalla lista dei vicini.",
-  "repeater_cliHelpRegion": "(solo serie) Elenca tutte le regioni definite e le autorizzazioni di allagamento correnti.",
+  "repeater_cliHelpRegion": "(solo serie) Elenca tutte le regioni definite e le autorizzazioni flood correnti.",
   "repeater_cliHelpRegionLoad": "NOTA: questo è un'invocazione multi-comando speciale. Ogni comando successivo è un nome di regione (indentato con spazi per indicare la gerarchia parentale, con almeno uno spazio). Terminata inviando una riga vuota/comando.",
   "repeater_cliHelpRegionGet": "Cerca la regione con il prefisso del nome dato (o \"\" per l'ambito globale). Risponde con \"-> nome-regione (nome-genitore) 'F'\"",
   "repeater_cliHelpRegionPut": "Aggiunge o aggiorna una definizione di regione con il nome specificato.",
@@ -1673,7 +1738,6 @@
   "settings_locationGPSEnableSubtitle": "Abilita l'aggiornamento automatico della posizione tramite GPS.",
   "settings_locationIntervalSec": "Intervallo GPS (Secondi)",
   "settings_locationIntervalInvalid": "L'intervallo deve essere di almeno 60 secondi e inferiore a 86400 secondi.",
-  "contacts_manageRoom": "Gestisci server stanza",
   "room_management": "Gestione del Server di Camera",
   "@community_joinConfirmation": {
     "placeholders": {
@@ -1837,10 +1901,15 @@
   "appSettings_enableMessageTracing": "Abilita tracciamento messaggi",
   "appSettings_enableMessageTracingSubtitle": "Mostra metadati dettagliati su instradamento e tempi per i messaggi",
   "contacts_zeroHopAdvert": "Annuncio Zero Hop",
-  "contacts_floodAdvert": "Annuncio alluvionale",
+  "contacts_floodAdvert": "Annuncio Flood",
   "contacts_copyAdvertToClipboard": "Copia Annuncio negli Appunti",
   "contacts_addContactFromClipboard": "Aggiungere contatto dalla clipboard",
   "contacts_clipboardEmpty": "La clipboard è vuota.",
+  "contacts_scanQrCode": "Scansiona codice QR",
+  "contacts_scanQrInstructions": "Inquadra un codice QR di un contatto MeshCore",
+  "contacts_qrFromGallery": "Scansiona QR dalla galleria",
+  "contacts_noQrCodeFound": "Nessun codice QR trovato nell'immagine selezionata.",
+  "contacts_qrGalleryFailed": "Impossibile aprire la galleria.",
   "contacts_ShareContact": "Copia contatto negli Appunti",
   "contacts_contactImported": "Il contatto è stato importato.",
   "contacts_contactImportFailed": "Contatto non importato con successo.",
@@ -1883,7 +1952,6 @@
     }
   },
   "notification_receivedNewMessage": "Nuovo messaggio ricevuto",
-  "notification_receivedNewMessage": "Nuovo messaggio ricevuto",
   "settings_gpxExportRepeaters": "Esporta ripetitori / server di stanza in GPX",
   "settings_gpxExportContacts": "Esporta compagni in GPX",
   "settings_gpxExportSuccess": "Esportazione del file GPX completata con successo.",
@@ -1899,7 +1967,7 @@
   "settings_gpxExportAllContacts": "Tutte le posizioni dei contatti",
   "settings_gpxExportShareText": "Dati mappa esportati da meshcore-open",
   "settings_gpxExportShareSubject": "meshcore-open esportazione dati mappa GPX",
-  "pathTrace_someHopsNoLocation": "Uno o più hop non hanno una posizione!",
+  "pathTrace_someHopsNoLocation": "Uno o più salti non hanno una posizione!",
   "map_removeLast": "Rimuovi ultimo",
   "map_pathTraceCancelled": "Tracciamento del percorso annullato.",
   "pathTrace_clearTooltip": "Cancella percorso",
@@ -2058,52 +2126,7 @@
   "listFilter_addToFavorites": "Aggiungi ai preferiti",
   "listFilter_removeFromFavorites": "Rimuovi dai preferiti",
   "listFilter_favorites": "Preferiti",
-  "@contacts_searchFavorites": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      },
-      "str": {
-        "type": "String"
-      }
-    }
-  },
-  "@contacts_searchUsers": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      },
-      "str": {
-        "type": "String"
-      }
-    }
-  },
-  "@contacts_searchRepeaters": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      },
-      "str": {
-        "type": "String"
-      }
-    }
-  },
-  "@contacts_searchRoomServers": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      },
-      "str": {
-        "type": "String"
-      }
-    }
-  },
-  "contacts_searchUsers": "Cerca {number}{str} utenti...",
-  "contacts_searchContactsNoNumber": "Cerca contatti...",
-  "contacts_searchFavorites": "Cerca {number}{str} preferiti...",
   "contacts_unread": "Non letti",
-  "contacts_searchRepeaters": "Cerca {number}{str} ripetitori...",
-  "contacts_searchRoomServers": "Cerca {number}{str} server stanza...",
   "contactsSettings_title": "Impostazioni dei contatti",
   "settings_contactSettings": "Impostazioni di contatto",
   "contactsSettings_otherTitle": "Altre impostazioni relative ai contatti",
@@ -2207,6 +2230,8 @@
   "settings_telemetryEnvironmentMode": "Modalità di ambiente di telemetria",
   "settings_advertLocation": "Posizione dell'annuncio",
   "settings_advertLocationSubtitle": "Includi la posizione nell'annuncio",
+  "settings_autoZeroHopAdvertOnGpsUpdate": "Annuncio zero-hop automatico all'aggiornamento GPS",
+  "settings_autoZeroHopAdvertOnGpsUpdateSubtitle": "Quando la posizione GPS cambia, invia un annuncio zero-hop (richiede la posizione nell'annuncio).",
   "settings_privacy": "Impostazioni sulla privacy",
   "settings_denyAll": "Negare tutto",
   "settings_privacySubtitle": "Controlla le informazioni che vengono condivise.",
@@ -2407,7 +2432,7 @@
   "repeater_cliHelpGetAgcResetInterval": "Indica l'intervallo di reset dell'AGC in secondi.",
   "repeater_cliHelpGetMultiAcks": "Indica se la modalità \"ACK doppio\" è attiva (1) o disattivata (0).",
   "repeater_cliHelpGetAllowReadOnly": "Indica se è consentito l'accesso in sola lettura per gli ospiti.",
-  "repeater_cliHelpGetAdvertInterval": "Indica l'intervallo pubblicitario locale in minuti.",
+  "repeater_cliHelpGetAdvertInterval": "Indica l'intervallo di annuncio locale in minuti.",
   "repeater_cliHelpGetFloodAdvertInterval": "Indica l'intervallo dell'annuncio flood, espresso in ore.",
   "repeater_cliHelpGetGuestPassword": "Visualizza la password del guest configurata.",
   "repeater_cliHelpGetLat": "Mostra la latitudine configurata.",
@@ -2721,5 +2746,259 @@
   "pathMap_noLocation": "Nessuna posizione",
   "pathMap_followPacket": "Blocca la vista sul pacchetto",
   "pathMap_unfollowPacket": "Sblocca la vista dal pacchetto",
-  "pathMap_gpsCount": "{confirmed}/{total} GPS"
+  "pathMap_gpsCount": "{confirmed}/{total} GPS",
+  "@settings_deleteRegionConfirm": {
+    "placeholders": {
+      "region": {
+        "type": "String"
+      }
+    }
+  },
+  "@channels_regionSetTo": {
+    "placeholders": {
+      "region": {
+        "type": "String",
+        "example": "de-mitte"
+      }
+    }
+  },
+  "@chat_imagePickFailed": {
+    "description": "Shown when picking or reading a photo to send fails"
+  },
+  "@repeater_pubKeyPrefixHelper": {
+    "placeholders": {
+      "tries": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_packetsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_longSendBody": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_sentConfirmation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_sendFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_sendingProgress": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_senderPrefix": {
+    "placeholders": {
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
+  "@receivedImage_incoming": {
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_incomplete": {
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_awaiting": {
+    "placeholders": {
+      "bytes": {
+        "type": "int"
+      },
+      "packets": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_secondsValue": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_minutesSecondsValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_regionSettings": "Regioni",
+  "settings_regionSettingsSubtitle": "Gestione delle regioni salvate",
+  "settings_regionManagement_screenTitle": "Gestione Regionale",
+  "settings_regionNameHint": "Inserisci il nome della regione",
+  "settings_regionAddRegion": "Aggiungi regione",
+  "settings_regionFetchRegions": "Recupera le regioni dai ripetitori",
+  "settings_regionFetchRegionsFail": "Non sono state trovate regioni",
+  "settings_regionFetchRegionsAlreadyExists": "Questa regione è già stata aggiunta",
+  "settings_regionName": "Nome della Regione",
+  "settings_regionDeleted": "Regione cancellata",
+  "settings_deleteRegion": "Elimina Regione",
+  "settings_deleteRegionConfirm": "Rimuovere \"{region}\" dalla lista delle regioni?",
+  "settings_infoHardware": "Hardware",
+  "settings_infoFirmware": "Firmware",
+  "repeater_pathHashModeOption0": "0 - 1 byte",
+  "repeater_pathHashModeOption1": "1 - 2 byte",
+  "repeater_pathHashModeOption2": "2 - 3 byte",
+  "repeater_pathHashModeOption3": "3 - 4 byte",
+  "appSettings_batteryLipoHv": "LiPo HV (3,0-4,35 V)",
+  "channels_regionSetTo": "Regione: {region}",
+  "channels_regionNotSet": "Regione: nessuna",
+  "channels_regionSelect_Title": "Scegli una regione",
+  "channels_clearRegion": "Zona chiara",
+  "chat_sendImageLora": "Invia immagine tramite MeshCore",
+  "chat_imagePickFailed": "Non sono riuscito ad aprire quell'immagine",
+  "chat_receivedGif": "Ricevuto un GIF",
+  "repeater_keySettings": "Cambia le Chiavi di Identità",
+  "repeater_keySettingsSubtitle": "Cambia la coppia di chiavi pubblica/privata",
+  "repeater_prvKey": "Chiave privata",
+  "repeater_prvKeyHelper": "Una nuova chiave privata per il ripetitore, una stringa esadecimale di 128 caratteri.",
+  "repeater_generatePrvKey": "Genera una coppia di chiavi casuale",
+  "repeater_stopGeneratingPrvKey": "Interrompi la ricerca della coppia di chiavi",
+  "repeater_pubKey": "Chiave pubblica",
+  "repeater_pubKeyHelper": "Questa è la chiave pubblica che accompagna la chiave privata generata. Non è possibile impostarla direttamente.",
+  "repeater_pubKeyPrefix": "Prefisso desiderato",
+  "repeater_pubKeyPrefixHelper": "Trova una chiave pubblica che inizia con queste cifre esadecimali. Tentativi necessari previsti: {tries}.",
+  "imageMessages_enableTitle": "Messaggi con immagini",
+  "imageMessages_enableSubtitle": "Invia le immagini tramite la mesh. È necessario scaricare il modello dell'immagine una tantum.",
+  "imageMessages_modelSectionTitle": "Modello di immagine",
+  "imageMessages_downloadModel": "Scarica",
+  "imageMessages_cancelDownload": "Annullare",
+  "imageMessages_removeModel": "Rimuovi il modello",
+  "imageMessages_modelReady": "Pronto",
+  "imageMessages_modelNotPublished": "Non pubblicato ancora — questa versione non può scaricarlo.",
+  "imageMessages_downloadFailed": "Il modello di immagine non può essere scaricato.",
+  "imageMessages_autoProcessTitle": "Elabora automaticamente le immagini",
+  "imageMessages_autoProcessSubtitle": "Ricostruisci ogni immagine non appena arriva. Utilizza circa 2 GB di memoria per un secondo ogni volta; disattiva la ricostruzione con un semplice tocco.",
+  "imageSend_title": "Invia immagine",
+  "imageSend_cropNote": "Ridimensionato a 512 × 512 · rapporto d'aspetto non conservato",
+  "imageSend_originalSize": "Traduzione:\n\nOriginal text:\n\nPlease translate the following English text into Italian:\n\nOriginal text:\n\n(No original English text provided)",
+  "imageSend_onAirSize": "In onda",
+  "imageSend_quality": "Qualità",
+  "imageSend_qualityStandard": "Standard",
+  "imageSend_qualityHigh": "Alto",
+  "imageSend_packetsLabel": "Pacchetti",
+  "imageSend_airtimeLabel": "Tempo in onda",
+  "imageSend_sizeLabel": "Carico utile",
+  "imageSend_packetsCount": "{count} {count, plural, =1{pacchetto} other{pacchetti}}",
+  "imageSend_range": "{min}–{max}",
+  "imageSend_unknownValue": "—",
+  "imageSend_radioUnknownTitle": "Impostazioni radio sconosciute",
+  "imageSend_radioUnknownBody": "Collegati a un dispositivo in modo che si possa calcolare l'orario di trasmissione.",
+  "imageSend_longSendTitle": "Lunga trasmissione",
+  "imageSend_longSendBody": "Questo manterrà il canale per circa {duration}.",
+  "imageSend_floodNote": "Instradamento flood: ogni ripetitore nel raggio ritrasmette ogni pacchetto, quindi il canale rimane occupato più a lungo.",
+  "imageSend_parityTitle": "Pacchetto di recupero",
+  "imageSend_paritySubtitle": "Un pacchetto aggiuntivo. I messaggi di gruppo non vengono riconosciuti, quindi questo permette al destinatario di ricostruire l'immagine se un singolo pacchetto viene perso.",
+  "imageSend_send": "Invia",
+  "imageSend_cancel": "Annullare",
+  "imageSend_encodeFailed": "Questa immagine non può essere codificata.",
+  "imageSend_codecDownloading": "Il modello di immagine sta ancora scaricando.",
+  "imageSend_codecUnavailable": "L'invio di immagini non è disponibile su questo dispositivo.",
+  "imageSend_codecDisabled": "I messaggi immagine sono disattivati nelle impostazioni.",
+  "imageSend_deviceUnsupported": "Questa radio non può inviare pacchetti di immagini. Collegare un dispositivo con firmware companion versione 13 o successiva.",
+  "imageSend_directMessagesUnsupported": "Le immagini viaggiano come dati di gruppo, quindi possono essere inviate solo a un canale — non tramite messaggio diretto.",
+  "imageSend_tooLarge": "Quella immagine è stata codificata in un numero di pacchetti superiore a quello consentito dal formato mesh.",
+  "imageSend_sentConfirmation": "Immagine inviata come {count} {count, plural, =1{pacchetto} other{pacchetti}}.",
+  "imageSend_sendFailed": "L'immagine non può essere inviata: {error}",
+  "imageSend_sendingProgress": "Invio immagine — pacchetto {sent} di {total}",
+  "receivedImage_senderPrefix": "Nodo {prefix}",
+  "receivedImage_incoming": "{received} di {total} pacchetti",
+  "receivedImage_queued": "In attesa di decodificare",
+  "receivedImage_tapToDecode": "Tocca per decodificare",
+  "receivedImage_decoding": "Ricostruire… circa 1 s",
+  "receivedImage_incomplete": "Immagine incompleta — {received} su {total} pacchetti ricevuti",
+  "receivedImage_corrupt": "L'immagine non potrebbe essere ricostruita",
+  "receivedImage_decoderMissing": "Immagine ricevuta — decodifica dell'immagine non funzionante",
+  "receivedImage_evicted": "Immagine non più memorizzata",
+  "receivedImage_retry": "Prova ancora",
+  "receivedImage_decodeAgain": "Decodifica di nuovo",
+  "receivedImage_openSettings": "Imposta",
+  "receivedImage_tapToProcess": "Premi per elaborare",
+  "receivedImage_awaiting": "{bytes} byte · {packets} {packets, plural, =1{pacchetto} other{pacchetti}}",
+  "imageSend_secondsValue": "{seconds} secondi",
+  "imageSend_minutesSecondsValue": "{minutes} min {seconds} s",
+  "channels_noFreeSlots": "Tutti gli slot dei canali sono in uso",
+  "chat_longMessageRetryNote": "Oltre 158 byte: inviato al massimo {count} volte",
+  "reaction_report": "Reazioni con Emoji",
+  "repeater_bridgeNote": "Disponibile solo su firmware compilato con un bridge (RS232 o ESP-NOW).",
+  "repeater_cliHelpGetFloodMaxAdvert": "Mostra il numero massimo di salti per gli annunci flood.",
+  "repeater_cliHelpGetFloodMaxUnscoped": "Mostra il numero massimo di salti per i pacchetti flood senza ambito regionale.",
+  "repeater_cliHelpGetRadioFemRxGain": "Mostra se il guadagno RX del modulo frontend LoRa è attivo.",
+  "repeater_cliHelpGetRadioFemTxGain": "Mostra se il guadagno TX del modulo frontend LoRa è attivo.",
+  "repeater_cliHelpRegionDef": "Definisce una catena di regioni in un solo comando: ogni nome viene aggiunto sotto il precedente; \"name,parent\" aggiunge il nome e continua sotto il padre indicato. Risponde con l'elenco delle regioni.",
+  "repeater_cliHelpSetFloodMaxAdvert": "Imposta il numero massimo di salti per l'inoltro degli annunci flood (0-64).",
+  "repeater_cliHelpSetFloodMaxUnscoped": "Imposta il numero massimo di salti per l'inoltro dei pacchetti flood privi di ambito regionale (0-64).",
+  "repeater_cliHelpSetRadioFemRxGain": "Attiva o disattiva il guadagno RX (LNA) del modulo frontend LoRa. Le schede prive di questo modulo rispondono \"Error: unsupported\".",
+  "repeater_cliHelpSetRadioFemTxGain": "Attiva o disattiva il guadagno TX (PA) del modulo frontend LoRa. Le schede prive di questo modulo rispondono \"Error: unsupported\".",
+  "repeater_cliRegionLoadActive": "Modalità di caricamento regioni: invia un nome di regione per riga, indentato con spazi sotto la sua regione padre (aggiungi F dopo il nome per consentire il flood). Le righe non ricevono risposta. Invia una riga vuota per terminare, poi \"region save\" per salvare il risultato.",
+  "repeater_cliRegionLoadEnd": "(fine caricamento regioni)",
+  "repeater_cliRegionLoadHint": "Riga di regione, o vuota per terminare",
+  "repeater_frequencyInvalid": "Frequenza non valida (150-2500 MHz)",
+  "repeater_frequencyRangeHelper": "150-2500 MHz",
+  "repeater_recvErrors": "Errori di ricezione",
+  "repeater_txPowerRangeHelper": "Da -9 a 30 dBm",
+  "room_postsPushed": "Post Inviati",
+  "room_postsStored": "Post",
+  "settings_radioSettingsNotApplied": "La radio non ha applicato queste impostazioni",
+  "urlImage_enable": "Abilita immagini URL",
+  "urlImage_possible": "Possibile immagine URL; abilitala nelle Impostazioni.",
+  "@chat_longMessageRetryNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

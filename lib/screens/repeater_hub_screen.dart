@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meshcore_open/connector/meshcore_protocol.dart';
+import 'package:meshcore_open/connector/meshcore_connector.dart';
 import 'package:provider/provider.dart';
 import '../l10n/l10n.dart';
 import '../models/contact.dart';
@@ -31,6 +32,7 @@ class RepeaterHubScreen extends StatelessWidget {
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
     final settingsService = context.watch<AppSettingsService>();
+    final connector = context.watch<MeshCoreConnector>();
     final chemistry = settingsService.batteryChemistryForRepeater(
       repeater.publicKeyHex,
     );
@@ -85,7 +87,10 @@ class RepeaterHubScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            repeater.pathLabel(l10n),
+                            repeater.pathLabel(
+                              l10n,
+                              pathHashByteWidth: connector.pathHashByteWidth,
+                            ),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: scheme.onSurfaceVariant),
                           ),
@@ -117,7 +122,9 @@ class RepeaterHubScreen extends StatelessWidget {
                       ),
                     ),
                     StatusChip(
-                      label: isAdmin ? 'ADMIN' : 'GUEST',
+                      label: isAdmin
+                          ? l10n.repeater_roleAdmin
+                          : l10n.repeater_roleGuest,
                       color: isAdmin
                           ? MeshPalette.blue
                           : scheme.onSurfaceVariant,
@@ -159,6 +166,10 @@ class RepeaterHubScreen extends StatelessWidget {
                     DropdownMenuItem(
                       value: 'lipo',
                       child: Text(l10n.appSettings_batteryLipo),
+                    ),
+                    DropdownMenuItem(
+                      value: 'lipo_hv',
+                      child: Text(l10n.appSettings_batteryLipoHv),
                     ),
                   ],
                 ),
@@ -209,23 +220,26 @@ class RepeaterHubScreen extends StatelessWidget {
               },
             ),
 
-            _HubActionTile(
-              index: 2,
-              icon: Icons.group,
-              title: l10n.repeater_neighbors,
-              subtitle: l10n.repeater_neighborsSubtitle,
-              accentColor: MeshPalette.signal,
-              onTap: () {
-                HapticFeedback.selectionClick();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        NeighborsScreen(repeater: repeater, password: password),
-                  ),
-                );
-              },
-            ),
+            if (repeater.type != advTypeRoom)
+              _HubActionTile(
+                index: 2,
+                icon: Icons.group,
+                title: l10n.repeater_neighbors,
+                subtitle: l10n.repeater_neighborsSubtitle,
+                accentColor: MeshPalette.signal,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NeighborsScreen(
+                        repeater: repeater,
+                        password: password,
+                      ),
+                    ),
+                  );
+                },
+              ),
 
             if (isAdmin) ...[
               _HubActionTile(
@@ -296,46 +310,53 @@ class _HubActionTile extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return ListEntrance(
       index: index,
-      child: MeshCard(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(MeshRadii.md),
-                border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+      child: Semantics(
+        button: true,
+        child: MeshCard(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(MeshRadii.md),
+                  border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                ),
+                alignment: Alignment.center,
+                child: Icon(icon, size: 22, color: accentColor),
               ),
-              alignment: Alignment.center,
-              child: Icon(icon, size: 22, color: accentColor),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: scheme.onSurfaceVariant,
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(Icons.chevron_right, color: scheme.onSurfaceVariant, size: 20),
-          ],
+              Icon(
+                Icons.chevron_right,
+                color: scheme.onSurfaceVariant,
+                size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -34,6 +34,7 @@ import '../widgets/unread_badge.dart';
 import '../helpers/snack_bar_builder.dart';
 import 'channels_screen.dart';
 import 'chat_screen.dart';
+import 'contact_qr_scanner_screen.dart';
 import 'discovery_screen.dart';
 import 'map_screen.dart';
 import 'repeater_hub_screen.dart';
@@ -185,6 +186,14 @@ class _ContactsScreenState extends State<ContactsScreen>
           }
           final hexString = pubKeyToHex(advertPacket);
           Clipboard.setData(ClipboardData(text: "meshcore://$hexString"));
+          _pendingOperations.remove(ContactOperationType.export);
+          if (mounted) {
+            showDismissibleSnackBar(
+              context,
+              content: Text(context.l10n.contacts_contactAdvertCopied),
+            );
+          }
+          return;
         }
 
         // Generic OK/ERR acks carry no command correlation, so consume only
@@ -376,6 +385,21 @@ class _ContactsScreenState extends State<ContactsScreen>
                   ),
                   onTap: () => _contactImport(),
                 ),
+                PopupMenuItem(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.qr_code_scanner),
+                      const SizedBox(width: 8),
+                      Text(context.l10n.contacts_scanQrCode),
+                    ],
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ContactQrScannerScreen(),
+                    ),
+                  ),
+                ),
                 const PopupMenuDivider(),
                 PopupMenuItem(
                   child: Row(
@@ -486,6 +510,19 @@ class _ContactsScreenState extends State<ContactsScreen>
               onTap: () {
                 Navigator.pop(sheetContext);
                 _contactImport();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.qr_code_scanner),
+              title: Text(context.l10n.contacts_scanQrCode),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ContactQrScannerScreen(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -704,7 +741,7 @@ class _ContactsScreenState extends State<ContactsScreen>
       return EmptyState(
         icon: Icons.people_outline,
         title: context.l10n.contacts_noContacts,
-        subtitle: context.l10n.contacts_contactsWillAppear,
+        subtitle: context.l10n.contacts_noContactsDiscoveredHint,
         action: FilledButton.icon(
           onPressed: () => Navigator.push(
             context,
@@ -882,6 +919,20 @@ class _ContactsScreenState extends State<ContactsScreen>
             ],
           ),
         ),
+        ListTile(
+          dense: true,
+          leading: const Icon(Icons.person_add_rounded),
+          title: Text(
+            context.l10n.contacts_discoveredNearby(
+              connector.discoveredContacts.where((c) => !c.isActive).length,
+            ),
+          ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DiscoveryScreen()),
+          ),
+        ),
         Expanded(
           child: RefreshIndicator(
             onRefresh: () => connector.getContacts(),
@@ -915,12 +966,14 @@ class _ContactsScreenState extends State<ContactsScreen>
                       return _ContactTileEntrance(
                         index: index,
                         contact: contact,
+                        pathHashByteWidth: connector.pathHashByteWidth,
                         lastSeen: _resolveLastSeen(contact),
                         unreadCount: unreadCount,
                         isFavorite: contact.isFavorite,
                         onTap: () => _openChat(context, contact),
                         onLongPress: () =>
                             _showContactOptions(context, connector, contact),
+                        onManage: _manageAction(context, contact),
                       );
                     },
                   ),
@@ -1044,6 +1097,17 @@ class _ContactsScreenState extends State<ContactsScreen>
         ),
       );
     }
+  }
+
+  VoidCallback? _manageAction(BuildContext context, Contact contact) {
+    if (contact.type == advTypeRepeater) {
+      return () => _showRepeaterLogin(context, contact);
+    }
+    if (contact.type == advTypeRoom) {
+      return () =>
+          _showRoomLogin(context, contact, RoomLoginDestination.management);
+    }
+    return null;
   }
 
   void _handleQuickSwitch(int index, BuildContext context) {
@@ -1371,7 +1435,10 @@ class _ContactsScreenState extends State<ContactsScreen>
                     MaterialPageRoute(
                       builder: (context) => PathTraceMapScreen(
                         title: context.l10n.contacts_repeaterPing,
-                        path: Uint8List.fromList([contact.publicKey.first]),
+                        path: contact.pathBytesForDisplay.isNotEmpty
+                            ? contact.pathBytesForDisplay
+                            : _contactPathPrefix(contact, hw),
+                        flipPathAround: true,
                         targetContact: contact,
                         pathHashByteWidth: hw,
                       ),
@@ -1405,8 +1472,8 @@ class _ContactsScreenState extends State<ContactsScreen>
                             : context.l10n.contacts_roomPing,
                         path: contact.pathBytesForDisplay.isNotEmpty
                             ? contact.pathBytesForDisplay
-                            : Uint8List.fromList([contact.publicKey.first]),
-                        flipPathAround: contact.pathBytesForDisplay.isNotEmpty,
+                            : _contactPathPrefix(contact, hw),
+                        flipPathAround: true,
                         targetContact: contact,
                         pathHashByteWidth: hw,
                       ),
@@ -1501,7 +1568,7 @@ class _ContactsScreenState extends State<ContactsScreen>
                 color: Theme.of(context).colorScheme.error,
               ),
               title: Text(
-                context.l10n.contacts_deleteContact,
+                context.l10n.contacts_removeFromContacts,
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
               onTap: () {
@@ -1516,32 +1583,61 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
+  Uint8List _contactPathPrefix(Contact contact, int hashByteWidth) {
+    if (contact.publicKey.isEmpty) return Uint8List(0);
+    final width = hashByteWidth
+        .clamp(1, pubKeySize)
+        .toInt()
+        .clamp(1, contact.publicKey.length)
+        .toInt();
+    return Uint8List.fromList(contact.publicKey.sublist(0, width));
+  }
+
   void _confirmDelete(
     BuildContext context,
     MeshCoreConnector connector,
     Contact contact,
   ) {
+    var keepHistory = false;
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(context.l10n.contacts_deleteContact),
-        content: Text(context.l10n.contacts_removeConfirm(contact.name)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(context.l10n.common_cancel),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: Text(context.l10n.contacts_removeFromContacts),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.contacts_removeFromContactsConfirm(contact.name),
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                value: keepHistory,
+                title: Text(context.l10n.contacts_keepChatHistory),
+                onChanged: (value) =>
+                    setDialogState(() => keepHistory = value ?? false),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              connector.removeContact(contact);
-            },
-            child: Text(
-              context.l10n.common_delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(context.l10n.common_cancel),
             ),
-          ),
-        ],
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                connector.removeContact(contact, keepMessages: keepHistory);
+              },
+              child: Text(
+                context.l10n.contacts_remove,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1549,19 +1645,23 @@ class _ContactsScreenState extends State<ContactsScreen>
 
 class _ContactTile extends StatelessWidget {
   final Contact contact;
+  final int pathHashByteWidth;
   final DateTime lastSeen;
   final int unreadCount;
   final bool isFavorite;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
+  final VoidCallback? onManage;
 
   const _ContactTile({
     required this.contact,
+    required this.pathHashByteWidth,
     required this.lastSeen,
     required this.unreadCount,
     required this.isFavorite,
     required this.onTap,
     required this.onLongPress,
+    this.onManage,
   });
 
   /// Node-type avatar color per design language.
@@ -1598,9 +1698,6 @@ class _ContactTile extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final emoji = firstEmoji(contact.name);
     final isChat = contact.type == advTypeChat;
-    final pathLen = contact.pathBytesForDisplay.length;
-    final isDirect = contact.pathLength >= 0;
-    final hasPath = pathLen > 0 || contact.pathLength == 0;
 
     return GestureDetector(
       onSecondaryTapUp: PlatformInfo.isDesktop ? (_) => onLongPress() : null,
@@ -1676,7 +1773,10 @@ class _ContactTile extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          contact.pathLabel(context.l10n),
+                          contact.pathLabel(
+                            context.l10n,
+                            pathHashByteWidth: pathHashByteWidth,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -1685,13 +1785,6 @@ class _ContactTile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (hasPath) ...[
-                        const SizedBox(width: 6),
-                        RouteChip(
-                          isDirect: isDirect,
-                          hops: isDirect ? contact.pathLength : null,
-                        ),
-                      ],
                     ],
                   ),
                 ],
@@ -1730,6 +1823,15 @@ class _ContactTile extends StatelessWidget {
                 ],
               ),
             ),
+            if (onManage != null)
+              IconButton(
+                icon: const Icon(Icons.admin_panel_settings_outlined),
+                tooltip: contact.type == advTypeRoom
+                    ? context.l10n.room_management
+                    : context.l10n.contacts_manageRepeater,
+                visualDensity: VisualDensity.compact,
+                onPressed: onManage,
+              ),
           ],
         ),
       ),
@@ -1763,20 +1865,24 @@ class _ContactTile extends StatelessWidget {
 class _ContactTileEntrance extends StatelessWidget {
   final int index;
   final Contact contact;
+  final int pathHashByteWidth;
   final DateTime lastSeen;
   final int unreadCount;
   final bool isFavorite;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
+  final VoidCallback? onManage;
 
   const _ContactTileEntrance({
     required this.index,
     required this.contact,
+    required this.pathHashByteWidth,
     required this.lastSeen,
     required this.unreadCount,
     required this.isFavorite,
     required this.onTap,
     required this.onLongPress,
+    this.onManage,
   });
 
   @override
@@ -1785,11 +1891,13 @@ class _ContactTileEntrance extends StatelessWidget {
       index: index,
       child: _ContactTile(
         contact: contact,
+        pathHashByteWidth: pathHashByteWidth,
         lastSeen: lastSeen,
         unreadCount: unreadCount,
         isFavorite: isFavorite,
         onTap: onTap,
         onLongPress: onLongPress,
+        onManage: onManage,
       ),
     );
   }

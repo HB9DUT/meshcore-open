@@ -100,6 +100,8 @@
   "settings_locationInvalid": "Ongeldige breedtegraad of lengtegraad.",
   "settings_latitude": "Breedtegraad",
   "settings_longitude": "Lengtegraad",
+  "settings_autoZeroHopAdvertOnGpsUpdate": "Automatische zero-hop-advertentie bij GPS-update",
+  "settings_autoZeroHopAdvertOnGpsUpdateSubtitle": "Wanneer de GPS-locatie verandert, een zero-hop-advertentie verzenden (vereist locatie in advertentie).",
   "settings_privacyMode": "Privacy-modus",
   "settings_privacyModeSubtitle": "Naam/locatie verbergen in advertenties",
   "settings_privacyModeToggle": "Schakel privacy modus in om je naam en locatie in advertenties te verbergen.",
@@ -240,6 +242,19 @@
   "appSettings_last6Hours": "Afgelopen 6 uur",
   "appSettings_last24Hours": "Afgelopen 24 uur",
   "appSettings_lastWeek": "Afgelopen week",
+  "appSettings_rasterTileSource": "Rastertegelbron",
+  "appSettings_stadiaEndpoint": "Stadia-eindpunt",
+  "appSettings_stadiaApiKey": "Stadia API-sleutel",
+  "appSettings_stadiaApiKeyRequired": "Vereist voor gebruik van Stadia Maps",
+  "appSettings_stadiaApiKeyConfigured": "Geconfigureerd: {maskedKey}",
+  "@appSettings_stadiaApiKeyConfigured": {
+    "placeholders": {
+      "maskedKey": {
+        "type": "String"
+      }
+    }
+  },
+  "appSettings_stadiaApiKeyDialogDescription": "Voer je Stadia Maps API-sleutel in. De app gebruikt die voor rastertegelverzoeken.",
   "appSettings_offlineMapCache": "Offline Kaartcache",
   "appSettings_noAreaSelected": "Geen gebied geselecteerd",
   "appSettings_areaSelectedZoom": "Geselecteerd gebied (zoom {minZoom}-{maxZoom})",
@@ -470,6 +485,7 @@
       }
     }
   },
+  "chat_selectSendAction": "Verzendactie selecteren",
   "chat_sendGif": "GIF verzenden",
   "chat_reply": "Reageren",
   "chat_addReaction": "Reactie toevoegen",
@@ -566,7 +582,7 @@
   "chat_recentAckPaths": "Recente ACK Paden (tik om te gebruiken):",
   "chat_pathHistoryFull": "De voorgeschiedenis is vol. Verwijder vermeldingen om er nieuwe aan toe te voegen.",
   "chat_hopSingular": "Hop",
-  "chat_hopPlural": "hoppen",
+  "chat_hopPlural": "hops",
   "chat_hopsCount": "{count} {count, plural, =1{hop} other{hops}}",
   "@chat_hopsCount": {
     "placeholders": {
@@ -616,7 +632,7 @@
       }
     }
   },
-  "chat_floodAuto": "Overstroming (van een auto)",
+  "chat_floodAuto": "Flood (automatisch)",
   "chat_direct": "Direct",
   "chat_poiShared": "Gedeelde POI",
   "chat_unread": "Nieuw: {count}",
@@ -766,6 +782,56 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "mapCache_cachedTilesLabel": "Cached tiles",
+  "mapCache_cachedTileSummaryLabel": "Cached tile summary",
+  "mapCache_bulkDownloadDisabledForSource": "Offline bulk downloads are disabled for {source}.",
+  "@mapCache_bulkDownloadDisabledForSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_bulkDownloadDisabledInConfig": "Offline bulk downloads are disabled for {source} in this app configuration.",
+  "@mapCache_bulkDownloadDisabledInConfig": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_summarySource": "Source: {source}",
+  "@mapCache_summarySource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCache_summaryCachedTilesForSource": "Cached tiles for source: {count}",
+  "@mapCache_summaryCachedTilesForSource": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapCache_summaryCachedInSelection": "Cached in selected area/zoom: {count}",
+  "@mapCache_summaryCachedInSelection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapCache_summaryApproxCacheSize": "Approx cache size: {size}",
+  "@mapCache_summaryApproxCacheSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
       }
     }
   },
@@ -980,7 +1046,7 @@
       }
     }
   },
-  "repeater_duplicatesFloodDirect": "Overstroming: {flood}, Direct: {direct}",
+  "repeater_duplicatesFloodDirect": "Flood: {flood}, Direct: {direct}",
   "@repeater_duplicatesFloodDirect": {
     "placeholders": {
       "flood": {
@@ -1107,9 +1173,9 @@
   "repeater_advancedSettings": "Geavanceerd",
   "repeater_advancedSettingsSubtitle": "Regelhendels voor ervaren gebruikers",
   "repeater_pathHashMode": "Hash-modus voor paden",
-  "repeater_pathHashModeHelper": "Bytes die gebruikt worden om de ID van deze repeater te coderen in flood-pad/lusdetectietags. 0=1 byte (256 ID's, tot 64 hops), 1=2 bytes (65.000 ID's, tot 32 hops), 2=3 bytes (16 miljoen ID's, tot 21 hops). Versies 1.13 en ouder gebruiken multi-byte paden – alleen na het activeren van het netwerk.",
+  "repeater_pathHashModeHelper": "Bytes die gebruikt worden om de ID van deze repeater te coderen in flood-pad/lusdetectietags. 0=1 byte (256 ID's, tot 64 hops), 1=2 bytes (65.000 ID's, tot 32 hops), 2=3 bytes (16 miljoen ID's, tot 21 hops). Firmware vóór v1.14 gebruikte altijd 1-byte paden; v1.14 en nieuwer kunnen worden ingesteld op 2- of 3-byte paden.",
   "repeater_txDelay": "Vertraging bij Flood TX",
-  "repeater_txDelayHelper": "Herzendinterval voor verkeer tijdens overstromingen, als een veelvoud van de tijd die het pakket nodig heeft (0-2, standaard 0.5). Een hoger getal betekent minder botsingen, maar ook een langere leveringstijd.",
+  "repeater_txDelayHelper": "Herzendinterval voor flood-verkeer, als een veelvoud van de tijd die het pakket nodig heeft (0-2, standaard 0.5). Een hoger getal betekent minder botsingen, maar ook een langere leveringstijd.",
   "repeater_directTxDelay": "Directe vertraging",
   "repeater_directTxDelayHelper": "De overzending van tijdslots voor directe (niet-massaal) verkeer, als een vermenigvuldigingsfactor van de tijd die een pakket nodig heeft (0-2, standaard 0,3).",
   "repeater_intThresh": "Grenswaarde voor interferentie",
@@ -1117,8 +1183,8 @@
   "repeater_agcResetInterval": "Interval voor het opnieuw instellen van AGC",
   "repeater_agcResetIntervalHelper": "Hoe vaak moet u de automatische gainregeling van de radio opnieuw instellen om terug te keren van een situatie waarin de gain vastzit? Elke seconde, of elke 4e seconde. Het uitschakelen van de periodieke reset (0) zorgt ervoor dat de gain niet automatisch wordt aangepast.",
   "repeater_actionsTitle": "Acties",
-  "repeater_sendAdvert": "Verzend advertentie over overstromingen",
-  "repeater_sendAdvertSubtitle": "Zend een advertentie over overstromingen uit via het netwerk.",
+  "repeater_sendAdvert": "Verzend flood-advertentie",
+  "repeater_sendAdvertSubtitle": "Zend een flood-advertentie uit via het netwerk.",
   "repeater_sendAdvertZeroHop": "Verzend een advertentie zonder tussenliggende stap",
   "repeater_sendAdvertZeroHopSubtitle": "Zend een advertentie met één enkele verbinding (zonder tussenliggende zenders).",
   "repeater_clockSync": "Synchroniseer klok nu",
@@ -1417,7 +1483,7 @@
     }
   },
   "channelPath_unknownPath": "Onbekend",
-  "channelPath_floodPath": "Overstroming",
+  "channelPath_floodPath": "Flood",
   "channelPath_directPath": "Direct",
   "channelPath_observedZeroOf": "0 van {total} sprongen",
   "@channelPath_observedZeroOf": {
@@ -1689,8 +1755,8 @@
   "appSettings_languageUk": "Oekraïens",
   "contacts_invalidAdvertFormat": "Ongeldige contactgegevens",
   "contacts_contactImportFailed": "Contact kon niet geïmporteerd worden.",
-  "contacts_zeroHopAdvert": "Zero Hop Reclame",
-  "contacts_floodAdvert": "Overstromingsadvertentie",
+  "contacts_zeroHopAdvert": "Zero-hop-advertentie",
+  "contacts_floodAdvert": "Flood-advertentie",
   "contacts_copyAdvertToClipboard": "Advert naar klembord kopiëren",
   "appSettings_languageRu": "Russisch",
   "appSettings_enableMessageTracing": "Berichttracking inschakelen",
@@ -1699,7 +1765,7 @@
   "contacts_addContactFromClipboard": "Contact uit klembord toevoegen",
   "contacts_contactImported": "Contact is geïmporteerd.",
   "contacts_zeroHopContactAdvertSent": "Contact verzonden via advertentie",
-  "contacts_contactAdvertCopied": "Reclame gekopieerd naar Klembord.",
+  "contacts_contactAdvertCopied": "Advertentie gekopieerd naar Klembord.",
   "contacts_contactAdvertCopyFailed": "Kopiëren van advertentie naar Clipboard is mislukt.",
   "contacts_ShareContact": "Contact naar Klembord kopiëren",
   "contacts_ShareContactZeroHop": "Contact delen via advertentie",
@@ -2233,15 +2299,15 @@
   "repeater_cliHelpGetAgcResetInterval": "Geeft het interval in seconden aan voor het resetten van de AGC (Automatic Gain Control).",
   "repeater_cliHelpGetMultiAcks": "Geeft aan of de modus \"dubbele bevestiging\" is ingeschakeld (1) of uitgeschakeld (0).",
   "repeater_cliHelpGetAllowReadOnly": "Geeft aan of er toegang is voor gastgebruikers zonder rechten.",
-  "repeater_cliHelpGetAdvertInterval": "Geeft de duur van de lokale reclame in minuten aan.",
-  "repeater_cliHelpGetFloodAdvertInterval": "Geeft de duur van de reclame-interval in uren aan.",
+  "repeater_cliHelpGetAdvertInterval": "Geeft de duur van het lokale advertentie-interval in minuten aan.",
+  "repeater_cliHelpGetFloodAdvertInterval": "Geeft de duur van het flood-advertentie-interval in uren aan.",
   "repeater_cliHelpGetGuestPassword": "Toont het ingestelde gastwachtwoord.",
   "repeater_cliHelpGetLat": "Toont de ingestelde breedtegraad.",
   "repeater_cliHelpGetLon": "Toont de ingestelde lengtegraad.",
   "repeater_cliHelpGetRxDelay": "Toont de basiswaarde van de rx-vertraging.",
   "repeater_cliHelpGetTxDelay": "Geeft de factor weer die de vertraging in de flood-modus bepaalt.",
   "repeater_cliHelpGetDirectTxDelay": "Geeft de factor voor de vertraging in de directe modus weer.",
-  "repeater_cliHelpGetFloodMax": "Toont het maximale aantal keer dat een overstroming heeft plaatsgevonden.",
+  "repeater_cliHelpGetFloodMax": "Toont het maximale aantal hops voor flood-pakketten.",
   "repeater_cliHelpGetOwnerInfo": "Toont de string met contactgegevens van de eigenaar.",
   "repeater_cliHelpGetPathHashMode": "Toont de modus voor het berekenen van de hash (0/1/2).",
   "repeater_cliHelpGetLoopDetect": "Geeft de gevoeligheid voor het detecteren van lusvorming weer.",
@@ -2263,8 +2329,8 @@
   "repeater_cliHelpSensorList": "Toont alle aangepaste instellingen voor sensoren, gegroepeerd op basis van een optionele startindex.",
   "repeater_cliHelpRegionDefault": "Toont het huidige standaard regio-bereik.",
   "repeater_cliHelpRegionDefaultSet": "Stelt de standaard regio-omvang in. Gebruik \"<null>\" om deze te resetten.",
-  "repeater_cliHelpRegionListAllowed": "Lijst van gebieden waar doorstromen tijdens overstromingen is toegestaan.",
-  "repeater_cliHelpRegionListDenied": "Geeft een lijst van regio's die het verkeer tijdens overstromingen verbieden.",
+  "repeater_cliHelpRegionListAllowed": "Geeft een lijst van regio's die flood-verkeer toestaan.",
+  "repeater_cliHelpRegionListDenied": "Geeft een lijst van regio's die flood-verkeer verbieden.",
   "repeater_cliHelpStatsPackets": "(Alleen voor seriële verbindingen) Toont statistieken op pakketniveau.",
   "repeater_cliHelpStatsRadio": "(Alleen voor serienummers) Toont radio-statistieken.",
   "repeater_cliHelpStatsCore": "(Alleen voor seriële communicatie) Toont de belangrijkste firmware-statistieken.",
@@ -2403,7 +2469,7 @@
   "contacts_searchClose": "Zoeken",
   "routing_title": "Routeplanning",
   "routing_modeAuto": "Auto",
-  "routing_modeFlood": "Overstroming",
+  "routing_modeFlood": "Flood",
   "routing_modeManual": "Handleiding",
   "routing_modeAutoHint": "Selecteert automatisch het bekendste pad, en gebruikt een flood-algoritme als er geen bekend pad is.",
   "routing_modeFloodHint": "Uitzendingen via elke zender. De meest betrouwbare methode, maar vereist meer uitzendtijd.",
@@ -2421,13 +2487,13 @@
   "routing_qualityGood": "Een goede eerste stap",
   "routing_qualityFair": "Een goede eerste hop",
   "routing_qualityWorked": "Is geleverd",
-  "routing_qualityFlood": "Hears via een overstroming",
+  "routing_qualityFlood": "Gehoord via flood",
   "routing_qualityUntested": "Niet getest",
   "routing_neverWorked": "nooit bevestigd",
   "routing_deliveryCounts": "{successes} zijn behaald, {failures} zijn mislukt",
-  "routing_floodDelivery": "Levering bij overstroming",
+  "routing_floodDelivery": "Flood-levering",
   "pathEditor_title": "Pad creëren",
-  "pathEditor_hopCounter": "{count} van 64 hopgranen",
+  "pathEditor_hopCounter": "{count} van 64 hops",
   "pathEditor_noHops": "Er zijn nog geen hop toegevoegd. Klik op de onderstaande knoppen om ze in de juiste volgorde toe te voegen, of sla de bestelling op zonder hop om deze direct te versturen.",
   "pathEditor_addHops": "Voeg hop toe in de juiste volgorde.",
   "pathEditor_searchRepeaters": "Zoek naar herhaaldelijke zenders",
@@ -2435,7 +2501,7 @@
   "pathEditor_hexLabel": "Hex-voorkanten",
   "pathEditor_hexHelper": "Twee hex-tekens per stap, gescheiden door komma's",
   "pathEditor_invalidTokens": "Ongeldig: {tokens}",
-  "pathEditor_tooManyHops": "Maximaal 64 hopken",
+  "pathEditor_tooManyHops": "Maximaal 64 hops",
   "pathEditor_usePath": "Gebruik deze route.",
   "pathEditor_removeHop": "Verwijder de hop",
   "pathEditor_unknownHop": "Onbekend type zender",
@@ -2540,5 +2606,261 @@
   "pathMap_noLocation": "Geen locatie",
   "pathMap_followPacket": "Weergave vergrendelen op pakket",
   "pathMap_unfollowPacket": "Weergave ontgrendelen van pakket",
-  "pathMap_gpsCount": "{confirmed}/{total} GPS"
+  "pathMap_gpsCount": "{confirmed}/{total} GPS",
+  "@settings_deleteRegionConfirm": {
+    "placeholders": {
+      "region": {
+        "type": "String"
+      }
+    }
+  },
+  "@channels_regionSetTo": {
+    "placeholders": {
+      "region": {
+        "type": "String",
+        "example": "de-mitte"
+      }
+    }
+  },
+  "@chat_imagePickFailed": {
+    "description": "Shown when picking or reading a photo to send fails"
+  },
+  "@repeater_pubKeyPrefixHelper": {
+    "placeholders": {
+      "tries": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_packetsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_longSendBody": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_sentConfirmation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_sendFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_sendingProgress": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_senderPrefix": {
+    "placeholders": {
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
+  "@receivedImage_incoming": {
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_incomplete": {
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@receivedImage_awaiting": {
+    "placeholders": {
+      "bytes": {
+        "type": "int"
+      },
+      "packets": {
+        "type": "int"
+      }
+    }
+  },
+  "@imageSend_secondsValue": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "@imageSend_minutesSecondsValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_regionSettings": "Regio's",
+  "settings_regionSettingsSubtitle": "Beheer van opgeslagen regio's",
+  "settings_regionManagement_screenTitle": "Regionale Bestuur",
+  "settings_regionNameHint": "Regio naam invoeren",
+  "settings_regionAddRegion": "Regio toevoegen",
+  "settings_regionFetchRegions": "Haal regio's uit herhalers",
+  "settings_regionFetchRegionsFail": "Er zijn geen regio's gevonden",
+  "settings_regionFetchRegionsAlreadyExists": "Deze regio is al toegevoegd.",
+  "settings_regionName": "Regio Naam",
+  "settings_regionDeleted": "Regio verwijderd",
+  "settings_deleteRegion": "Regio verwijden",
+  "settings_deleteRegionConfirm": "Verwijder \"{region}\" uit de regio-lijst?",
+  "settings_infoHardware": "Hardware",
+  "settings_infoFirmware": "Firmware",
+  "repeater_pathHashModeOption0": "0 - 1 byte",
+  "repeater_pathHashModeOption1": "1 - 2 bytes",
+  "repeater_pathHashModeOption2": "2 - 3 bytes",
+  "repeater_pathHashModeOption3": "3 - 4 bytes",
+  "appSettings_batteryLipoHv": "LiPo HV (3,0-4,35 V)",
+  "channels_regionSetTo": "Regio: {region}",
+  "channels_regionNotSet": "Regio: geen",
+  "channels_regionSelect_Title": "Kies een regio",
+  "channels_clearRegion": "Duidelijke regio",
+  "chat_sendImageLora": "Afbeelding verzenden via MeshCore",
+  "chat_imagePickFailed": "Kunde die afbeelding niet openen",
+  "chat_receivedGif": "Ontvangen van een GIF",
+  "repeater_keySettings": "Verander de Identiteitskies",
+  "repeater_keySettingsSubtitle": "Wijzig de openbare/private sleutelpaar",
+  "repeater_prvKey": "Geheime sleutel",
+  "repeater_prvKeyHelper": "Een nieuwe private sleutel voor de repeater, een 128-karakter lange hexadecimale string.",
+  "repeater_generatePrvKey": "Stel een willekeurige sleutelpaar op",
+  "repeater_stopGeneratingPrvKey": "Stop zoek naar sleutelpaar",
+  "repeater_pubKey": "Openbaar sleutel",
+  "repeater_pubKeyHelper": "Dit is de openbare sleutel die past bij de gegenereerde privésleutel. U kunt dit niet direct instellen.",
+  "repeater_pubKeyPrefix": "Verlangde voorvoegsel",
+  "repeater_pubKeyPrefixHelper": "Zoek een openbare sleutel die begint met deze hexadecimale cijfers. Verwacht aantal pogingen: {tries}.",
+  "imageMessages_enableTitle": "Bijbehorende afbeeldingen activeren",
+  "imageMessages_enableSubtitle": "Beeldjes verzenden via het netwerk. Vereist eenmalig afdaling van een beeldmodel.",
+  "imageMessages_modelSectionTitle": "Beeldmodel",
+  "imageMessages_downloadModel": "Download",
+  "imageMessages_cancelDownload": "Annuleren",
+  "imageMessages_removeModel": "Model verwijderen",
+  "imageMessages_modelReady": "Klaar",
+  "imageMessages_modelNotPublished": "Nog niet gepubliceerd — deze versie kan dit niet downloaden.",
+  "imageMessages_downloadFailed": "Het beeldmodel kon niet worden gedownload.",
+  "imageMessages_autoProcessTitle": "Beeldverwerking automatisch",
+  "imageMessages_autoProcessSubtitle": "Reconstrueer elk beeld direct nadat het binnenkomt. Het gebruikt ongeveer 2 GB geheugen voor elke keer; schakel het reconstrueren uit met een tik als je het niet nodig hebt.",
+  "imageSend_title": "Beeld verzenden",
+  "imageSend_cropNote": "Aangepast aan 512 × 512 · het aspectverhouding is niet behouden",
+  "imageSend_originalSize": "Oorspronkelijk",
+  "imageSend_onAirSize": "Op de lucht",
+  "imageSend_quality": "Kwaliteit",
+  "imageSend_qualityStandard": "Standaard",
+  "imageSend_qualityHigh": "Hoog",
+  "imageSend_packetsLabel": "Pakketten",
+  "imageSend_airtimeLabel": "Tijd op de lucht",
+  "imageSend_sizeLabel": "Belasting",
+  "imageSend_packetsCount": "{count} {count, plural, =1{pakket} other{pakketten}}",
+  "imageSend_range": "{min}–{max}",
+  "imageSend_unknownValue": "—",
+  "imageSend_radioUnknownTitle": "Radio-instellingen onbekend",
+  "imageSend_radioUnknownBody": "Verbinding maken met een apparaat zodat de uitzendtijd kan worden berekend.",
+  "imageSend_longSendTitle": "Lange transmissie",
+  "imageSend_longSendBody": "Dit houdt de kanaal ongeveer voor {duration} stand.",
+  "imageSend_floodNote": "Flood-routing: elke repeater binnen bereik herzendsends elk pakket opnieuw, waardoor het kanaal langer bezig blijft dan dit.",
+  "imageSend_parityTitle": "Herstelpakket",
+  "imageSend_paritySubtitle": "Een extra pakje. Groepsberichten worden niet bevestigd, waardoor de ontvanger het beeld kan herstellen als een enkel pakket verloren gaat.",
+  "imageSend_send": "Stuur",
+  "imageSend_cancel": "Annuleren",
+  "imageSend_encodeFailed": "Dit beeld kon niet worden gecodeerd.",
+  "imageSend_codecDownloading": "Het beeldmodel wordt nog steeds gedownload.",
+  "imageSend_codecUnavailable": "Het verzenden van een afbeelding is niet mogelijk op dit apparaat.",
+  "imageSend_codecDisabled": "Boodschappen met afbeeldingen zijn uitgeschakeld in de instellingen.",
+  "imageSend_deviceUnsupported": "Dit radio kan geen beeldpakketten verzenden. Verbind een apparaat met de bijbehorende firmware versie 13 of nieuwer.",
+  "imageSend_directMessagesUnsupported": "Afbeeldingen worden verzonden als groepsgegevens, dus ze kunnen alleen naar een kanaal worden gestuurd — niet via een directe boodschap.",
+  "imageSend_tooLarge": "Die afbeelding werd gecodeerd in meer pakketten dan het mesh-formaat toelaat.",
+  "imageSend_sentConfirmation": "Afbeelding verzonden als {count} {count, plural, =1{pakket} other{pakketten}}.",
+  "imageSend_sendFailed": "Het beeld kon niet worden verzonden: {error}",
+  "imageSend_sendingProgress": "Beeld verzenden — pakket {sent} van {total}",
+  "receivedImage_senderPrefix": "Knipper {prefix}",
+  "receivedImage_incoming": "{received} van de {total} pakketten",
+  "receivedImage_queued": "Wachten op het ontcijferen",
+  "receivedImage_tapToDecode": "Tik om te decoderen",
+  "receivedImage_decoding": "Herstellen… ongeveer 1 seconde",
+  "receivedImage_incomplete": "Afbeelding onvolledig — {received} van {total} pakketten ontvangen",
+  "receivedImage_corrupt": "Afbeelding kon niet worden gereconstrueerd",
+  "receivedImage_decoderMissing": "Beeld ontvangen — beeldontcipheringsapparatuur is uitgeschakeld",
+  "receivedImage_evicted": "Afbeelding niet langer opgeslagen",
+  "receivedImage_retry": "Probeer het opnieuw",
+  "receivedImage_decodeAgain": "Decode opnieuw",
+  "receivedImage_openSettings": "Inricht",
+  "receivedImage_tapToProcess": "Tik om te verwerken",
+  "receivedImage_awaiting": "{bytes} bytes · {packets} {packets, plural, =1{pakket} other{pakketten}}",
+  "imageSend_secondsValue": "{seconds} seconden",
+  "imageSend_minutesSecondsValue": "{minutes} m {seconds} s",
+  "channels_noFreeSlots": "Alle kanaalslots zijn bezet",
+  "chat_longMessageRetryNote": "Meer dan 158 bytes: maximaal {count} keer verzonden",
+  "@chat_longMessageRetryNote": {
+    "description": "Shown under the DM composer when the message is too long for the firmware's later retry attempts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reaction_report": "Emoji-reacties",
+  "repeater_bridgeNote": "Alleen beschikbaar bij firmware gebouwd met een bridge (RS232 of ESP-NOW).",
+  "repeater_cliHelpGetFloodMaxAdvert": "Toont het maximale aantal hops voor flood-advertenties.",
+  "repeater_cliHelpGetFloodMaxUnscoped": "Toont het maximale aantal hops voor flood-pakketten zonder regio-scope.",
+  "repeater_cliHelpGetRadioFemRxGain": "Toont of de RX-versterking van de LoRa-frontendmodule aan staat.",
+  "repeater_cliHelpGetRadioFemTxGain": "Toont of de TX-versterking van de LoRa-frontendmodule aan staat.",
+  "repeater_cliHelpRegionDef": "Definieert een keten van regio's in één commando: elke naam wordt onder de vorige toegevoegd; \"name,parent\" voegt de naam toe en gaat dan verder onder de opgegeven bovenliggende regio. Antwoordt met de regiolijst.",
+  "repeater_cliHelpSetFloodMaxAdvert": "Stelt het maximale aantal hops in voor het doorsturen van flood-advertenties (0-64).",
+  "repeater_cliHelpSetFloodMaxUnscoped": "Stelt het maximale aantal hops in voor het doorsturen van flood-pakketten zonder regio-scope (0-64).",
+  "repeater_cliHelpSetRadioFemRxGain": "Schakelt de RX-versterking (LNA) van de LoRa-frontendmodule. Boards zonder deze module antwoorden met \"Error: unsupported\".",
+  "repeater_cliHelpSetRadioFemTxGain": "Schakelt de TX-versterking (PA) van de LoRa-frontendmodule. Boards zonder deze module antwoorden met \"Error: unsupported\".",
+  "repeater_cliRegionLoadActive": "Regio-laadmodus: verstuur per regel één regionaam, ingesprongen met spaties onder de bovenliggende regio (voeg F toe na de naam om flood toe te staan). Regels krijgen geen antwoord. Verstuur een lege regel om te voltooien en dan \"region save\" om het resultaat te bewaren.",
+  "repeater_cliRegionLoadEnd": "(einde van regio-laadmodus)",
+  "repeater_cliRegionLoadHint": "Regioregel, of leeg om te voltooien",
+  "repeater_frequencyInvalid": "Ongeldige frequentie (150-2500 MHz)",
+  "repeater_frequencyRangeHelper": "150-2500 MHz",
+  "repeater_recvErrors": "Ontvangstfouten",
+  "repeater_txPowerRangeHelper": "-9 tot 30 dBm",
+  "room_postsPushed": "Verzonden posts",
+  "room_postsStored": "Opgeslagen posts",
+  "settings_publicKeyCopied": "Openbare sleutel gekopieerd",
+  "settings_radioSettingsNotApplied": "De radio heeft deze instellingen niet toegepast",
+  "urlImage_enable": "URL-afbeeldingen inschakelen",
+  "urlImage_possible": "Mogelijke URL-afbeelding; schakel dit in bij Instellingen."
 }

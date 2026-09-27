@@ -1,3 +1,4 @@
+import 'image_codec_support.dart';
 import 'translation_support.dart';
 
 enum UnitSystem { metric, imperial }
@@ -76,6 +77,7 @@ class Cyr2LatProfile {
 
 class AppSettings {
   static const Object _unset = Object();
+  static const String stadiaDemo = '51bd0381-4685-4666-bae8-48940f6d77c0';
 
   final bool clearPathOnMaxRetry;
   final bool mapShowRepeaters;
@@ -87,20 +89,29 @@ class AppSettings {
   final String mapKeyPrefix;
   final bool mapShowMarkers;
   final bool mapShowGuessedLocations;
+  final bool mapClusterNodes;
   final bool enableMessageTracing;
   final Map<String, double>? mapCacheBounds;
   final int mapCacheMinZoom;
   final int mapCacheMaxZoom;
+  final String mapRasterSourceId;
+  final String mapTileEndpointId;
+  final String? mapTileApiKey;
   final bool notificationsEnabled;
   final bool notifyOnNewMessage;
   final bool notifyOnNewChannelMessage;
   final bool notifyOnNewAdvert;
+  final bool autoSendZeroHopAdvertOnGpsUpdate;
+  final int gpsIntervalSeconds;
   final bool autoRouteRotationEnabled;
   final double maxRouteWeight;
   final double initialRouteWeight;
   final double routeWeightSuccessIncrement;
   final double routeWeightFailureDecrement;
   final int maxMessageRetries;
+  final bool channelMinHopsEnabled;
+  final int channelMinHops;
+  final int channelMinHopsRetries;
   final String themeMode;
   final String? languageOverride; // null = system default
   final bool appDebugLogEnabled;
@@ -112,6 +123,29 @@ class AppSettings {
   final String tcpServerAddress;
   final int tcpServerPort;
   final bool jumpToOldestUnread;
+  final bool imageMessagesEnabled;
+
+  /// Whether a received image is decoded as soon as it is reassembled.
+  ///
+  /// Off by default and deliberately so: a decode peaks around 2.16 GiB
+  /// resident and takes about a second, so an unattended chat must not be able
+  /// to trigger one per arriving image. When false, `ReceivedImageStore` parks
+  /// the arrival as a "Tap to process" placeholder instead of queueing it.
+  final bool imageProcessAutomatically;
+
+  // ---- neural image codec (AEIC-SE) ---------------------------------------
+  // Structural twins of the translation block above; the JSON keys match
+  // ImageCodecPreferences.toJson so ImageCodecService reads them unchanged.
+  final bool imageCodecEnabled;
+  final String? imageCodecSelectedModelId;
+  final String? imageCodecModelSourceUrl;
+
+  /// [AeicRatePoint.wireValue] of the composer's default rate point.
+  /// 4 == ft32, the only rate point this build ships.
+  final int imageCodecRatePoint;
+
+  final List<ImageCodecModelRecord> imageCodecDownloadedModels;
+
   final bool translationEnabled;
   final bool autoTranslateIncomingMessages;
   final String? translationTargetLanguageCode;
@@ -121,6 +155,26 @@ class AppSettings {
   final List<TranslationModelRecord> translationDownloadedModels;
   final List<Cyr2LatProfile> cyr2latProfiles;
   final String selectedCyr2latProfileId;
+
+  /// The five `imageCodec*` fields as the value object `ImageCodecService`
+  /// consumes. Assembled rather than stored so the settings blob stays flat.
+  ImageCodecPreferences get imageCodec => ImageCodecPreferences(
+    enabled: imageCodecEnabled,
+    selectedModelId: imageCodecSelectedModelId,
+    modelSourceUrl: imageCodecModelSourceUrl,
+    ratePoint: imageCodecRatePoint,
+    downloadedModels: imageCodecDownloadedModels,
+  );
+
+  String get effectiveMapTileApiKey {
+    final apiKey = mapTileApiKey?.trim();
+    if (apiKey == null || apiKey.isEmpty) {
+      return stadiaDemo;
+    }
+    return apiKey;
+  }
+
+  bool get usesstadiaDemo => effectiveMapTileApiKey == stadiaDemo;
 
   Map<String, String> get cyr2latCharMap {
     final profile = cyr2latProfiles.firstWhere(
@@ -136,25 +190,34 @@ class AppSettings {
     this.mapShowChatNodes = true,
     this.mapShowOtherNodes = true,
     this.mapShowOverlaps = false,
-    this.mapTimeFilterHours = 0, // Default to all time
+    this.mapTimeFilterHours = 168,
     this.mapKeyPrefixEnabled = false,
     this.mapKeyPrefix = '',
     this.mapShowMarkers = true,
     this.mapShowGuessedLocations = true,
-    this.enableMessageTracing = true,
+    this.mapClusterNodes = true,
+    this.enableMessageTracing = false,
     this.mapCacheBounds,
     this.mapCacheMinZoom = 10,
     this.mapCacheMaxZoom = 15,
+    this.mapRasterSourceId = 'osm_auto',
+    this.mapTileEndpointId = 'standard_2x',
+    this.mapTileApiKey,
     this.notificationsEnabled = true,
     this.notifyOnNewMessage = true,
     this.notifyOnNewChannelMessage = true,
     this.notifyOnNewAdvert = true,
+    this.autoSendZeroHopAdvertOnGpsUpdate = false,
+    this.gpsIntervalSeconds = 900,
     this.autoRouteRotationEnabled = true,
     this.maxRouteWeight = 5.0,
     this.initialRouteWeight = 3.0,
     this.routeWeightSuccessIncrement = 0.5,
     this.routeWeightFailureDecrement = 0.2,
     this.maxMessageRetries = 5,
+    this.channelMinHopsEnabled = false,
+    this.channelMinHops = 2,
+    this.channelMinHopsRetries = 1,
     this.themeMode = 'system',
     this.languageOverride,
     this.appDebugLogEnabled = false,
@@ -166,6 +229,13 @@ class AppSettings {
     this.tcpServerAddress = '',
     this.tcpServerPort = 0,
     this.jumpToOldestUnread = false,
+    this.imageMessagesEnabled = false,
+    this.imageProcessAutomatically = false,
+    this.imageCodecEnabled = false,
+    this.imageCodecSelectedModelId,
+    this.imageCodecModelSourceUrl,
+    this.imageCodecRatePoint = 4,
+    List<ImageCodecModelRecord>? imageCodecDownloadedModels,
     this.translationEnabled = false,
     this.autoTranslateIncomingMessages = true,
     this.translationTargetLanguageCode,
@@ -178,6 +248,7 @@ class AppSettings {
   }) : batteryChemistryByDeviceId = batteryChemistryByDeviceId ?? {},
        batteryChemistryByRepeaterId = batteryChemistryByRepeaterId ?? {},
        mutedChannels = mutedChannels ?? {},
+       imageCodecDownloadedModels = imageCodecDownloadedModels ?? const [],
        translationDownloadedModels = translationDownloadedModels ?? const [],
        cyr2latProfiles =
            cyr2latProfiles ??
@@ -202,20 +273,30 @@ class AppSettings {
       'map_key_prefix': mapKeyPrefix,
       'map_show_markers': mapShowMarkers,
       'map_show_guessed_locations': mapShowGuessedLocations,
+      'map_cluster_nodes': mapClusterNodes,
       'enable_message_tracing': enableMessageTracing,
       'map_cache_bounds': mapCacheBounds,
       'map_cache_min_zoom': mapCacheMinZoom,
       'map_cache_max_zoom': mapCacheMaxZoom,
+      'map_raster_source_id': mapRasterSourceId,
+      'map_tile_endpoint_id': mapTileEndpointId,
+      'map_tile_api_key': mapTileApiKey,
       'notifications_enabled': notificationsEnabled,
       'notify_on_new_message': notifyOnNewMessage,
       'notify_on_new_channel_message': notifyOnNewChannelMessage,
       'notify_on_new_advert': notifyOnNewAdvert,
+      'auto_send_zero_hop_advert_on_gps_update':
+          autoSendZeroHopAdvertOnGpsUpdate,
+      'gps_interval_seconds': gpsIntervalSeconds,
       'auto_route_rotation_enabled': autoRouteRotationEnabled,
       'max_route_weight': maxRouteWeight,
       'initial_route_weight': initialRouteWeight,
       'route_weight_success_increment': routeWeightSuccessIncrement,
       'route_weight_failure_decrement': routeWeightFailureDecrement,
       'max_message_retries': maxMessageRetries,
+      'channel_min_hops_enabled': channelMinHopsEnabled,
+      'channel_min_hops': channelMinHops,
+      'channel_min_hops_retries': channelMinHopsRetries,
       'theme_mode': themeMode,
       'language_override': languageOverride,
       'app_debug_log_enabled': appDebugLogEnabled,
@@ -227,6 +308,15 @@ class AppSettings {
       'tcp_server_address': tcpServerAddress,
       'tcp_server_port': tcpServerPort,
       'jump_to_oldest_unread': jumpToOldestUnread,
+      'image_messages_enabled': imageMessagesEnabled,
+      'image_process_automatically': imageProcessAutomatically,
+      'image_codec_enabled': imageCodecEnabled,
+      'image_codec_selected_model_id': imageCodecSelectedModelId,
+      'image_codec_model_source_url': imageCodecModelSourceUrl,
+      'image_codec_rate_point': imageCodecRatePoint,
+      'image_codec_downloaded_models': imageCodecDownloadedModels
+          .map((model) => model.toJson())
+          .toList(),
       'translation_enabled': translationEnabled,
       'auto_translate_incoming_messages': autoTranslateIncomingMessages,
       'translation_target_language_code': translationTargetLanguageCode,
@@ -258,23 +348,31 @@ class AppSettings {
       mapShowOtherNodes: json['map_show_other_nodes'] as bool? ?? true,
       mapShowOverlaps: json['map_show_overlaps'] as bool? ?? false,
       mapTimeFilterHours:
-          (json['map_time_filter_hours'] as num?)?.toDouble() ?? 0,
+          (json['map_time_filter_hours'] as num?)?.toDouble() ?? 168,
       mapKeyPrefixEnabled: json['map_key_prefix_enabled'] as bool? ?? false,
       mapKeyPrefix: json['map_key_prefix'] as String? ?? '',
       mapShowMarkers: json['map_show_markers'] as bool? ?? true,
       mapShowGuessedLocations:
           json['map_show_guessed_locations'] as bool? ?? true,
-      enableMessageTracing: json['enable_message_tracing'] as bool? ?? true,
+      mapClusterNodes: json['map_cluster_nodes'] as bool? ?? true,
+      enableMessageTracing: json['enable_message_tracing'] as bool? ?? false,
       mapCacheBounds: (json['map_cache_bounds'] as Map?)?.map(
         (key, value) => MapEntry(key.toString(), (value as num).toDouble()),
       ),
       mapCacheMinZoom: json['map_cache_min_zoom'] as int? ?? 10,
       mapCacheMaxZoom: json['map_cache_max_zoom'] as int? ?? 15,
+      mapRasterSourceId: json['map_raster_source_id'] as String? ?? 'osm_auto',
+      mapTileEndpointId: json['map_tile_endpoint_id'] as String? ?? 'standard',
+      mapTileApiKey: json['map_tile_api_key'] as String?,
       notificationsEnabled: json['notifications_enabled'] as bool? ?? true,
       notifyOnNewMessage: json['notify_on_new_message'] as bool? ?? true,
       notifyOnNewChannelMessage:
           json['notify_on_new_channel_message'] as bool? ?? true,
       notifyOnNewAdvert: json['notify_on_new_advert'] as bool? ?? true,
+      autoSendZeroHopAdvertOnGpsUpdate:
+          json['auto_send_zero_hop_advert_on_gps_update'] as bool? ?? false,
+      gpsIntervalSeconds:
+          (json['gps_interval_seconds'] as num?)?.toInt() ?? 900,
       autoRouteRotationEnabled:
           json['auto_route_rotation_enabled'] as bool? ?? true,
       maxRouteWeight: (json['max_route_weight'] as num?)?.toDouble() ?? 5.0,
@@ -285,6 +383,9 @@ class AppSettings {
       routeWeightFailureDecrement:
           (json['route_weight_failure_decrement'] as num?)?.toDouble() ?? 0.2,
       maxMessageRetries: json['max_message_retries'] as int? ?? 5,
+      channelMinHopsEnabled: json['channel_min_hops_enabled'] as bool? ?? false,
+      channelMinHops: json['channel_min_hops'] as int? ?? 2,
+      channelMinHopsRetries: json['channel_min_hops_retries'] as int? ?? 1,
       themeMode: json['theme_mode'] as String? ?? 'system',
       languageOverride: json['language_override'] as String?,
       appDebugLogEnabled: json['app_debug_log_enabled'] as bool? ?? false,
@@ -309,6 +410,23 @@ class AppSettings {
       tcpServerAddress: json['tcp_server_address'] as String? ?? '',
       tcpServerPort: json['tcp_server_port'] as int? ?? 0,
       jumpToOldestUnread: json['jump_to_oldest_unread'] as bool? ?? false,
+      imageMessagesEnabled: json['image_messages_enabled'] as bool? ?? false,
+      imageProcessAutomatically:
+          json['image_process_automatically'] as bool? ?? false,
+      imageCodecEnabled: json['image_codec_enabled'] as bool? ?? false,
+      imageCodecSelectedModelId:
+          json['image_codec_selected_model_id'] as String?,
+      imageCodecModelSourceUrl: json['image_codec_model_source_url'] as String?,
+      imageCodecRatePoint: json['image_codec_rate_point'] as int? ?? 4,
+      imageCodecDownloadedModels:
+          (json['image_codec_downloaded_models'] as List<dynamic>?)
+              ?.map(
+                (entry) => ImageCodecModelRecord.fromJson(
+                  Map<String, dynamic>.from(entry as Map),
+                ),
+              )
+              .toList() ??
+          const [],
       translationEnabled: json['translation_enabled'] as bool? ?? false,
       autoTranslateIncomingMessages:
           json['auto_translate_incoming_messages'] as bool? ?? true,
@@ -375,20 +493,29 @@ class AppSettings {
     String? mapKeyPrefix,
     bool? mapShowMarkers,
     bool? mapShowGuessedLocations,
+    bool? mapClusterNodes,
     bool? enableMessageTracing,
     Object? mapCacheBounds = _unset,
     int? mapCacheMinZoom,
     int? mapCacheMaxZoom,
+    String? mapRasterSourceId,
+    String? mapTileEndpointId,
+    Object? mapTileApiKey = _unset,
     bool? notificationsEnabled,
     bool? notifyOnNewMessage,
     bool? notifyOnNewChannelMessage,
     bool? notifyOnNewAdvert,
+    bool? autoSendZeroHopAdvertOnGpsUpdate,
+    int? gpsIntervalSeconds,
     bool? autoRouteRotationEnabled,
     double? maxRouteWeight,
     double? initialRouteWeight,
     double? routeWeightSuccessIncrement,
     double? routeWeightFailureDecrement,
     int? maxMessageRetries,
+    bool? channelMinHopsEnabled,
+    int? channelMinHops,
+    int? channelMinHopsRetries,
     String? themeMode,
     Object? languageOverride = _unset,
     bool? appDebugLogEnabled,
@@ -400,6 +527,13 @@ class AppSettings {
     String? tcpServerAddress,
     int? tcpServerPort,
     bool? jumpToOldestUnread,
+    bool? imageMessagesEnabled,
+    bool? imageProcessAutomatically,
+    bool? imageCodecEnabled,
+    Object? imageCodecSelectedModelId = _unset,
+    Object? imageCodecModelSourceUrl = _unset,
+    int? imageCodecRatePoint,
+    List<ImageCodecModelRecord>? imageCodecDownloadedModels,
     bool? translationEnabled,
     bool? autoTranslateIncomingMessages,
     Object? translationTargetLanguageCode = _unset,
@@ -422,17 +556,27 @@ class AppSettings {
       mapShowMarkers: mapShowMarkers ?? this.mapShowMarkers,
       mapShowGuessedLocations:
           mapShowGuessedLocations ?? this.mapShowGuessedLocations,
+      mapClusterNodes: mapClusterNodes ?? this.mapClusterNodes,
       enableMessageTracing: enableMessageTracing ?? this.enableMessageTracing,
       mapCacheBounds: mapCacheBounds == _unset
           ? this.mapCacheBounds
           : mapCacheBounds as Map<String, double>?,
       mapCacheMinZoom: mapCacheMinZoom ?? this.mapCacheMinZoom,
       mapCacheMaxZoom: mapCacheMaxZoom ?? this.mapCacheMaxZoom,
+      mapRasterSourceId: mapRasterSourceId ?? this.mapRasterSourceId,
+      mapTileEndpointId: mapTileEndpointId ?? this.mapTileEndpointId,
+      mapTileApiKey: mapTileApiKey == _unset
+          ? this.mapTileApiKey
+          : mapTileApiKey as String?,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       notifyOnNewMessage: notifyOnNewMessage ?? this.notifyOnNewMessage,
       notifyOnNewChannelMessage:
           notifyOnNewChannelMessage ?? this.notifyOnNewChannelMessage,
       notifyOnNewAdvert: notifyOnNewAdvert ?? this.notifyOnNewAdvert,
+      autoSendZeroHopAdvertOnGpsUpdate:
+          autoSendZeroHopAdvertOnGpsUpdate ??
+          this.autoSendZeroHopAdvertOnGpsUpdate,
+      gpsIntervalSeconds: gpsIntervalSeconds ?? this.gpsIntervalSeconds,
       autoRouteRotationEnabled:
           autoRouteRotationEnabled ?? this.autoRouteRotationEnabled,
       maxRouteWeight: maxRouteWeight ?? this.maxRouteWeight,
@@ -442,6 +586,11 @@ class AppSettings {
       routeWeightFailureDecrement:
           routeWeightFailureDecrement ?? this.routeWeightFailureDecrement,
       maxMessageRetries: maxMessageRetries ?? this.maxMessageRetries,
+      channelMinHopsEnabled:
+          channelMinHopsEnabled ?? this.channelMinHopsEnabled,
+      channelMinHops: channelMinHops ?? this.channelMinHops,
+      channelMinHopsRetries:
+          channelMinHopsRetries ?? this.channelMinHopsRetries,
       themeMode: themeMode ?? this.themeMode,
       languageOverride: languageOverride == _unset
           ? this.languageOverride
@@ -458,6 +607,19 @@ class AppSettings {
       tcpServerAddress: tcpServerAddress ?? this.tcpServerAddress,
       tcpServerPort: tcpServerPort ?? this.tcpServerPort,
       jumpToOldestUnread: jumpToOldestUnread ?? this.jumpToOldestUnread,
+      imageMessagesEnabled: imageMessagesEnabled ?? this.imageMessagesEnabled,
+      imageProcessAutomatically:
+          imageProcessAutomatically ?? this.imageProcessAutomatically,
+      imageCodecEnabled: imageCodecEnabled ?? this.imageCodecEnabled,
+      imageCodecSelectedModelId: imageCodecSelectedModelId == _unset
+          ? this.imageCodecSelectedModelId
+          : imageCodecSelectedModelId as String?,
+      imageCodecModelSourceUrl: imageCodecModelSourceUrl == _unset
+          ? this.imageCodecModelSourceUrl
+          : imageCodecModelSourceUrl as String?,
+      imageCodecRatePoint: imageCodecRatePoint ?? this.imageCodecRatePoint,
+      imageCodecDownloadedModels:
+          imageCodecDownloadedModels ?? this.imageCodecDownloadedModels,
       translationEnabled: translationEnabled ?? this.translationEnabled,
       autoTranslateIncomingMessages:
           autoTranslateIncomingMessages ?? this.autoTranslateIncomingMessages,

@@ -57,12 +57,22 @@ class MessageStore {
       return [];
     }
 
+    final List<dynamic> jsonList;
     try {
-      final jsonList = jsonDecode(jsonString) as List<dynamic>;
-      return jsonList.map((json) => _messageFromJson(json)).toList();
+      jsonList = jsonDecode(jsonString) as List<dynamic>;
     } catch (e) {
+      appLogger.warn('Stored messages for $contactKeyHex are unreadable: $e');
       return [];
     }
+    final messages = <Message>[];
+    for (final json in jsonList) {
+      try {
+        messages.add(_messageFromJson(json as Map<String, dynamic>));
+      } catch (e) {
+        appLogger.warn('Skipping malformed stored message: $e');
+      }
+    }
+    return messages;
   }
 
   Future<void> clearMessages(String contactKeyHex) async {
@@ -113,13 +123,44 @@ class MessageStore {
     final decodedText = isCli
         ? rawText
         : (Smaz.tryDecodePrefixed(rawText) ?? rawText);
+
+    final rawPathLength = json['pathLength'] as int?;
+    final rawPathBytes = json['pathBytes'] != null
+        ? Uint8List.fromList(base64Decode(json['pathBytes'] as String))
+        : Uint8List(0);
+
+    int? decodedPathLength = rawPathLength;
+    Uint8List decodedPathBytes = rawPathBytes;
+
+    if (rawPathLength != null) {
+      if (rawPathLength == 0xFF || rawPathLength < 0) {
+        decodedPathLength = -1;
+        decodedPathBytes = Uint8List(0);
+      } else if (rawPathLength >= 64) {
+        final mode = (rawPathLength & 0xC0) >> 6;
+        final hopCount = rawPathLength & 0x3F;
+        final width = mode + 1;
+        final byteLen = hopCount * width;
+        decodedPathLength = hopCount;
+        if (byteLen <= rawPathBytes.length) {
+          decodedPathBytes = rawPathBytes.sublist(0, byteLen);
+        } else {
+          decodedPathBytes = Uint8List(0);
+        }
+      } else if (rawPathLength == 0) {
+        decodedPathBytes = Uint8List(0);
+      }
+    }
+
     return Message(
       senderKey: Uint8List.fromList(base64Decode(json['senderKey'] as String)),
       text: decodedText,
       timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
-      isOutgoing: json['isOutgoing'] as bool,
+      isOutgoing: json['isOutgoing'] as bool? ?? false,
       isCli: isCli,
-      status: MessageStatus.values[json['status'] as int],
+      status:
+          MessageStatus.values.elementAtOrNull(json['status'] as int? ?? -1) ??
+          MessageStatus.failed,
       messageId: json['messageId'] as String?,
       originalText: json['originalText'] as String?,
       translatedText: json['translatedText'] as String?,
@@ -138,13 +179,16 @@ class MessageStore {
           ? DateTime.fromMillisecondsSinceEpoch(json['deliveredAt'] as int)
           : null,
       tripTimeMs: json['tripTimeMs'] as int?,
-      pathLength: json['pathLength'] as int?,
-      pathBytes: json['pathBytes'] != null
-          ? Uint8List.fromList(base64Decode(json['pathBytes'] as String))
-          : Uint8List(0),
+      pathLength: decodedPathLength,
+      pathBytes: decodedPathBytes,
       reactions:
           (json['reactions'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, value as int),
+            (key, value) => MapEntry(
+              key,
+              (value is int)
+                  ? List<String?>.filled(value, null)
+                  : List<String?>.from(value),
+            ),
           ) ??
           {},
       reactionStatuses:

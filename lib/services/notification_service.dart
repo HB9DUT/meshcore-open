@@ -3,9 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+import '../helpers/message_url_image_helper.dart';
 import '../helpers/reaction_helper.dart';
 import '../l10n/app_localizations.dart';
+import '../storage/prefs_manager.dart';
 import '../utils/platform_info.dart';
 
 class NotificationService {
@@ -26,6 +29,11 @@ class NotificationService {
   }
 
   AppLocalizations get _l10n => lookupAppLocalizations(_locale);
+
+  String _logSafe(String value) {
+    final sanitized = value.replaceAll(RegExp(r'[\x00-\x1F\x7F]'), ' ');
+    return Uri.encodeComponent(sanitized);
+  }
 
   // Rate limiting to prevent notification storms
   // (Added after getting notification-flooded while evaluating RF flood management. The irony.)
@@ -116,9 +124,11 @@ class NotificationService {
 
   // Cached "are we allowed to post notifications" result. Null = not yet
   // determined. Avoids calling _notifications.show() when it would only throw
-  // "You must request notifications permissions first" (every web build, and
-  // Android 13+ before the user grants the permission).
+  // "You must request notifications permissions first" (every web build).
+  // Android denials are never cached so a later grant in system settings is
+  // picked up without restarting the app.
   bool? _canNotify;
+  static const _permissionRequestedKey = 'notification_permission_requested';
 
   Future<bool> _ensureCanNotify() async {
     if (!await _ensureInitialized()) return false;
@@ -136,8 +146,9 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin
         >();
     if (androidPlugin != null) {
-      final enabled = await androidPlugin.areNotificationsEnabled();
-      return _canNotify = enabled ?? false;
+      final enabled = await androidPlugin.areNotificationsEnabled() ?? false;
+      if (enabled) _canNotify = true;
+      return enabled;
     }
 
     // iOS/macOS request permission during initialize(); desktop has no gate.
@@ -156,8 +167,8 @@ class NotificationService {
         >();
     if (androidPlugin != null) {
       final granted = await androidPlugin.requestNotificationsPermission();
-      _canNotify = granted ?? false;
-      return _canNotify!;
+      if (granted == true) _canNotify = true;
+      return granted ?? false;
     }
 
     // iOS permissions are requested during initialization
@@ -171,11 +182,23 @@ class NotificationService {
         badge: true,
         sound: true,
       );
-      _canNotify = granted ?? false;
-      return _canNotify!;
+      if (granted == true) _canNotify = true;
+      return granted ?? false;
     }
 
     return true;
+  }
+
+  /// Asks for the Android 13+ notification permission the first time it is
+  /// needed. Never re-prompts after the user has answered once; iOS/macOS
+  /// already prompt during [initialize].
+  Future<void> requestPermissionsOnce() async {
+    if (!PlatformInfo.isAndroid || !await _ensureInitialized()) return;
+    final prefs = PrefsManager.instance;
+    if (prefs.getBool(_permissionRequestedKey) ?? false) return;
+    if (await _ensureCanNotify()) return;
+    await prefs.setBool(_permissionRequestedKey, true);
+    await requestPermissions();
   }
 
   /// Format special message types for human-readable notifications.
@@ -191,13 +214,39 @@ class NotificationService {
     return text;
   }
 
+  Future<String?> _resolveNotificationImagePath(
+    String text, {
+    required bool urlImagesEnabled,
+  }) async {
+    if (!urlImagesEnabled) return null;
+
+    final imageUrl = await MessageUrlImageHelper.parseVerified(text);
+    if (imageUrl == null) return null;
+
+    try {
+      // Cache the image so notification platforms can read it from disk.
+      final imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
+      if (!imageFile.existsSync()) return null;
+      return imageFile.path;
+    } catch (e) {
+      debugPrint('Failed to resolve notification image: $e');
+      return null;
+    }
+  }
+
   Future<void> _showMessageNotificationImpl({
     required String contactName,
     required String message,
+    required bool urlImagesEnabled,
     String? contactId,
     int? badgeCount,
   }) async {
     if (!await _ensureCanNotify()) return;
+
+    final imagePath = await _resolveNotificationImagePath(
+      message,
+      urlImagesEnabled: urlImagesEnabled,
+    );
 
     final androidDetails = AndroidNotificationDetails(
       'messages',
@@ -207,6 +256,12 @@ class NotificationService {
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
       number: badgeCount,
+      styleInformation: imagePath != null
+          ? BigPictureStyleInformation(
+              FilePathAndroidBitmap(imagePath),
+              summaryText: formatNotificationText(message),
+            )
+          : null,
     );
 
     final iosDetails = DarwinNotificationDetails(
@@ -214,6 +269,11 @@ class NotificationService {
       presentBadge: true,
       presentSound: true,
       badgeNumber: badgeCount,
+      attachments: imagePath != null
+          ? <DarwinNotificationAttachment>[
+              DarwinNotificationAttachment(imagePath),
+            ]
+          : null,
     );
 
     final macDetails = DarwinNotificationDetails(
@@ -221,6 +281,11 @@ class NotificationService {
       presentBadge: true,
       presentSound: true,
       badgeNumber: badgeCount,
+      attachments: imagePath != null
+          ? <DarwinNotificationAttachment>[
+              DarwinNotificationAttachment(imagePath),
+            ]
+          : null,
     );
 
     final notificationDetails = NotificationDetails(
@@ -294,10 +359,16 @@ class NotificationService {
   Future<void> _showChannelMessageNotificationImpl({
     required String channelName,
     required String message,
+    required bool urlImagesEnabled,
     int? channelIndex,
     int? badgeCount,
   }) async {
     if (!await _ensureCanNotify()) return;
+
+    final imagePath = await _resolveNotificationImagePath(
+      message,
+      urlImagesEnabled: urlImagesEnabled,
+    );
 
     final androidDetails = AndroidNotificationDetails(
       'channel_messages',
@@ -307,6 +378,12 @@ class NotificationService {
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
       number: badgeCount,
+      styleInformation: imagePath != null
+          ? BigPictureStyleInformation(
+              FilePathAndroidBitmap(imagePath),
+              summaryText: formatNotificationText(message),
+            )
+          : null,
     );
 
     final iosDetails = DarwinNotificationDetails(
@@ -314,6 +391,11 @@ class NotificationService {
       presentBadge: true,
       presentSound: true,
       badgeNumber: badgeCount,
+      attachments: imagePath != null
+          ? <DarwinNotificationAttachment>[
+              DarwinNotificationAttachment(imagePath),
+            ]
+          : null,
     );
 
     final macDetails = DarwinNotificationDetails(
@@ -321,6 +403,11 @@ class NotificationService {
       presentBadge: true,
       presentSound: true,
       badgeNumber: badgeCount,
+      attachments: imagePath != null
+          ? <DarwinNotificationAttachment>[
+              DarwinNotificationAttachment(imagePath),
+            ]
+          : null,
     );
 
     final notificationDetails = NotificationDetails(
@@ -356,11 +443,11 @@ class NotificationService {
   String _getNotificationIdentifier(_PendingNotification n) {
     switch (n.type) {
       case _NotificationType.advert:
-        return n.body;
+        return _logSafe(n.body);
       case _NotificationType.message:
-        return 'from: ${n.title}';
+        return 'from: ${_logSafe(n.title)}';
       case _NotificationType.channelMessage:
-        return 'in: ${n.title}';
+        return 'in: ${_logSafe(n.title)}';
     }
   }
 
@@ -443,6 +530,7 @@ class NotificationService {
   Future<void> showMessageNotification({
     required String contactName,
     required String message,
+    required bool urlImagesEnabled,
     String? contactId,
     int? badgeCount,
   }) async {
@@ -453,6 +541,7 @@ class NotificationService {
         type: _NotificationType.message,
         title: contactName,
         body: message,
+        urlImagesEnabled: urlImagesEnabled,
         id: contactId,
         badgeCount: badgeCount,
       ),
@@ -480,6 +569,7 @@ class NotificationService {
     required String channelName,
     required String senderName,
     required String message,
+    required bool urlImagesEnabled,
     int? channelIndex,
     int? badgeCount,
   }) async {
@@ -490,6 +580,7 @@ class NotificationService {
         type: _NotificationType.channelMessage,
         title: channelName,
         body: '$senderName: $message',
+        urlImagesEnabled: urlImagesEnabled,
         id: channelIndex?.toString(),
         badgeCount: badgeCount,
       ),
@@ -551,6 +642,7 @@ class NotificationService {
           await _showMessageNotificationImpl(
             contactName: notification.title,
             message: notification.body,
+            urlImagesEnabled: notification.urlImagesEnabled,
             contactId: notification.id,
             badgeCount: notification.badgeCount,
           );
@@ -566,6 +658,7 @@ class NotificationService {
           await _showChannelMessageNotificationImpl(
             channelName: notification.title,
             message: notification.body,
+            urlImagesEnabled: notification.urlImagesEnabled,
             channelIndex: int.tryParse(notification.id ?? ''),
             badgeCount: notification.badgeCount,
           );
@@ -606,7 +699,7 @@ class NotificationService {
 
     // Show first few device names in batch summary for debugging (only if adverts exist)
     final deviceInfo = adverts.isNotEmpty
-        ? ' (${adverts.take(5).map((n) => n.body).join(', ')}${adverts.length > 5 ? ', ...' : ''})'
+        ? ' (${adverts.take(5).map((n) => _logSafe(n.body)).join(', ')}${adverts.length > 5 ? ', ...' : ''})'
         : '';
     debugPrint('[Notification] batch summary: ${parts.join(", ")}$deviceInfo');
 
@@ -642,6 +735,7 @@ class _PendingNotification {
   final _NotificationType type;
   final String title;
   final String body;
+  final bool urlImagesEnabled;
   final String? id;
   final int? badgeCount;
 
@@ -649,6 +743,7 @@ class _PendingNotification {
     required this.type,
     required this.title,
     required this.body,
+    this.urlImagesEnabled = false,
     this.id,
     this.badgeCount,
   });

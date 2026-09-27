@@ -68,13 +68,24 @@ class ChannelMessageStore {
     if (jsonString == null || jsonString.isEmpty) {
       return [];
     }
+    final List<dynamic> jsonList;
     try {
-      final jsonList = jsonDecode(jsonString) as List<dynamic>;
-      return jsonList.map((json) => _messageFromJson(json)).toList();
+      jsonList = jsonDecode(jsonString) as List<dynamic>;
     } catch (e) {
-      // If parsing fails, return empty list
+      appLogger.warn(
+        'Stored messages for channel $channelIndex are unreadable: $e',
+      );
       return [];
     }
+    final messages = <ChannelMessage>[];
+    for (final json in jsonList) {
+      try {
+        messages.add(_messageFromJson(json as Map<String, dynamic>));
+      } catch (e) {
+        appLogger.warn('Skipping malformed stored channel message: $e');
+      }
+    }
+    return messages;
   }
 
   /// Clear messages for a specific channel
@@ -110,6 +121,7 @@ class ChannelMessageStore {
       'channelIndex': msg.channelIndex,
       'repeatCount': msg.repeatCount,
       'pathLength': msg.pathLength,
+      'pathHashWidth': msg.pathHashWidth,
       'pathBytes': base64Encode(msg.pathBytes),
       'pathVariants': msg.pathVariants.map(base64Encode).toList(),
       'repeats': msg.repeats.map(_repeatToJson).toList(),
@@ -126,11 +138,43 @@ class ChannelMessageStore {
   ChannelMessage _messageFromJson(Map<String, dynamic> json) {
     final rawText = json['text'] as String;
     final decodedText = Smaz.tryDecodePrefixed(rawText) ?? rawText;
+
+    final rawPathLength = json['pathLength'] as int?;
+    final rawPathBytes = json['pathBytes'] != null
+        ? Uint8List.fromList(base64Decode(json['pathBytes'] as String))
+        : Uint8List(0);
+    final rawPathHashWidth = json['pathHashWidth'] as int?;
+
+    int? decodedPathLength = rawPathLength;
+    Uint8List decodedPathBytes = rawPathBytes;
+    int? decodedPathHashWidth = rawPathHashWidth;
+
+    if (rawPathLength != null) {
+      if (rawPathLength == 0xFF || rawPathLength < 0) {
+        decodedPathLength = -1;
+        decodedPathBytes = Uint8List(0);
+      } else if (rawPathLength >= 64) {
+        final mode = (rawPathLength & 0xC0) >> 6;
+        final hopCount = rawPathLength & 0x3F;
+        final width = mode + 1;
+        final byteLen = hopCount * width;
+        decodedPathLength = hopCount;
+        decodedPathHashWidth = width;
+        if (byteLen <= rawPathBytes.length) {
+          decodedPathBytes = rawPathBytes.sublist(0, byteLen);
+        } else {
+          decodedPathBytes = Uint8List(0);
+        }
+      } else if (rawPathLength == 0) {
+        decodedPathBytes = Uint8List(0);
+      }
+    }
+
     return ChannelMessage(
       senderKey: json['senderKey'] != null
           ? Uint8List.fromList(base64Decode(json['senderKey']))
           : null,
-      senderName: json['senderName'] as String,
+      senderName: json['senderName'] as String? ?? 'Unknown',
       text: decodedText,
       originalText: json['originalText'] as String?,
       translatedText: json['translatedText'] as String?,
@@ -140,13 +184,16 @@ class ChannelMessageStore {
       ),
       translationModelId: json['translationModelId'] as String?,
       timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
-      isOutgoing: json['isOutgoing'] as bool,
-      status: ChannelMessageStatus.values[json['status'] as int],
+      isOutgoing: json['isOutgoing'] as bool? ?? false,
+      status:
+          ChannelMessageStatus.values.elementAtOrNull(
+            json['status'] as int? ?? -1,
+          ) ??
+          ChannelMessageStatus.failed,
       repeatCount: (json['repeatCount'] as int?) ?? 0,
-      pathLength: json['pathLength'] as int?,
-      pathBytes: json['pathBytes'] != null
-          ? Uint8List.fromList(base64Decode(json['pathBytes'] as String))
-          : Uint8List(0),
+      pathLength: decodedPathLength,
+      pathHashWidth: decodedPathHashWidth,
+      pathBytes: decodedPathBytes,
       pathVariants: (json['pathVariants'] as List<dynamic>?)
           ?.map((entry) => Uint8List.fromList(base64Decode(entry as String)))
           .toList(),
@@ -163,7 +210,12 @@ class ChannelMessageStore {
       replyToText: json['replyToText'] as String?,
       reactions:
           (json['reactions'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, value as int),
+            (key, value) => MapEntry(
+              key,
+              (value is int)
+                  ? List<String?>.filled(value, null)
+                  : List<String?>.from(value),
+            ),
           ) ??
           {},
     );
