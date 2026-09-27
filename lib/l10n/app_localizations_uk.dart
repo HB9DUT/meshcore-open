@@ -111,6 +111,46 @@ class AppLocalizationsUk extends AppLocalizations {
   String get messageStatus_repeated => 'Почув неодноразово';
 
   @override
+  String get messageStatus_failedChannel =>
+      'Your radio couldn\'t send this message.';
+
+  @override
+  String messageStatus_resending(int resends, int maxResends) {
+    return 'Not heard through enough repeaters yet. Resent $resends of $maxResends times.';
+  }
+
+  @override
+  String messageStatus_hopsNotReached(int hops, int required) {
+    return 'Sent, but only heard back through $hops of $required repeaters. It may still have gone further than your radio can hear.';
+  }
+
+  @override
+  String get messageStatus_sentChannel =>
+      'Sent. Channels don\'t confirm delivery, so this only means your radio sent it.';
+
+  @override
+  String get messageStatus_sentDirect =>
+      'Sent. Waiting for the contact to confirm.';
+
+  @override
+  String messageStatus_heardRepeatedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: 'once',
+    );
+    return 'Heard repeated $_temp0. Nearby repeaters passed it on.';
+  }
+
+  @override
+  String get urlImage_enable => 'Показувати зображення за URL';
+
+  @override
+  String get urlImage_possible =>
+      'Можливе зображення за URL; увімкніть це в Налаштуваннях.';
+
+  @override
   String get common_reboot => 'Перезавантажити';
 
   @override
@@ -368,42 +408,63 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settings_radioSettingsUpdated => 'Налаштування радіо оновлено';
 
   @override
-  String get settings_regionSettings => 'Regions';
+  String get settings_radioSettingsNotApplied =>
+      'Радіомодуль не застосував ці налаштування';
 
   @override
-  String get settings_regionSettingsSubtitle => 'Manage stored regions';
+  String get settings_regionSettings => 'Ріси';
 
   @override
-  String get settings_regionManagement_screenTitle => 'Region Management';
+  String get settings_regionSettingsSubtitle => 'Управляти збережених регіонів';
 
   @override
-  String get settings_regionNameHint => 'Enter region name';
+  String get settings_regionEmptyExplanation =>
+      'Regions limit flood messages to repeaters in an area. Fetch them from nearby repeaters or add one by name.';
 
   @override
-  String get settings_regionAddRegion => 'Add region';
+  String get settings_regionFetchFromRepeaters => 'Fetch from repeaters';
 
   @override
-  String get settings_regionFetchRegions => 'Fetch regions from repeaters';
+  String get settings_regionDefault => 'Default region';
 
   @override
-  String get settings_regionFetchRegionsFail => 'No regions were found';
+  String get settings_regionDefaultSubtitle =>
+      'Used by channels without their own region';
+
+  @override
+  String get settings_regionDefaultNone => 'None';
+
+  @override
+  String get settings_regionManagement_screenTitle => 'Рégіональний управління';
+
+  @override
+  String get settings_regionNameHint => 'Назва регіону';
+
+  @override
+  String get settings_regionAddRegion => 'Добачить регіон';
+
+  @override
+  String get settings_regionFetchRegions => 'Збираємо регіони з репітерів';
+
+  @override
+  String get settings_regionFetchRegionsFail => 'Ні відкриті регіони';
 
   @override
   String get settings_regionFetchRegionsAlreadyExists =>
-      'This region has already been added';
+      'Цей регіон вже було доданий';
 
   @override
-  String get settings_regionName => 'Region Name';
+  String get settings_regionName => 'Ріонна назва';
 
   @override
-  String get settings_regionDeleted => 'Region deleted';
+  String get settings_regionDeleted => 'Ріон витертений';
 
   @override
-  String get settings_deleteRegion => 'Delete Region';
+  String get settings_deleteRegion => 'Видалення регіону';
 
   @override
   String settings_deleteRegionConfirm(String region) {
-    return 'Remove \"$region\" from region list?';
+    return 'Вирішіть \"$region\" з списку регіонів?';
   }
 
   @override
@@ -495,6 +556,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settings_telemetryEnvironmentMode => 'Режим середовища телеметрії';
 
   @override
+  String get settings_telemetryPerContactHint =>
+      'To allow a contact, open their chat and choose Contact Settings from the menu.';
+
+  @override
   String get settings_advertLocation => 'Геопозиція в оголошенні';
 
   @override
@@ -511,6 +576,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settings_multiAck => 'Багато підтверджень';
+
+  @override
+  String get settings_multiAckSubtitle =>
+      'Send extra ACKs for better delivery; uses more airtime';
 
   @override
   String get settings_telemetryModeUpdated => 'Режим телеметрії оновлено';
@@ -616,13 +685,29 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settings_infoPublicKey => 'Відкритий ключ';
 
   @override
+  String get settings_publicKeyCopied => 'Публічний ключ скопійовано';
+
+  @override
   String get settings_infoContactsCount => 'Кількість контактів';
 
   @override
   String get settings_infoChannelCount => 'Кількість каналів';
 
   @override
+  String get settings_infoHardware => 'Оборудовання';
+
+  @override
+  String get settings_infoFirmware => 'Програмне вміст (фirmware)';
+
+  @override
   String get settings_presets => 'Попередні налаштування';
+
+  @override
+  String get settings_presetCustom => 'Custom';
+
+  @override
+  String get settings_radioMatchWarning =>
+      'All nodes you talk to must use the same frequency, bandwidth, SF and CR.';
 
   @override
   String get settings_frequency => 'Частота (МГц)';
@@ -646,13 +731,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settings_txPower => 'Потужність TX (дБм)';
 
   @override
-  String get settings_txPowerHelper => '0 - 22';
+  String settings_txPowerRangeHelper(int min, int max) {
+    return '$min to $max dBm';
+  }
 
   @override
   String get settings_txPowerInvalid => 'Некоректна потужність TX (0-22 дБм)';
 
   @override
   String get settings_clientRepeat => 'Автономна система';
+
+  @override
+  String settings_clientRepeatFrequencyNote(String freq) {
+    return 'Frequency set to $freq MHz for off-grid repeat';
+  }
 
   @override
   String get settings_clientRepeatSubtitle =>
@@ -737,16 +829,49 @@ class AppLocalizationsUk extends AppLocalizations {
   String get appSettings_languageUk => 'Українська';
 
   @override
-  String get repeater_pathHashModeOption0 => '0 - 1 byte';
+  String get repeater_pathHashModeOption0 => '0 - 1 байт';
 
   @override
-  String get repeater_pathHashModeOption1 => '1 - 2 bytes';
+  String get repeater_pathHashModeOption1 => '1 - 2 байти';
 
   @override
-  String get repeater_pathHashModeOption2 => '2 - 3 bytes';
+  String get repeater_pathHashModeOption2 => '2 - 3 байти';
 
   @override
-  String get repeater_pathHashModeOption3 => '3 - 4 bytes';
+  String get repeater_pathHashModeOption3 => '3 - 4 байта';
+
+  @override
+  String get settings_pathHashModeHelper =>
+      'Size of each node ID recorded in the path of flood packets this radio sends: 1 byte (256 IDs, up to 64 hops), 2 bytes (65K IDs, up to 32 hops), 3 bytes (16M IDs, up to 21 hops). Larger IDs reduce collisions, but repeaters on firmware older than v1.14 drop packets with 2- or 3-byte IDs.';
+
+  @override
+  String settings_requiresFirmware(String version) {
+    return 'Requires firmware $version or newer';
+  }
+
+  @override
+  String get appSettings_channelMinHops =>
+      'Resend channel messages until they travel far enough';
+
+  @override
+  String get appSettings_channelMinHopsSubtitle =>
+      'If your message isn\'t heard coming back through enough repeaters, send it again. Uses more airtime.';
+
+  @override
+  String appSettings_channelMinHopsCount(int count) {
+    return 'Required hops: $count';
+  }
+
+  @override
+  String appSettings_channelMinHopsRetries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '1 time',
+    );
+    return 'Resend up to $_temp0';
+  }
 
   @override
   String get appSettings_enableMessageTracing =>
@@ -782,6 +907,13 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get appSettings_messageNotificationsSubtitle =>
       'Показувати сповіщення при отриманні нових повідомлень';
+
+  @override
+  String get appSettings_batteryOptimization => 'Background Activity';
+
+  @override
+  String get appSettings_batteryOptimizationSubtitle =>
+      'Set MeshCore Open to \"Don\'t optimize\" in battery settings so messages keep arriving in the background';
 
   @override
   String get appSettings_channelMessageNotifications => 'Сповіщення каналів';
@@ -893,6 +1025,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get appSettings_batteryLipo => 'LiPo (3.0-4.2В)';
+
+  @override
+  String get appSettings_batteryLipoHv => 'ЛиPo HV (3,0-4,35 В)';
 
   @override
   String get appSettings_mapDisplay => 'Відображення карти';
@@ -1068,6 +1203,29 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get contacts_removeFromContacts => 'Remove from contacts';
+
+  @override
+  String contacts_removeFromContactsConfirm(String contactName) {
+    return '$contactName will move to Discovered contacts. Chat history will be deleted.';
+  }
+
+  @override
+  String get contacts_keepChatHistory => 'Keep chat history';
+
+  @override
+  String get contacts_remove => 'Remove';
+
+  @override
+  String contacts_discoveredNearby(int count) {
+    return 'Discovered nearby ($count)';
+  }
+
+  @override
+  String get contacts_noContactsDiscoveredHint =>
+      'Nodes your radio hears but hasn\'t added yet are listed in Discovered contacts';
+
+  @override
   String get contacts_manageRepeater => 'Керувати ретранслятором';
 
   @override
@@ -1218,6 +1376,18 @@ class AppLocalizationsUk extends AppLocalizations {
   String get channels_private => 'Приватний';
 
   @override
+  String get channels_hashtag => 'Hashtag';
+
+  @override
+  String get channels_addSectionJoin => 'Join existing';
+
+  @override
+  String get channels_addSectionCreate => 'Create new';
+
+  @override
+  String get channels_dragToReorder => 'Drag to reorder';
+
+  @override
   String get channels_editChannel => 'Редагувати канал';
 
   @override
@@ -1349,6 +1519,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get channels_publicChannelAdded => 'Публічний канал додано';
 
   @override
+  String get channels_noFreeSlots => 'Немає вільних слотів для каналів';
+
+  @override
   String get channels_sortBy => 'Сортувати за';
 
   @override
@@ -1403,17 +1576,30 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String channels_regionSetTo(String region) {
-    return 'Region: $region';
+    return 'Ріон: $region';
   }
 
   @override
-  String get channels_regionNotSet => 'Region: none';
+  String get channels_regionNotSet => 'Ріон: нема';
 
   @override
-  String get channels_regionSelect_Title => 'Select a region';
+  String get channels_regionSelect_Title => 'Вybірте регіон';
 
   @override
-  String get channels_clearRegion => 'Clear region';
+  String get channels_clearRegion => 'Чистя зона';
+
+  @override
+  String get channels_regionDefaultSuffix => '(default)';
+
+  @override
+  String get channels_regionSelectExplanation =>
+      'Flood messages on this channel will only be forwarded by repeaters in the selected region.';
+
+  @override
+  String get channels_regionEmpty => 'No regions yet.';
+
+  @override
+  String get channels_manageRegions => 'Manage regions';
 
   @override
   String get chat_noMessages => 'Поки немає повідомлень.';
@@ -1469,10 +1655,25 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get chat_selectSendAction => 'Виберіть дію надсилання';
+
+  @override
   String get chat_sendGif => 'Надіслати GIF';
 
   @override
-  String get chat_receivedGif => 'Received a GIF';
+  String get chat_removeGif => 'Remove GIF';
+
+  @override
+  String get chat_cancelReply => 'Cancel reply';
+
+  @override
+  String get chat_sendImageLora => 'Надіслати зображення через MeshCore';
+
+  @override
+  String get chat_imagePickFailed => 'Неможливо відкрити це изображення';
+
+  @override
+  String get chat_receivedGif => 'Підймовано GIF';
 
   @override
   String get chat_reply => 'Відповісти';
@@ -1482,6 +1683,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get chat_me => 'Я';
+
+  @override
+  String get reaction_report => 'Реакції';
 
   @override
   String get emojiCategorySmileys => 'Емодзі';
@@ -1632,14 +1836,14 @@ class AppLocalizationsUk extends AppLocalizations {
   String get routing_modeAuto => 'Автомобіль';
 
   @override
-  String get routing_modeFlood => 'Повені';
+  String get routing_modeFlood => 'Через всю мережу';
 
   @override
   String get routing_modeManual => 'Інструкція';
 
   @override
   String get routing_modeAutoHint =>
-      'Автоматично обирає найкращий відомий шлях, та у разі відсутності відомого шляху, використовує алгоритм \"занурення\".';
+      'Автоматично обирає найкращий відомий шлях, а за відсутності відомого шляху використовує режим «через всю мережу» (flood).';
 
   @override
   String get routing_modeFloodHint =>
@@ -1680,7 +1884,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get routing_inUse => 'У робочому стані';
 
   @override
-  String get routing_qualityStrong => 'Сильний перший стрибок';
+  String get routing_qualityStrong => 'Сильний перший перехід';
 
   @override
   String get routing_qualityGood => 'Чудова перша спроба';
@@ -1692,7 +1896,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get routing_qualityWorked => 'Доставлено';
 
   @override
-  String get routing_qualityFlood => 'Дізнався через новини';
+  String get routing_qualityFlood => 'Отримано через всю мережу (flood)';
 
   @override
   String get routing_qualityUntested => 'Не протестовано';
@@ -1711,7 +1915,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get routing_floodDelivery => 'Доставка під час повені';
+  String get routing_floodDelivery => 'Доставка через всю мережу (flood)';
 
   @override
   String get pathEditor_title => 'Створити маршрут';
@@ -1723,10 +1927,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get pathEditor_noHops =>
-      'Ще не додано хміль. Натисніть на відповідні кнопки, щоб додати його в потрібному порядку, або збережіть рецепт без хмілю, щоб відправити його безпосередньо.';
+      'Ще не додано жодного переходу. Натисніть на відповідні кнопки нижче, щоб додати їх у потрібному порядку, або збережіть шлях без переходів, щоб надіслати напряму.';
 
   @override
-  String get pathEditor_addHops => 'Додавайте хміль у наступній послідовності.';
+  String get pathEditor_addHops => 'Додавайте переходи в потрібному порядку.';
 
   @override
   String get pathEditor_searchRepeaters => 'Пошук повторювачів';
@@ -1755,7 +1959,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get pathEditor_usePath => 'Використовуйте цей шлях';
 
   @override
-  String get pathEditor_removeHop => 'Видалити хміль';
+  String get pathEditor_removeHop => 'Видалити перехід';
 
   @override
   String get pathEditor_unknownHop => 'Невідомий ретранслятор';
@@ -1775,6 +1979,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get chat_path => 'Шлях';
+
+  @override
+  String get chat_viewPathOnMap => 'View path on map';
 
   @override
   String get chat_publicKey => 'Відкритий ключ';
@@ -1812,6 +2019,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get chat_newMessages => 'Нові повідомлення';
+
+  @override
+  String get chat_today => 'Today';
+
+  @override
+  String get chat_yesterday => 'Yesterday';
 
   @override
   String get chat_openLink => 'Відкрити посилання?';
@@ -1859,6 +2072,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get map_centerOnNode => 'Центрувати на вузлі';
 
   @override
+  String get map_centerOnMe => 'Center on my location';
+
+  @override
   String get map_details => 'Деталі';
 
   @override
@@ -1875,6 +2091,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get map_noNodesWithLocation => 'Немає вузлів з даними про геопозицію';
+
+  @override
+  String get map_noNodesLocationHint =>
+      'No nodes with a recent location. Widen the time filter, or set your own location in Settings.';
 
   @override
   String get map_nodesNeedGps =>
@@ -2019,6 +2239,16 @@ class AppLocalizationsUk extends AppLocalizations {
       'Показати геопозиції передбачених вузлів';
 
   @override
+  String get map_clusterNodes => 'Group nearby nodes';
+
+  @override
+  String get map_groupChip => 'Group';
+
+  @override
+  String get map_clusterNodesSubtitle =>
+      'When zoomed out, show nearby nodes as one numbered circle';
+
+  @override
   String get map_showDiscoveryContacts => 'Показати виявлені контакти';
 
   @override
@@ -2038,6 +2268,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get map_manageRepeater => 'Керувати ретранслятором';
+
+  @override
+  String get map_manageServer => 'Manage Server';
 
   @override
   String get map_tapToAdd => 'Натисніть на вузли, щоб додати їх до шляху';
@@ -2243,6 +2476,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get login_enterPassword => 'Введіть пароль';
 
   @override
+  String get login_showPassword => 'Show password';
+
+  @override
+  String get login_hidePassword => 'Hide password';
+
+  @override
   String get login_savePassword => 'Зберегти пароль';
 
   @override
@@ -2256,6 +2495,9 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get login_roomDescription =>
       'Введіть пароль кімнати для доступу до налаштувань та статусу.';
+
+  @override
+  String get login_advanced => 'Advanced';
 
   @override
   String get login_routing => 'Маршрутизація';
@@ -2296,6 +2538,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get common_clear => 'Очистити';
 
   @override
+  String get common_clearSearch => 'Clear search';
+
+  @override
   String get path_currentPathLabel => 'Поточний шлях';
 
   @override
@@ -2319,6 +2564,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_guestTools => 'Гостьові інструменти';
+
+  @override
+  String get repeater_roleAdmin => 'ADMIN';
+
+  @override
+  String get repeater_roleGuest => 'GUEST';
 
   @override
   String get repeater_status => 'Статус';
@@ -2698,7 +2949,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_floodMax =>
-      'Максимальна кількість стрибків під час повені';
+      'Максимальна кількість переходів під час поширення через всю мережу (flood)';
 
   @override
   String get repeater_floodMaxHelper =>
@@ -2719,38 +2970,38 @@ class AppLocalizationsUk extends AppLocalizations {
       'Байти, що використовуються для кодування ідентифікатора цього ретранслятора в тегах flood-шляху/виявлення петель. 0=1 байт (256 ідентифікаторів, до 64 переходів), 1=2 байти (65 000 ідентифікаторів, до 32 переходів), 2=3 байти (16 мільйонів ідентифікаторів, до 21 переходу). Прошивки до v1.14 завжди використовували 1-байтові шляхи; v1.14 і новіші можна налаштувати на 2- або 3-байтові шляхи.';
 
   @override
-  String get repeater_keySettings => 'Change Identity Keys';
+  String get repeater_keySettings => 'Зміна ключів ідентифікації';
 
   @override
   String get repeater_keySettingsSubtitle =>
-      'Change the public/private keypair';
+      'Замініть публічний/приватний ключ';
 
   @override
-  String get repeater_prvKey => 'Private key';
+  String get repeater_prvKey => 'Приватний ключ';
 
   @override
   String get repeater_prvKeyHelper =>
-      'A new private key for the repeater, a 128-character hex string.';
+      'Нова приватна ключ для репітера, 128-символова штучна штука в шестнадцатеричному форматі.';
 
   @override
-  String get repeater_generatePrvKey => 'Generate a random keypair';
+  String get repeater_generatePrvKey => 'Синхронізujте ключовий пару';
 
   @override
-  String get repeater_stopGeneratingPrvKey => 'Interrupt search for keypair';
+  String get repeater_stopGeneratingPrvKey => 'Прервити шук ключового пару';
 
   @override
-  String get repeater_pubKey => 'Public key';
+  String get repeater_pubKey => 'Публічна ключ';
 
   @override
   String get repeater_pubKeyHelper =>
-      'This is the public key that goes with the generated private key. You can\'t set this directly.';
+      'Це публична ключ, який пов\'язано з створеною приватною ключом. Ви не можете встановлювати його напрямую.';
 
   @override
-  String get repeater_pubKeyPrefix => 'Desired prefix';
+  String get repeater_pubKeyPrefix => 'Високорейтингове прикінання';
 
   @override
   String repeater_pubKeyPrefixHelper(int tries) {
-    return 'Find a public key that starts with these hex digits. Expected tries needed: $tries.';
+    return 'Найдіть відповідний открытий ключ, який починається ціми шестнадцатыми цифрами. Ожидається кількість потрібних попыток: $tries.';
   }
 
   @override
@@ -2758,7 +3009,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_txDelayHelper =>
-      'Повторне надсилання з урахуванням навантаження від потоків транспорту, як множник від часу передачі пакета (0-2, за замовчуванням 0,5). Чим вище значення, тим менше конфліктів, але повільніше передавання.';
+      'Затримка повторного надсилання для трафіку через всю мережу (flood), як множник від часу передачі пакета (0-2, за замовчуванням 0,5). Чим вище значення, тим менше конфліктів, але повільніше передавання.';
 
   @override
   String get repeater_directTxDelay => 'Пряме затримка TX';
@@ -2785,18 +3036,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get repeater_actionsTitle => 'Дії';
 
   @override
-  String get repeater_sendAdvert => 'Надіслати рекламу щодо повені';
+  String get repeater_sendAdvert =>
+      'Надіслати оголошення через всю мережу (flood)';
 
   @override
   String get repeater_sendAdvertSubtitle =>
-      'Розповсюдити рекламу про надзвичайну ситуацію (повен) через мережу.';
+      'Розповсюдити оголошення через всю мережу (flood).';
 
   @override
-  String get repeater_sendAdvertZeroHop => 'Надіслати рекламу без посередників';
+  String get repeater_sendAdvertZeroHop =>
+      'Надіслати оголошення без ретрансляції';
 
   @override
   String get repeater_sendAdvertZeroHopSubtitle =>
-      'Розповсюдити рекламу з однією переадресацією (без повторного розповсюдження)';
+      'Розповсюдити оголошення лише на один перехід (без ретрансляторів)';
 
   @override
   String get repeater_clockSync => 'Синхронізувати годинник зараз';
@@ -2846,6 +3099,17 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_refreshPrivacyMode => 'Оновити режим приватності';
+
+  @override
+  String get repeater_refreshAll => 'Refresh all';
+
+  @override
+  String get repeater_settingsNotLoaded =>
+      'Settings haven\'t been loaded from this repeater yet.';
+
+  @override
+  String get repeater_settingsLoadIncomplete =>
+      'Some settings could not be loaded. Use the refresh buttons to retry.';
 
   @override
   String repeater_refreshed(String label) {
@@ -3141,6 +3405,75 @@ class AppLocalizationsUk extends AppLocalizations {
       'ПРИМІТКА: для різних команд «set»... також існує команда «get»...';
 
   @override
+  String get repeater_frequencyRangeHelper => '150-2500 МГц';
+
+  @override
+  String get repeater_frequencyInvalid => 'Некоректна частота (150-2500 МГц)';
+
+  @override
+  String get repeater_txPowerRangeHelper => 'від -9 до 30 dBm';
+
+  @override
+  String get repeater_recvErrors => 'Помилки прийому';
+
+  @override
+  String get room_postsStored => 'Публікації';
+
+  @override
+  String get room_postsPushed => 'Надіслано публікацій';
+
+  @override
+  String get repeater_cliRegionLoadActive =>
+      'Режим завантаження регіонів: надсилайте по одному імені регіону в рядку, з відступом пробілами під батьківським регіоном (додайте F після імені, щоб дозволити поширення через всю мережу). Рядки не отримують відповіді. Надішліть порожній рядок, щоб завершити, а потім \"region save\", щоб зберегти результат.';
+
+  @override
+  String get repeater_cliRegionLoadHint =>
+      'Рядок регіону або порожній рядок для завершення';
+
+  @override
+  String get repeater_cliRegionLoadEnd => '(кінець завантаження регіонів)';
+
+  @override
+  String get repeater_cliHelpRegionDef =>
+      'Визначає ланцюжок регіонів однією командою: кожне ім’я додається під попереднім; \"name,parent\" додає ім’я і продовжує під вказаним батьківським регіоном. У відповідь повертає список регіонів.';
+
+  @override
+  String get repeater_cliHelpSetFloodMaxUnscoped =>
+      'Встановлює максимальну кількість переходів для пересилання пакетів через всю мережу (flood) без визначеної області регіону (0-64).';
+
+  @override
+  String get repeater_cliHelpSetFloodMaxAdvert =>
+      'Встановлює максимальну кількість переходів для пересилання оголошень через всю мережу (flood) (0-64).';
+
+  @override
+  String get repeater_cliHelpGetFloodMaxUnscoped =>
+      'Показує максимальну кількість переходів для пакетів через всю мережу (flood) без визначеної області.';
+
+  @override
+  String get repeater_cliHelpGetFloodMaxAdvert =>
+      'Показує максимальну кількість переходів для оголошень через всю мережу (flood).';
+
+  @override
+  String get repeater_cliHelpSetRadioFemRxGain =>
+      'Перемикає підсилення RX (LNA) вхідного модуля LoRa. Плати без нього відповідають \"Error: unsupported\".';
+
+  @override
+  String get repeater_cliHelpSetRadioFemTxGain =>
+      'Перемикає підсилення TX (PA) вхідного модуля LoRa. Плати без нього відповідають \"Error: unsupported\".';
+
+  @override
+  String get repeater_cliHelpGetRadioFemRxGain =>
+      'Показує, чи увімкнено підсилення RX вхідного модуля LoRa.';
+
+  @override
+  String get repeater_cliHelpGetRadioFemTxGain =>
+      'Показує, чи увімкнено підсилення TX вхідного модуля LoRa.';
+
+  @override
+  String get repeater_bridgeNote =>
+      'Доступно лише для прошивки, зібраної з мостом (RS232 або ESP-NOW).';
+
+  @override
   String get repeater_general => 'Загальні';
 
   @override
@@ -3189,7 +3522,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_cliHelpAdvertZeroHop =>
-      'Надсилає рекламу, яка не проходить через інші мережі (лише до безпосередніх сусідів).';
+      'Надсилає оголошення, яке не проходить через інші мережі (лише до безпосередніх сусідів).';
 
   @override
   String get repeater_cliHelpStartOta =>
@@ -3313,11 +3646,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_cliHelpGetAdvertInterval =>
-      'Показує тривалість місцевої рекламної паузи в хвилинах.';
+      'Показує тривалість інтервалу локальних оголошень у хвилинах.';
 
   @override
   String get repeater_cliHelpGetFloodAdvertInterval =>
-      'Показує інтервал часу між рекламними роликами про повені, виражений у годинах.';
+      'Показує інтервал оголошень через всю мережу (flood), виражений у годинах.';
 
   @override
   String get repeater_cliHelpGetGuestPassword =>
@@ -3335,7 +3668,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_cliHelpGetTxDelay =>
-      'Показує коефіцієнт затримки сигналу у режимі затоплення.';
+      'Показує коефіцієнт затримки сигналу в режимі «через всю мережу» (flood).';
 
   @override
   String get repeater_cliHelpGetDirectTxDelay =>
@@ -3343,7 +3676,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_cliHelpGetFloodMax =>
-      'Показує максимальну кількість підйомів, спричинених повенем.';
+      'Показує максимальну кількість переходів під час пересилання через всю мережу (flood).';
 
   @override
   String get repeater_cliHelpGetOwnerInfo =>
@@ -3431,11 +3764,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get repeater_cliHelpRegionListAllowed =>
-      'Перелік регіонів, де дозволено рух транспорту під час повені.';
+      'Перелік регіонів, де дозволено поширення через всю мережу (flood).';
 
   @override
   String get repeater_cliHelpRegionListDenied =>
-      'Перелік регіонів, які забороняють рух транспорту під час повені.';
+      'Перелік регіонів, де заборонено поширення через всю мережу (flood).';
 
   @override
   String get repeater_cliHelpStatsPackets =>
@@ -4219,13 +4552,30 @@ class AppLocalizationsUk extends AppLocalizations {
   String get contacts_zeroHopAdvert => 'Оголошення без ретрансляції';
 
   @override
-  String get contacts_floodAdvert => 'Оголошення з ретрансляцією';
+  String get contacts_floodAdvert => 'Оголошення через всю мережу (flood)';
 
   @override
   String get contacts_copyAdvertToClipboard => 'Копіювати оголошення';
 
   @override
   String get contacts_addContactFromClipboard => 'Додати контакт з буфера';
+
+  @override
+  String get contacts_scanQrCode => 'Scan QR Code';
+
+  @override
+  String get contacts_scanQrInstructions =>
+      'Point the camera at a MeshCore contact QR code';
+
+  @override
+  String get contacts_qrFromGallery => 'Scan QR from Gallery';
+
+  @override
+  String get contacts_noQrCodeFound =>
+      'No QR code found in the selected image.';
+
+  @override
+  String get contacts_qrGalleryFailed => 'Could not open the gallery.';
 
   @override
   String get contacts_ShareContact => 'Копіювати контакт у буфер обміну';
@@ -4360,6 +4710,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get snrIndicator_lastSeen => 'Останній раз бачили';
 
   @override
+  String get snrIndicator_nearByRepeatersDescription =>
+      'Repeaters your radio heard directly, most recently heard first.';
+
+  @override
   String get contactsSettings_title => 'Налаштування контактів';
 
   @override
@@ -4467,6 +4821,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get radioStats_screenTitle => 'Статистика радіо';
 
   @override
+  String get radioStats_sectionSignal => 'Signal';
+
+  @override
+  String get radioStats_sectionAirtime => 'Airtime';
+
+  @override
   String get radioStats_notConnected =>
       'Підключіться до пристрою, щоб переглядати статистику радіо.';
 
@@ -4523,6 +4883,43 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get translation_title => 'Переклад';
+
+  @override
+  String get imageMessages_enableTitle => 'Підтримка зображень для посилання';
+
+  @override
+  String get imageMessages_enableSubtitle =>
+      'Пошукуєте изображення через сеть. Вимagaєте однократне скачання моделю изображення.';
+
+  @override
+  String get imageMessages_modelSectionTitle => 'Модель для зображень';
+
+  @override
+  String get imageMessages_downloadModel => 'Скачання';
+
+  @override
+  String get imageMessages_cancelDownload => 'Завершити';
+
+  @override
+  String get imageMessages_removeModel => 'Видалим модель';
+
+  @override
+  String get imageMessages_modelReady => 'Готово';
+
+  @override
+  String get imageMessages_modelNotPublished =>
+      'Щоб не було опубліковано — це версія не дозволяє зробити скачання.';
+
+  @override
+  String get imageMessages_downloadFailed =>
+      'Модель для зображень не можна сказати.';
+
+  @override
+  String get imageMessages_autoProcessTitle => 'Автоматично оброблювати obraзи';
+
+  @override
+  String get imageMessages_autoProcessSubtitle =>
+      'Кожна картинка повинні бути відтворена на мій момент прибуття. Використовує приблизно 2 ГБ пам\'яті на кожен раз; відключіть від відтворення за допомогою кlikу.';
 
   @override
   String get translation_enableTitle => 'Увімкнути переклад';
@@ -4813,4 +5210,252 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get pathMap_unfollowPacket => 'Відв\'язати вигляд від пакету';
+
+  @override
+  String get imageSend_title =>
+      'Нашкоду зовні\n\n(or more naturally, depending on context)\n\nПошукуєте изображення';
+
+  @override
+  String get imageSend_cropNote =>
+      'Манітовано до 512 × 512 · соотношення варість не зберігається';
+
+  @override
+  String imageSend_lossyNote(int bytes) {
+    return 'Compressed to about $bytes bytes. The receiver\'s model reconstructs it, so details will differ.';
+  }
+
+  @override
+  String get imageSend_viewOriginal => 'Original';
+
+  @override
+  String get imageSend_viewReconstruction => 'What recipients see';
+
+  @override
+  String get imageSend_reconstructionUnavailable =>
+      'This device can\'t preview the reconstruction.';
+
+  @override
+  String get imageSend_modelNotDownloaded =>
+      'The image model isn\'t downloaded yet. Download it in Settings to send images.';
+
+  @override
+  String get imageSend_originalSize => 'Оригінал';
+
+  @override
+  String get imageSend_onAirSize => 'На ері';
+
+  @override
+  String get imageSend_quality => 'Качество';
+
+  @override
+  String get imageSend_qualityStandard => 'Стандарт';
+
+  @override
+  String get imageSend_qualityHigh => 'Висок';
+
+  @override
+  String get imageSend_packetsLabel => 'Пакети';
+
+  @override
+  String get imageSend_airtimeLabel => 'Час на ері';
+
+  @override
+  String get imageSend_sizeLabel => 'Підлог';
+
+  @override
+  String imageSend_packetsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'пакета',
+      many: 'пакетів',
+      few: 'пакети',
+      one: 'пакет',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String imageSend_range(String min, String max) {
+    return '$min–$max';
+  }
+
+  @override
+  String get imageSend_unknownValue => '—';
+
+  @override
+  String get imageSend_radioUnknownTitle => 'Настройки радио неизвестні';
+
+  @override
+  String get imageSend_radioUnknownBody =>
+      'Залучіться до пристрою, щоб можна було розрахунювати час в етері.';
+
+  @override
+  String get imageSend_longSendTitle => 'Длуга передача';
+
+  @override
+  String imageSend_longSendBody(String duration) {
+    return 'Це забезпечить канал на approximativno $duration хвилин.';
+  }
+
+  @override
+  String get imageSend_floodNote =>
+      'Поширення через всю мережу (flood): кожен ретранслятор у діапазоні пересилає кожен пакет, тому канал залишається зайнятим довше, ніж зазначено тут.';
+
+  @override
+  String get imageSend_parityTitle => 'Пакет відновлення';
+
+  @override
+  String get imageSend_paritySubtitle =>
+      'Один дополний пакет. Групові посилання не відповідають, тому це дозволяє відвідувачу відтворити зображення, якщо один пакет втрачений.';
+
+  @override
+  String get imageSend_send => 'Пошутить';
+
+  @override
+  String get imageSend_cancel => 'Завершити';
+
+  @override
+  String get imageSend_encodeFailed =>
+      'Це изображення не може бути кодировано.';
+
+  @override
+  String get imageSend_codecDownloading =>
+      'Модель для відтворення изображень ще збирається.';
+
+  @override
+  String get imageSend_codecUnavailable =>
+      'Постій для відправлення изображень на цьому пристрої не доступний.';
+
+  @override
+  String get imageSend_codecDisabled =>
+      'Пictesovani posyly wyключені в настройках.';
+
+  @override
+  String get imageSend_deviceUnsupported =>
+      'Цей радіопередач не може отправляти пакети зображень. Зконнете пристрої, що працює з обладнанням керемонітом компаньєр 13 або новшим.';
+
+  @override
+  String get imageSend_directMessagesUnsupported =>
+      'Фотографії передаються як дані групою, тому їх можна відправляти лише на канал — не в прямому посилання.';
+
+  @override
+  String get imageSend_tooLarge =>
+      'Це изображення кодує більше пакітів, ніж дозволяє формат сети.';
+
+  @override
+  String imageSend_sentConfirmation(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'пакетів',
+      one: 'пакет',
+    );
+    return 'Зображення надіслано як $count $_temp0.';
+  }
+
+  @override
+  String imageSend_sendFailed(String error) {
+    return 'Изображення не можна відправити: $error';
+  }
+
+  @override
+  String imageSend_sendingProgress(int sent, int total) {
+    return 'Пошускаємо изображення — пакет $sent з $total';
+  }
+
+  @override
+  String receivedImage_senderPrefix(String prefix) {
+    return 'Нод $prefix';
+  }
+
+  @override
+  String receivedImage_incoming(int received, int total) {
+    return 'Підходяче: $received з $total пакітів';
+  }
+
+  @override
+  String get receivedImage_queued => 'Очікування розслівання коду';
+
+  @override
+  String get receivedImage_tapToDecode => 'Кliknite для декодування';
+
+  @override
+  String get receivedImage_decoding => 'Повноювання… за прибуття 1 с.';
+
+  @override
+  String receivedImage_incomplete(int received, int total) {
+    return 'Образок не повний — $received з $total пакітів прибавлено';
+  }
+
+  @override
+  String get receivedImage_corrupt => 'Obraz не можна відтворити';
+
+  @override
+  String get receivedImage_decoderMissing =>
+      'Під час приємки — розшифровка зображення не вдалося.';
+
+  @override
+  String get receivedImage_evicted => 'Изображення не зберігається';
+
+  @override
+  String get receivedImage_retry => 'Попробуй ще раз';
+
+  @override
+  String get receivedImage_decodeAgain => 'Декодуй ще раз';
+
+  @override
+  String get receivedImage_openSettings => 'Заведіть';
+
+  @override
+  String get receivedImage_tapToProcess => 'Кликніть для обробки';
+
+  @override
+  String get receivedImage_save => 'Save image';
+
+  @override
+  String receivedImage_shareCaption(int bytes) {
+    return 'AI-reconstructed from $bytes bytes; fine detail is generated, not transmitted.';
+  }
+
+  @override
+  String get receivedImage_packetInfo => 'Packet info';
+
+  @override
+  String get receivedImage_parityRecovered =>
+      'One packet was rebuilt from the recovery packet.';
+
+  @override
+  String receivedImage_decodeTime(int ms) {
+    return 'Reconstructed in $ms ms';
+  }
+
+  @override
+  String get receivedImage_saveFailed => 'Couldn\'t save the image';
+
+  @override
+  String receivedImage_awaiting(int bytes, int packets) {
+    String _temp0 = intl.Intl.pluralLogic(
+      packets,
+      locale: localeName,
+      other: 'пакетів',
+      one: 'пакет',
+    );
+    return '$bytes байтів · $packets $_temp0';
+  }
+
+  @override
+  String imageSend_secondsValue(String seconds) {
+    return '$seconds секунди';
+  }
+
+  @override
+  String imageSend_minutesSecondsValue(String minutes, String seconds) {
+    return '$minutes хв $seconds с';
+  }
+
+  @override
+  String chat_longMessageRetryNote(int count) {
+    return 'Понад 158 байтів: надсилається не більше $count разів';
+  }
 }

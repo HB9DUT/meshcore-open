@@ -47,8 +47,8 @@ class _CompanionRadioStatsScreenState extends State<CompanionRadioStatsScreen> {
   @override
   void dispose() {
     _connector?.radioStatsNotifier.removeListener(_onStatsUpdate);
-    _connector?.releaseRadioStatsPolling();
     _connector?.setPollingInterval(30);
+    _connector?.releaseRadioStatsPolling();
     super.dispose();
   }
 
@@ -117,8 +117,8 @@ class _CompanionRadioStatsScreenState extends State<CompanionRadioStatsScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
                   if (stats != null) ...[
-                    const SectionHeader(
-                      'Signal',
+                    SectionHeader(
+                      l10n.radioStats_sectionSignal,
                       padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                     ),
                     MeshCard(
@@ -152,8 +152,8 @@ class _CompanionRadioStatsScreenState extends State<CompanionRadioStatsScreen> {
                         ],
                       ),
                     ),
-                    const SectionHeader(
-                      'Airtime',
+                    SectionHeader(
+                      l10n.radioStats_sectionAirtime,
                       padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                     ),
                     MeshCard(
