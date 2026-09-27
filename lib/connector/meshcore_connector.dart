@@ -4740,6 +4740,9 @@ class MeshCoreConnector extends ChangeNotifier {
       case respCodeEndOfContacts:
         debugPrint('Got END_OF_CONTACTS');
         _isLoadingContacts = false;
+        if (_contactsStorageFull && _contacts.length < _maxContacts) {
+          _contactsStorageFull = false; // capacity freed up since the warning
+        }
         _hasLoadedContacts = true;
         _preserveContactsOnRefresh = false;
         _contactSyncUsesSinceFilter = false;
