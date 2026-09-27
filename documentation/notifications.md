@@ -81,6 +81,10 @@ The notification system prevents notification storms:
 - **Opening a channel**: Cancels the channel notification and resets unread count
 - **Opening Contacts screen**: Cancels all advertisement notifications
 
+## Translation and image references
+
+Automatic incoming translation can also translate notification text when enabled with a ready local model. GIF and URL-image retrieval still need internet; receiving a notification does not make those references available offline. For image packet progress and reconstruction states, use [channel image chat](image-messages.md).
+
 ## Platform Support
 
 | Platform | Message Notifs | Badge | Background Service |
