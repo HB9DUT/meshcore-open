@@ -119,6 +119,7 @@ class ChannelMessageStore {
       'isOutgoing': msg.isOutgoing,
       'status': msg.status.index,
       'channelIndex': msg.channelIndex,
+      'region': msg.region,
       'repeatCount': msg.repeatCount,
       'pathLength': msg.pathLength,
       'pathHashWidth': msg.pathHashWidth,
@@ -203,6 +204,7 @@ class ChannelMessageStore {
               .toList() ??
           const [],
       channelIndex: json['channelIndex'] as int?,
+      region: json['region'] as String?,
       messageId: json['messageId'] as String?,
       packetHash: json['packetHash'] as String?,
       replyToMessageId: json['replyToMessageId'] as String?,
