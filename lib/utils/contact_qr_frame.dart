@@ -8,8 +8,10 @@ import 'contact_qr.dart';
 /// Builds the device frame that applies [scanned].
 ///
 /// Advert blobs are replayed with `CMD_IMPORT_CONTACT`; contact cards are
-/// written with `CMD_ADD_UPDATE_CONTACT`, preserving the flags, name and route
-/// of [existing] when the QR omits them. A card carries no route, so a contact
+/// written with `CMD_ADD_UPDATE_CONTACT`, preserving the type, flags, name,
+/// route and advert timestamp of [existing] when the QR omits them. The
+/// timestamp is the firmware's replay guard, so a new contact gets 0 rather
+/// than the phone clock, which would make it drop the node's real adverts. A card carries no route, so a contact
 /// the device does not know yet is written with the `0xFF` unknown-path
 /// sentinel (`Contact.fromFrame` maps it to `hopCount == -1`) and its messages
 /// flood until an advert supplies a path.
@@ -29,11 +31,12 @@ Uint8List buildContactQrFrame(
     scanned.publicKey!,
     route.path,
     route.pathLen,
-    type: scanned.type,
+    type: scanned.type ?? existing?.type ?? advTypeChat,
     flags: existing?.flags ?? 0,
     name: _fitName(
       scanned.name.isEmpty ? (existing?.name ?? '') : scanned.name,
     ),
+    lastAdvert: existing?.lastSeen,
   );
 }
 

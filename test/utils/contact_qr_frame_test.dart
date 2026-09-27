@@ -56,6 +56,61 @@ void main() {
       expect(name, 'Alice');
     });
 
+    test('defaults a new contact without a type to Companion', () {
+      final frame = buildContactQrFrame(ScannedContact(publicKey: publicKey));
+
+      expect(frame[33], advTypeChat);
+    });
+
+    test('keeps the type of an existing contact when the card has none', () {
+      final existing = Contact(
+        publicKey: publicKey,
+        name: 'Hilltop',
+        type: advTypeRepeater,
+        pathLength: -1,
+        path: Uint8List(0),
+        lastSeen: DateTime.fromMillisecondsSinceEpoch(0),
+      );
+      final frame = buildContactQrFrame(
+        ScannedContact(publicKey: publicKey),
+        existing: existing,
+      );
+
+      expect(frame[33], advTypeRepeater);
+    });
+
+    test('writes a zero advert timestamp for a new contact', () {
+      final frame = buildContactQrFrame(
+        ScannedContact(publicKey: publicKey, name: 'Alice'),
+      );
+
+      final tsStart = 36 + maxPathSize + maxNameSize;
+      expect(frame.sublist(tsStart, tsStart + 4), [0, 0, 0, 0]);
+    });
+
+    test('keeps the advert timestamp of an existing contact', () {
+      final existing = Contact(
+        publicKey: publicKey,
+        name: 'Alice',
+        type: advTypeChat,
+        pathLength: -1,
+        path: Uint8List(0),
+        lastSeen: DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000),
+      );
+      final frame = buildContactQrFrame(
+        ScannedContact(publicKey: publicKey, name: 'Alice'),
+        existing: existing,
+      );
+
+      final tsStart = 36 + maxPathSize + maxNameSize;
+      final ts = ByteData.sublistView(
+        frame,
+        tsStart,
+        tsStart + 4,
+      ).getUint32(0, Endian.little);
+      expect(ts, 1700000000);
+    });
+
     test('preserves the flags of an existing contact', () {
       final frame = buildContactQrFrame(
         ScannedContact(publicKey: publicKey, name: 'Alice'),

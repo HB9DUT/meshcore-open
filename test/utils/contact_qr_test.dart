@@ -21,24 +21,24 @@ void main() {
       expect(result.type, 2);
     });
 
-    test('missing type defaults to 1', () {
+    test('missing type is left unset', () {
       final key = 'ab' * 32;
       final result = parseContactQr(
         'meshcore://contact/add?name=Bob&public_key=$key',
       );
 
       expect(result, isNotNull);
-      expect(result!.type, 1);
+      expect(result!.type, isNull);
     });
 
-    test('garbage type falls back to 1', () {
+    test('garbage type is left unset', () {
       final key = 'ab' * 32;
       final result = parseContactQr(
         'meshcore://contact/add?name=Bob&public_key=$key&type=nope',
       );
 
       expect(result, isNotNull);
-      expect(result!.type, 1);
+      expect(result!.type, isNull);
     });
 
     test('uppercase hex public key is accepted', () {

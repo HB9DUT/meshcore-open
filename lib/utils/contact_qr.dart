@@ -11,14 +11,15 @@ class ScannedContact {
   /// Contact name from the card form; empty string when unknown.
   final String name;
 
-  /// Advert type: 1 Companion, 2 Repeater, 3 Room Server, 4 Sensor.
-  final int type;
+  /// Advert type: 1 Companion, 2 Repeater, 3 Room Server, 4 Sensor; null
+  /// when the card omits it or carries an unknown value.
+  final int? type;
 
   const ScannedContact({
     this.advertPacket,
     this.publicKey,
     this.name = '',
-    this.type = 1,
+    this.type,
   });
 
   bool get isAdvertPacket => advertPacket != null;
@@ -71,8 +72,8 @@ ScannedContact? _parseContactCard(Uri uri) {
   }
 
   final name = (params['name'] ?? '').trim();
-  int type = int.tryParse(params['type'] ?? '') ?? 1;
-  if (type < 1 || type > 4) type = 1;
+  int? type = int.tryParse(params['type'] ?? '');
+  if (type != null && (type < 1 || type > 4)) type = null;
 
   return ScannedContact(publicKey: publicKey, name: name, type: type);
 }

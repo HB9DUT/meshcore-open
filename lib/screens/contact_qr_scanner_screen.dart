@@ -25,6 +25,10 @@ class ContactQrScannerScreen extends StatefulWidget {
 class _ContactQrScannerScreenState extends State<ContactQrScannerScreen> {
   bool _isProcessing = false;
 
+  /// Set after a failed import so the camera does not immediately rescan the
+  /// same QR and resend the frame in a loop.
+  bool _importFailed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +48,8 @@ class _ContactQrScannerScreenState extends State<ContactQrScannerScreen> {
               color: Theme.of(context).colorScheme.surface,
               child: const Center(child: CircularProgressIndicator()),
             )
+          : _importFailed
+          ? _buildImportFailed(context)
           : QrScannerWidget(
               onScanned: (data) => _handleScannedData(data),
               validator: (data) => parseContactQr(data) != null,
@@ -51,6 +57,36 @@ class _ContactQrScannerScreenState extends State<ContactQrScannerScreen> {
               instructions: context.l10n.contacts_scanQrInstructions,
               overlay: _buildThemedOverlay(context),
             ),
+    );
+  }
+
+  Widget _buildImportFailed(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.contacts_contactImportFailed,
+              style: Theme.of(context).textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => setState(() => _importFailed = false),
+              icon: const Icon(Icons.refresh),
+              label: Text(context.l10n.common_retry),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -202,6 +238,7 @@ class _ContactQrScannerScreenState extends State<ContactQrScannerScreen> {
 
     setState(() {
       _isProcessing = true;
+      _importFailed = false;
     });
 
     final scanned = parseContactQr(data);
@@ -240,18 +277,14 @@ class _ContactQrScannerScreenState extends State<ContactQrScannerScreen> {
         context,
         content: Text(context.l10n.contacts_contactImported),
       );
+      // Keep _isProcessing set: resetting it would restart the camera on a
+      // closing route and let a second detection import and pop again.
       Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        showDismissibleSnackBar(
-          context,
-          content: Text(context.l10n.contacts_contactImportFailed),
-        );
-      }
-    } finally {
-      if (mounted) {
         setState(() {
           _isProcessing = false;
+          _importFailed = true;
         });
       }
     }
