@@ -3890,7 +3890,15 @@ class MeshCoreConnector extends ChangeNotifier {
           maxResends: maxResends,
         );
         notifyListeners();
-        await resend();
+        try {
+          await resend();
+        } catch (e) {
+          _appDebugLogService?.warn(
+            'Channel resend failed: $e',
+            tag: 'Channel resend',
+          );
+          break;
+        }
       }
       _appDebugLogService?.warn(
         'Channel message only heard at $hops of $minHops hops; giving up',
@@ -6987,12 +6995,31 @@ class MeshCoreConnector extends ChangeNotifier {
       }
     }
     // Second pass: heuristic fallback (outgoing echo, old messages without hash)
+    int? selfEchoFallback;
     for (int i = messages.length - 1; i >= 0; i--) {
-      if (_isChannelRepeat(messages[i], incoming)) {
-        return i;
+      final existing = messages[i];
+      if (!_isChannelRepeat(existing, incoming)) continue;
+      if (!existing.isOutgoing) return i;
+      // Our messages sent within one second share a timestamp. Skip any
+      // already tied to a different packet, and prefer the one whose text
+      // matches; the text can differ (reply prefix, cyr2lat), so otherwise
+      // fall back to the newest.
+      final existingHash = existing.packetHash;
+      if (existingHash != null &&
+          incomingHash != null &&
+          existingHash != incomingHash) {
+        continue;
       }
+      if (_sameChannelText(existing.text, incoming.text)) return i;
+      selfEchoFallback ??= i;
     }
-    return -1;
+    return selfEchoFallback ?? -1;
+  }
+
+  bool _sameChannelText(String a, String b) {
+    String strip(String text) =>
+        ChannelMessage.parseReplyMention(text)?.actualMessage ?? text;
+    return a == b || strip(a) == strip(b);
   }
 
   bool _isChannelRepeat(ChannelMessage existing, ChannelMessage incoming) {
