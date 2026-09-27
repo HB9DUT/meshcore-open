@@ -39,6 +39,14 @@ class UsbSerialService {
   /// Non-null while a disconnect teardown (native close in a helper isolate,
   /// then subscription cancel) is running.
   Future<void>? _activeDisconnect;
+
+  /// Exists while a native close runs in a helper isolate. flserial's slot
+  /// table is process-global and survives a hot restart, but
+  /// [_activeDisconnect] does not, so a fresh isolate checks this marker
+  /// before fl_free() tears down a slot that is still inside close().
+  static final String _pendingClosePath =
+      '${Directory.systemTemp.path}/meshcore_open_usb_close_$pid';
+  static const Duration _maxPendingClose = Duration(seconds: 45);
   AppDebugLogService? _debugLogService;
   Object? _lastError;
 
@@ -192,6 +200,7 @@ class UsbSerialService {
       // This must happen before we register any new NativeCallable, so it must
       // be the very first thing we do in the desktop branch.
       // (the previous teardown was already awaited above)
+      await _waitForOrphanedNativeClose();
 
       try {
         bindings.fl_free();
@@ -428,15 +437,23 @@ class UsbSerialService {
   Future<void> _closePortOffUiIsolate(FlSerial serial) async {
     final flh = serial.flh;
     if (flh < 0) {
-      // Already closed synchronously by dispose(); `closePort()` freed the
-      // native slot, the stream and both I/O buffers. Touching them again
-      // would double-free the calloc'd buffers.
+      // Already closed synchronously by dispose(), which also closed the
+      // stream and freed both I/O buffers.
       return;
     }
     serial.flh = -1;
     final startedAt = DateTime.now();
+    final markerPath = _pendingClosePath;
     try {
-      await Isolate.run(() => bindings.fl_close(flh));
+      File(markerPath).writeAsStringSync('');
+    } catch (_) {}
+    try {
+      await Isolate.run(() {
+        bindings.fl_close(flh);
+        try {
+          File(markerPath).deleteSync();
+        } catch (_) {}
+      });
     } catch (error) {
       // Spawning the helper failed, so the native slot and its SerialThread
       // are still alive with no reachable handle. Close it inline instead —
@@ -451,6 +468,9 @@ class UsbSerialService {
         // Ignore errors while closing.
       }
     }
+    try {
+      File(markerPath).deleteSync();
+    } catch (_) {}
     final elapsed = DateTime.now().difference(startedAt);
     if (elapsed > const Duration(seconds: 1)) {
       _debugLogService?.warn(
@@ -467,19 +487,37 @@ class UsbSerialService {
     _releaseSerialBuffers(serial);
   }
 
-  /// Frees the two calloc'd I/O buffers `openPort()` allocated and clears the
-  /// pointer fields.
-  ///
-  /// [alreadyFreed] is set when `FlSerial.closePort()` ran: it frees both
-  /// buffers itself but leaves the pointer fields dangling, so they must only
-  /// be cleared, never freed again.
-  void _releaseSerialBuffers(FlSerial serial, {bool alreadyFreed = false}) {
+  /// Waits for a native close left running by a previous isolate (hot
+  /// restart during a slow close). Bounded by the marker's age so a stale
+  /// marker — its helper isolate killed before deleting it — cannot block
+  /// forever.
+  Future<void> _waitForOrphanedNativeClose() async {
+    final marker = File(_pendingClosePath);
     try {
-      if (!alreadyFreed && serial.serialReadBuff.address != 0) {
+      if (!marker.existsSync()) return;
+      _debugLogService?.info(
+        'Waiting for a USB port close left over from a previous isolate',
+        tag: 'USB Serial',
+      );
+      final deadline = marker.lastModifiedSync().add(_maxPendingClose);
+      while (marker.existsSync() && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+      }
+      if (marker.existsSync()) marker.deleteSync();
+    } catch (_) {}
+  }
+
+  /// Frees the two calloc'd I/O buffers `openPort()` allocated and clears the
+  /// pointer fields. `FlSerial.closePort()` is never used for this: it tests
+  /// the buffers' first byte (`.value`) instead of their address, so it
+  /// usually leaks them.
+  void _releaseSerialBuffers(FlSerial serial) {
+    try {
+      if (serial.serialReadBuff.address != 0) {
         calloc.free(serial.serialReadBuff);
       }
       serial.serialReadBuff = Pointer.fromAddress(0);
-      if (!alreadyFreed && serial.serialWriteBuff.address != 0) {
+      if (serial.serialWriteBuff.address != 0) {
         calloc.free(serial.serialWriteBuff);
       }
       serial.serialWriteBuff = Pointer.fromAddress(0);
@@ -510,22 +548,24 @@ class UsbSerialService {
         // Close on any live handle, not only when isOpen() reports `open`:
         // flserial keeps a valid slot (and a running SerialThread) when the
         // port is in an I/O error state, and _serial is already unreachable.
-        var closed = false;
-        if (serial.flh >= 0) {
+        final flh = serial.flh;
+        if (flh >= 0) {
           try {
             serial.setDTR(false);
           } catch (_) {
             // Line-control failure must not skip the close below.
           }
+          serial.flh = -1;
           try {
-            serial.closePort(); // synchronous C call — kills the SerialThread
-            closed = true;
+            bindings.fl_close(
+              flh,
+            ); // synchronous C call — kills the SerialThread
           } catch (_) {}
+          unawaited(serial.onSerialData.close());
         }
         // _serial is gone, so the disconnect() below can no longer reach the
-        // buffers: release them here, or just clear the dangling pointers if
-        // closePort() already freed them.
-        _releaseSerialBuffers(serial, alreadyFreed: closed);
+        // buffers: release them here.
+        _releaseSerialBuffers(serial);
       }
     }
     // Kick off the full async teardown for anything else (subscription cancel,
