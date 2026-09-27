@@ -6838,9 +6838,15 @@ class MeshCoreConnector extends ChangeNotifier {
       return null;
     }
 
+    // `foo` and `#foo` share a scope key, so dedupe without the prefix or a
+    // region listed both ways would always look ambiguous.
     final candidates = <String>{
-      ...RegionStore().loadRegions(),
-      ..._channelRegions.values,
+      for (final region in [
+        ...RegionStore().loadRegions(),
+        ..._channelRegions.values,
+        _defaultRegion,
+      ])
+        region.startsWith('#') ? region.substring(1) : region,
     }.where((region) => region.trim().isNotEmpty).toList()..sort();
     String? match;
     for (final region in candidates) {
