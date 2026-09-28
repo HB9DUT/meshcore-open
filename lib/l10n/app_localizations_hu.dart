@@ -112,35 +112,35 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get messageStatus_failedChannel =>
-      'Your radio couldn\'t send this message.';
+      'A rádió nem tudta elküldeni ezt az üzenetet.';
 
   @override
   String messageStatus_resending(int resends, int maxResends) {
-    return 'Not heard through enough repeaters yet. Resent $resends of $maxResends times.';
+    return 'Még nem hallották vissza elég átjátszó segítségével. Újraküldve $resends alkalomból $maxResends alkalomból.';
   }
 
   @override
   String messageStatus_hopsNotReached(int hops, int required) {
-    return 'Sent, but only heard back through $hops of $required repeaters. It may still have gone further than your radio can hear.';
+    return 'Elküldve, de csak $hops / $required átjátszón keresztül hallották vissza. Lehet, hogy a rádió hatókörénél tovább is eljutott.';
   }
 
   @override
   String get messageStatus_sentChannel =>
-      'Sent. Channels don\'t confirm delivery, so this only means your radio sent it.';
+      'Elküldve. A csatornák nem erősítik meg a kézbesítést, ezért ez csak azt jelenti, hogy a rádió elküldötte.';
 
   @override
   String get messageStatus_sentDirect =>
-      'Sent. Waiting for the contact to confirm.';
+      'Elküldve. Várakozás a névjegy megerősítésére.';
 
   @override
   String messageStatus_heardRepeatedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: 'once',
+      other: '$count alkalommal',
+      one: 'egyszer',
     );
-    return 'Heard repeated $_temp0. Nearby repeaters passed it on.';
+    return '$_temp0 hallották vissza. A közeli átjátszók továbbították.';
   }
 
   @override
@@ -418,20 +418,20 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settings_regionEmptyExplanation =>
-      'Regions limit flood messages to repeaters in an area. Fetch them from nearby repeaters or add one by name.';
+      'A tájak a megadott terület átjátszóira korlátozzák az elárasztási üzeneteket. Töltse le őket a közeli átjátszókról, vagy adjon hozzá tájat név szerint.';
 
   @override
-  String get settings_regionFetchFromRepeaters => 'Fetch from repeaters';
+  String get settings_regionFetchFromRepeaters => 'Lekérés az átjátszókról';
 
   @override
-  String get settings_regionDefault => 'Default region';
+  String get settings_regionDefault => 'Alapértelmezett táj';
 
   @override
   String get settings_regionDefaultSubtitle =>
-      'Used by channels without their own region';
+      'Azok a csatornák használják, amelyeknek nincs saját tájuk';
 
   @override
-  String get settings_regionDefaultNone => 'None';
+  String get settings_regionDefaultNone => 'Nincs';
 
   @override
   String get settings_regionManagement_screenTitle => 'Regionális Kezelés';
@@ -559,7 +559,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settings_telemetryPerContactHint =>
-      'To allow a contact, open their chat and choose Contact Settings from the menu.';
+      'Ha engedélyezni szeretné a kapcsolatot, nyissa meg a csevegését, és válassza a menüben a Kapcsolati beállítások lehetőséget.';
 
   @override
   String get settings_advertLocation => 'Hirdetés helye';
@@ -581,7 +581,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settings_multiAckSubtitle =>
-      'Send extra ACKs for better delivery; uses more airtime';
+      'További ACK-kat küld a jobb kézbesítés érdekében; több műsoridőt igényel';
 
   @override
   String get settings_telemetryModeUpdated => 'Telemetriai mód frissítve';
@@ -702,11 +702,11 @@ class AppLocalizationsHu extends AppLocalizations {
   String get settings_presets => 'Előbeállítások';
 
   @override
-  String get settings_presetCustom => 'Custom';
+  String get settings_presetCustom => 'Egyéni';
 
   @override
   String get settings_radioMatchWarning =>
-      'All nodes you talk to must use the same frequency, bandwidth, SF and CR.';
+      'Az összes csomóponttal, amelyhez kapcsolódik, azonos frekvenciát, sávszélességet, SF-et és CR-t kell használni.';
 
   @override
   String get settings_frequency => 'Frekvencia (MHz)';
@@ -732,7 +732,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String settings_txPowerRangeHelper(int min, int max) {
-    return '$min to $max dBm';
+    return '$min–$max dBm';
   }
 
   @override
@@ -744,7 +744,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String settings_clientRepeatFrequencyNote(String freq) {
-    return 'Frequency set to $freq MHz for off-grid repeat';
+    return '$freq MHz frekvencia beállítva a hálózaton kívüli ismétléshez';
   }
 
   @override
@@ -843,24 +843,24 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settings_pathHashModeHelper =>
-      'Size of each node ID recorded in the path of flood packets this radio sends: 1 byte (256 IDs, up to 64 hops), 2 bytes (65K IDs, up to 32 hops), 3 bytes (16M IDs, up to 21 hops). Larger IDs reduce collisions, but repeaters on firmware older than v1.14 drop packets with 2- or 3-byte IDs.';
+      'Az elküldött elárasztási csomagok útvonalában rögzített csomópontazonosító mérete: 1 bájt (256 azonosító, legfeljebb 64 ugrás), 2 bájt (65 ezer, legfeljebb 32 ugrás), 3 bájt (16 millió, legfeljebb 21 ugrás). A nagyobb azonosítók csökkentik az ütközéseket, de az v1.14-nél régebbi firmware-t futtató átjátszók eldobják a 2 vagy 3 bájtos azonosítókat tartalmazó csomagokat.';
 
   @override
   String settings_requiresFirmware(String version) {
-    return 'Requires firmware $version or newer';
+    return '$version vagy újabb firmware szükséges';
   }
 
   @override
   String get appSettings_channelMinHops =>
-      'Resend channel messages until they travel far enough';
+      'A csatornaüzenetek újraküldése, amíg elég messzék el';
 
   @override
   String get appSettings_channelMinHopsSubtitle =>
-      'If your message isn\'t heard coming back through enough repeaters, send it again. Uses more airtime.';
+      'Ha az üzenet nem érkezik vissza elég átjátszón keresztül, küldje el újra. Több műsoridőt igényel.';
 
   @override
   String appSettings_channelMinHopsCount(int count) {
-    return 'Required hops: $count';
+    return 'Szükséges ugrások: $count';
   }
 
   @override
@@ -868,10 +868,10 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count-szer',
+      one: '1-szer',
     );
-    return 'Resend up to $_temp0';
+    return 'Legfeljebb $_temp0 újraküldés';
   }
 
   @override
@@ -909,11 +909,11 @@ class AppLocalizationsHu extends AppLocalizations {
       'Értesítés megjelenítése új üzenetek fogadásakor';
 
   @override
-  String get appSettings_batteryOptimization => 'Background Activity';
+  String get appSettings_batteryOptimization => 'Háttérben futó tevékenység';
 
   @override
   String get appSettings_batteryOptimizationSubtitle =>
-      'Set MeshCore Open to \"Don\'t optimize\" in battery settings so messages keep arriving in the background';
+      'Állítsa be a MeshCore Open alkalmazást az akkumulátorbeállításokban a „Ne optimalizálja” értékre, hogy az üzenetek a háttérben is érkezzenek';
 
   @override
   String get appSettings_channelMessageNotifications =>
@@ -1195,7 +1195,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get contacts_storageFull =>
-      'Contact storage on the node is full. New nodes cannot be added until contacts are removed.';
+      'A csomópont névjegytárhelye megtelt. Új csomópontokat nem lehet hozzáadni, amíg nem távolít el névjegyeket.';
 
   @override
   String get contacts_deleteContact => 'Névjegy törlése';
@@ -1206,27 +1206,27 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String get contacts_removeFromContacts => 'Remove from contacts';
+  String get contacts_removeFromContacts => 'Eltávolítás a névjegyek közül';
 
   @override
   String contacts_removeFromContactsConfirm(String contactName) {
-    return '$contactName will move to Discovered contacts. Chat history will be deleted.';
+    return '$contactName átkerül a Felfedezett kapcsolatok közé. A csevegési előzmények törlődnek.';
   }
 
   @override
-  String get contacts_keepChatHistory => 'Keep chat history';
+  String get contacts_keepChatHistory => 'A csevegés előzményeinek megőrzése';
 
   @override
-  String get contacts_remove => 'Remove';
+  String get contacts_remove => 'Eltávolítás';
 
   @override
   String contacts_discoveredNearby(int count) {
-    return 'Discovered nearby ($count)';
+    return 'Közelben felfedezve ($count)';
   }
 
   @override
   String get contacts_noContactsDiscoveredHint =>
-      'Nodes your radio hears but hasn\'t added yet are listed in Discovered contacts';
+      'Azok a csomópontok, amelyeket a rádió hall, de még nem adt hozzá, a Felfedezett kapcsolatok listáján szerepelnek';
 
   @override
   String get contacts_manageRepeater => 'Repeater kezelése';
@@ -1383,13 +1383,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get channels_hashtag => 'Hashtag';
 
   @override
-  String get channels_addSectionJoin => 'Join existing';
+  String get channels_addSectionJoin => 'Csatlakozás meglévőhöz';
 
   @override
-  String get channels_addSectionCreate => 'Create new';
+  String get channels_addSectionCreate => 'Új létrehozása';
 
   @override
-  String get channels_dragToReorder => 'Drag to reorder';
+  String get channels_dragToReorder => 'Húzza az átrendezéshez';
 
   @override
   String get channels_editChannel => 'Csatorna szerkesztése';
@@ -1596,17 +1596,17 @@ class AppLocalizationsHu extends AppLocalizations {
   String get channels_clearRegion => 'Kéres kör';
 
   @override
-  String get channels_regionDefaultSuffix => '(default)';
+  String get channels_regionDefaultSuffix => '(alapértelmezett)';
 
   @override
   String get channels_regionSelectExplanation =>
-      'Flood messages on this channel will only be forwarded by repeaters in the selected region.';
+      'A csatorna elárasztási üzeneteit csak a kiválasztott táj átjátszói továbbítják.';
 
   @override
-  String get channels_regionEmpty => 'No regions yet.';
+  String get channels_regionEmpty => 'Még nincsenek tájak.';
 
   @override
-  String get channels_manageRegions => 'Manage regions';
+  String get channels_manageRegions => 'Tájak kezelése';
 
   @override
   String get chat_noMessages => 'Még nincsenek üzenetek';
@@ -1667,10 +1667,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get chat_sendGif => 'GIF küldése';
 
   @override
-  String get chat_removeGif => 'Remove GIF';
+  String get chat_removeGif => 'GIF eltávolítása';
 
   @override
-  String get chat_cancelReply => 'Cancel reply';
+  String get chat_cancelReply => 'Válasz visszavonása';
 
   @override
   String get chat_sendImageLora => 'Kép küldése MeshCore-on keresztül';
@@ -1981,7 +1981,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get chat_path => 'Útvonal';
 
   @override
-  String get chat_viewPathOnMap => 'View path on map';
+  String get chat_viewPathOnMap => 'Útvonal megtekintése a térképen';
 
   @override
   String get chat_publicKey => 'Nyilvános kulcs';
@@ -2021,10 +2021,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get chat_newMessages => 'Új üzenetek';
 
   @override
-  String get chat_today => 'Today';
+  String get chat_today => 'Ma';
 
   @override
-  String get chat_yesterday => 'Yesterday';
+  String get chat_yesterday => 'Tegnap';
 
   @override
   String get chat_openLink => 'Link megnyitása?';
@@ -2073,7 +2073,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get map_centerOnNode => 'Középre a csomóponton';
 
   @override
-  String get map_centerOnMe => 'Center on my location';
+  String get map_centerOnMe => 'Középre a saját helyemre';
 
   @override
   String get map_details => 'Részletek';
@@ -2096,7 +2096,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get map_noNodesLocationHint =>
-      'No nodes with a recent location. Widen the time filter, or set your own location in Settings.';
+      'Nincsenek friss helyzetű csomópontok. Bővítse az időszűrőt, vagy állítsa be a saját helyét a Beállításokban.';
 
   @override
   String get map_nodesNeedGps =>
@@ -2241,14 +2241,14 @@ class AppLocalizationsHu extends AppLocalizations {
       'Talált csomópont-helyek megjelenítése';
 
   @override
-  String get map_clusterNodes => 'Group nearby nodes';
+  String get map_clusterNodes => 'Közeli csomópontok csoportosítása';
 
   @override
-  String get map_groupChip => 'Group';
+  String get map_groupChip => 'Csoportok';
 
   @override
   String get map_clusterNodesSubtitle =>
-      'When zoomed out, show nearby nodes as one numbered circle';
+      'Kicsinyített nézetben a közeli csomópontok egyetlen számozott körként jelennek meg';
 
   @override
   String get map_showDiscoveryContacts => 'Felfedezési névjegyek megjelenítése';
@@ -2272,7 +2272,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get map_manageRepeater => 'Repeater kezelése';
 
   @override
-  String get map_manageServer => 'Manage Server';
+  String get map_manageServer => 'Kiszolgáló kezelése';
 
   @override
   String get map_tapToAdd =>
@@ -2479,10 +2479,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get login_enterPassword => 'Adja meg a jelszót';
 
   @override
-  String get login_showPassword => 'Show password';
+  String get login_showPassword => 'Jelszó megjelenítése';
 
   @override
-  String get login_hidePassword => 'Hide password';
+  String get login_hidePassword => 'Jelszó elrejtése';
 
   @override
   String get login_savePassword => 'Jelszó mentése';
@@ -2500,7 +2500,7 @@ class AppLocalizationsHu extends AppLocalizations {
       'Adja meg a szoba jelszavát a vendég vagy adminisztrátori hozzáféréshez.';
 
   @override
-  String get login_advanced => 'Advanced';
+  String get login_advanced => 'Fejlett';
 
   @override
   String get login_routing => 'Útválasztás';
@@ -2542,7 +2542,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get common_clear => 'Világos';
 
   @override
-  String get common_clearSearch => 'Clear search';
+  String get common_clearSearch => 'Keresés törlése';
 
   @override
   String get path_currentPathLabel => 'Jelenlegi útvonal';
@@ -2573,7 +2573,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get repeater_roleAdmin => 'ADMIN';
 
   @override
-  String get repeater_roleGuest => 'GUEST';
+  String get repeater_roleGuest => 'VENDÉG';
 
   @override
   String get repeater_status => 'Állapot';
@@ -3098,15 +3098,15 @@ class AppLocalizationsHu extends AppLocalizations {
   String get repeater_refreshPrivacyMode => 'Frissítse az adatvédelmi módot';
 
   @override
-  String get repeater_refreshAll => 'Refresh all';
+  String get repeater_refreshAll => 'Összes frissítése';
 
   @override
   String get repeater_settingsNotLoaded =>
-      'Settings haven\'t been loaded from this repeater yet.';
+      'A beállításokat még nem töltöttük le erről az átjátszóról.';
 
   @override
   String get repeater_settingsLoadIncomplete =>
-      'Some settings could not be loaded. Use the refresh buttons to retry.';
+      'Néhány beállítást nem sikerült betölteni. Az újrapróbálkozáshoz használja a frissítés gombokat.';
 
   @override
   String repeater_refreshed(String label) {
@@ -4557,21 +4557,21 @@ class AppLocalizationsHu extends AppLocalizations {
       'Névjegy hozzáadása a vágólapról';
 
   @override
-  String get contacts_scanQrCode => 'Scan QR Code';
+  String get contacts_scanQrCode => 'QR-kód beolvasása';
 
   @override
   String get contacts_scanQrInstructions =>
-      'Point the camera at a MeshCore contact QR code';
+      'Irányítsa a kamerát a MeshCore névjegy QR-kódjára';
 
   @override
-  String get contacts_qrFromGallery => 'Scan QR from Gallery';
+  String get contacts_qrFromGallery => 'QR-kód beolvasása a galériából';
 
   @override
   String get contacts_noQrCodeFound =>
-      'No QR code found in the selected image.';
+      'A kiválasztott képen nem található QR-kód.';
 
   @override
-  String get contacts_qrGalleryFailed => 'Could not open the gallery.';
+  String get contacts_qrGalleryFailed => 'A galéria nem nyitható meg.';
 
   @override
   String get contacts_ShareContact => 'Névjegy másolása a vágólapra';
@@ -4639,42 +4639,42 @@ class AppLocalizationsHu extends AppLocalizations {
   String get notification_receivedNewMessage => 'Új üzenet érkezett';
 
   @override
-  String get notification_actionReply => 'Reply';
+  String get notification_actionReply => 'Válasz';
 
   @override
-  String get notification_actionMarkRead => 'Mark as read';
+  String get notification_actionMarkRead => 'Megjelölés olvasottként';
 
   @override
-  String get notification_actionMuteChannel => 'Mute channel';
+  String get notification_actionMuteChannel => 'Csatorna némítása';
 
   @override
-  String get notification_replyHint => 'Message';
+  String get notification_replyHint => 'Üzenet';
 
   @override
-  String get notification_you => 'You';
+  String get notification_you => 'Ön';
 
   @override
-  String get notification_replyFailedTitle => 'Reply not sent';
+  String get notification_replyFailedTitle => 'A válasz nem lett elküldve';
 
   @override
   String get notification_replyNotConnected =>
-      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+      'Nincs csatlakozás rádióhoz. Csatlakozzon újra a MeshCore Open alkalmazásban, és küldje el a választ újra.';
 
   @override
   String get notification_replyTooLong =>
-      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+      'A válasz túl hosszú ahhoz, hogy értesítésből küldhető legyen. Küldje el helyette a MeshCore Open alkalmazásból.';
 
   @override
   String get notification_replyUnavailable =>
-      'This conversation is no longer on the connected radio.';
+      'Ez a beszélgetés már nincs a csatlakoztatott rádión.';
 
   @override
   String get notification_replySendFailed =>
-      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+      'Előfordulhat, hogy a válasz nem ment el. Ellenőrizze a MeshCore Open alkalmazásban, és próbálja újra.';
 
   @override
   String get notification_replyAppNotRunning =>
-      'MeshCore Open isn\'t running. Open it and send your reply again.';
+      'A MeshCore Open nem fut. Nyissa meg, és küldje el a választ újra.';
 
   @override
   String get settings_gpxExportRepeaters =>
@@ -4737,7 +4737,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get snrIndicator_nearByRepeatersDescription =>
-      'Repeaters your radio heard directly, most recently heard first.';
+      'Azok az átjátszók, amelyeket a rádió közvetlenül hallott, a legutóbb hallottak elöl.';
 
   @override
   String get contactsSettings_title => 'Névjegyek beállításai';
@@ -4847,10 +4847,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get radioStats_screenTitle => 'Rádió statisztika';
 
   @override
-  String get radioStats_sectionSignal => 'Signal';
+  String get radioStats_sectionSignal => 'Jel';
 
   @override
-  String get radioStats_sectionAirtime => 'Airtime';
+  String get radioStats_sectionAirtime => 'Műsoridő';
 
   @override
   String get radioStats_notConnected =>
@@ -5239,22 +5239,22 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String imageSend_lossyNote(int bytes) {
-    return 'Compressed to about $bytes bytes. The receiver\'s model reconstructs it, so details will differ.';
+    return 'Tömörítve körülbelül $bytes bájtra. A címzett modellje rekonstruálja, így a részletek eltérnek.';
   }
 
   @override
-  String get imageSend_viewOriginal => 'Original';
+  String get imageSend_viewOriginal => 'Eredeti';
 
   @override
-  String get imageSend_viewReconstruction => 'What recipients see';
+  String get imageSend_viewReconstruction => 'Amit a címzettek látnak';
 
   @override
   String get imageSend_reconstructionUnavailable =>
-      'This device can\'t preview the reconstruction.';
+      'Ezen az eszközön nem jeleníthető meg a rekonstrukció előnézete.';
 
   @override
   String get imageSend_modelNotDownloaded =>
-      'The image model isn\'t downloaded yet. Download it in Settings to send images.';
+      'A képmodell még nincs letöltve. Töltse le a Beállításokban a képek küldéséhez.';
 
   @override
   String get imageSend_originalSize => 'Következtetés:';
@@ -5426,27 +5426,27 @@ class AppLocalizationsHu extends AppLocalizations {
   String get receivedImage_tapToProcess => 'Klikd a feljelenítést';
 
   @override
-  String get receivedImage_save => 'Save image';
+  String get receivedImage_save => 'Kép mentése';
 
   @override
   String receivedImage_shareCaption(int bytes) {
-    return 'AI-reconstructed from $bytes bytes; fine detail is generated, not transmitted.';
+    return 'AI-jel rekonstruálva $bytes bájtból; a finom részletek generáltak, nem továbbítottak.';
   }
 
   @override
-  String get receivedImage_packetInfo => 'Packet info';
+  String get receivedImage_packetInfo => 'Csomag adatai';
 
   @override
   String get receivedImage_parityRecovered =>
-      'One packet was rebuilt from the recovery packet.';
+      'Egy csomag újra lett építve a helyreállító csomagból.';
 
   @override
   String receivedImage_decodeTime(int ms) {
-    return 'Reconstructed in $ms ms';
+    return '$ms ms alatt rekonstruálva';
   }
 
   @override
-  String get receivedImage_saveFailed => 'Couldn\'t save the image';
+  String get receivedImage_saveFailed => 'A képet nem sikerült elmenteni';
 
   @override
   String receivedImage_awaiting(int bytes, int packets) {

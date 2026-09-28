@@ -112,35 +112,35 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get messageStatus_failedChannel =>
-      'Your radio couldn\'t send this message.';
+      'Din radio kunde inte skicka det här meddelandet.';
 
   @override
   String messageStatus_resending(int resends, int maxResends) {
-    return 'Not heard through enough repeaters yet. Resent $resends of $maxResends times.';
+    return 'Har inte hörts via tillräckligt många repeatrar ännu. Skickat om $resends av $maxResends gånger.';
   }
 
   @override
   String messageStatus_hopsNotReached(int hops, int required) {
-    return 'Sent, but only heard back through $hops of $required repeaters. It may still have gone further than your radio can hear.';
+    return 'Skickat, men endast hört tillbaka via $hops av $required repeatrar. Det kan ha kommit längre än din radio kan höra.';
   }
 
   @override
   String get messageStatus_sentChannel =>
-      'Sent. Channels don\'t confirm delivery, so this only means your radio sent it.';
+      'Skickat. Kanaler bekräftar inte leverans, så det betyder bara att din radio har skickat det.';
 
   @override
   String get messageStatus_sentDirect =>
-      'Sent. Waiting for the contact to confirm.';
+      'Skickat. Väntar på bekräftelse från kontakten.';
 
   @override
   String messageStatus_heardRepeatedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: 'once',
+      other: '$count gånger',
+      one: 'en gång',
     );
-    return 'Heard repeated $_temp0. Nearby repeaters passed it on.';
+    return 'Hördes $_temp0. Repeatrar i närheten har vidarebefordrat det.';
   }
 
   @override
@@ -417,20 +417,20 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settings_regionEmptyExplanation =>
-      'Regions limit flood messages to repeaters in an area. Fetch them from nearby repeaters or add one by name.';
+      'Regioner begränsar flood-meddelanden till repeatrar inom ett område. Hämta dem från repeatrar i närheten eller lägg till en med namn.';
 
   @override
-  String get settings_regionFetchFromRepeaters => 'Fetch from repeaters';
+  String get settings_regionFetchFromRepeaters => 'Hämta från repeatrar';
 
   @override
-  String get settings_regionDefault => 'Default region';
+  String get settings_regionDefault => 'Standardregion';
 
   @override
   String get settings_regionDefaultSubtitle =>
-      'Used by channels without their own region';
+      'Används av kanaler som saknar egen region';
 
   @override
-  String get settings_regionDefaultNone => 'None';
+  String get settings_regionDefaultNone => 'Ingen';
 
   @override
   String get settings_regionManagement_screenTitle => 'Regionhantering';
@@ -554,7 +554,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settings_telemetryPerContactHint =>
-      'To allow a contact, open their chat and choose Contact Settings from the menu.';
+      'För att tillåta en kontakt öppnar du chatten och väljer Kontaktinställningar i menyn.';
 
   @override
   String get settings_advertLocation => 'Annonsplacering';
@@ -575,7 +575,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settings_multiAckSubtitle =>
-      'Send extra ACKs for better delivery; uses more airtime';
+      'Skicka extra ACK för bättre leverans; använder mer sändningstid';
 
   @override
   String get settings_telemetryModeUpdated => 'Telemetri-läge uppdaterat';
@@ -695,11 +695,11 @@ class AppLocalizationsSv extends AppLocalizations {
   String get settings_presets => 'Fördefinierade inställningar';
 
   @override
-  String get settings_presetCustom => 'Custom';
+  String get settings_presetCustom => 'Anpassad';
 
   @override
   String get settings_radioMatchWarning =>
-      'All nodes you talk to must use the same frequency, bandwidth, SF and CR.';
+      'Alla noder du kommunicerar med måste använda samma frekvens, bandbredd, SF och CR.';
 
   @override
   String get settings_frequency => 'Frekvens (MHz)';
@@ -724,7 +724,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String settings_txPowerRangeHelper(int min, int max) {
-    return '$min to $max dBm';
+    return '$min till $max dBm';
   }
 
   @override
@@ -735,7 +735,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String settings_clientRepeatFrequencyNote(String freq) {
-    return 'Frequency set to $freq MHz for off-grid repeat';
+    return 'Frekvensen är satt till $freq MHz för upprepning utan elnät';
   }
 
   @override
@@ -834,24 +834,24 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get settings_pathHashModeHelper =>
-      'Size of each node ID recorded in the path of flood packets this radio sends: 1 byte (256 IDs, up to 64 hops), 2 bytes (65K IDs, up to 32 hops), 3 bytes (16M IDs, up to 21 hops). Larger IDs reduce collisions, but repeaters on firmware older than v1.14 drop packets with 2- or 3-byte IDs.';
+      'Storleken på varje nod-ID som registreras i rutten för de flood-paket som den här radion skickar: 1 byte (256 ID:n, upp till 64 hopp), 2 byte (65K ID:n, upp till 32 hopp), 3 byte (16M ID:n, upp till 21 hopp). Större ID:n minskar kollisioner, men repeatrar med firmware äldre än v1.14 tappar paket med 2- eller 3-byte-ID:n.';
 
   @override
   String settings_requiresFirmware(String version) {
-    return 'Requires firmware $version or newer';
+    return 'Kräver firmware $version eller senare';
   }
 
   @override
   String get appSettings_channelMinHops =>
-      'Resend channel messages until they travel far enough';
+      'Skicka om kanalmeddelanden tills de kommer tillräckligt långt';
 
   @override
   String get appSettings_channelMinHopsSubtitle =>
-      'If your message isn\'t heard coming back through enough repeaters, send it again. Uses more airtime.';
+      'Om ditt meddelande inte hörs tillbaka via tillräckligt många repeatrar skickar du om det. Använder mer sändningstid.';
 
   @override
   String appSettings_channelMinHopsCount(int count) {
-    return 'Required hops: $count';
+    return 'Nödvändiga hopp: $count';
   }
 
   @override
@@ -859,10 +859,10 @@ class AppLocalizationsSv extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count gånger',
+      one: '1 gång',
     );
-    return 'Resend up to $_temp0';
+    return 'Skicka om upp till $_temp0';
   }
 
   @override
@@ -900,11 +900,11 @@ class AppLocalizationsSv extends AppLocalizations {
       'Visa en notifiering när nya meddelanden tas emot';
 
   @override
-  String get appSettings_batteryOptimization => 'Background Activity';
+  String get appSettings_batteryOptimization => 'Bakgrundsaktivitet';
 
   @override
   String get appSettings_batteryOptimizationSubtitle =>
-      'Set MeshCore Open to \"Don\'t optimize\" in battery settings so messages keep arriving in the background';
+      'Sätt MeshCore Open till “Inte optimera” i batteriinställningarna så att meddelanden fortsätter att komma i bakgrunden';
 
   @override
   String get appSettings_channelMessageNotifications => 'Kanalnotifieringar';
@@ -1184,7 +1184,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get contacts_storageFull =>
-      'Contact storage on the node is full. New nodes cannot be added until contacts are removed.';
+      'Kontaktlagringen på noden är full. Nya noder kan inte läggas till förrän kontakter har tagits bort.';
 
   @override
   String get contacts_deleteContact => 'Ta bort Kontakt';
@@ -1195,27 +1195,27 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get contacts_removeFromContacts => 'Remove from contacts';
+  String get contacts_removeFromContacts => 'Ta bort från kontakter';
 
   @override
   String contacts_removeFromContactsConfirm(String contactName) {
-    return '$contactName will move to Discovered contacts. Chat history will be deleted.';
+    return '$contactName flyttas till Upptäckta kontakter. Chatthistoriken tas bort.';
   }
 
   @override
-  String get contacts_keepChatHistory => 'Keep chat history';
+  String get contacts_keepChatHistory => 'Behåll chatthistorik';
 
   @override
-  String get contacts_remove => 'Remove';
+  String get contacts_remove => 'Ta bort';
 
   @override
   String contacts_discoveredNearby(int count) {
-    return 'Discovered nearby ($count)';
+    return 'Upptäckt i närheten ($count)';
   }
 
   @override
   String get contacts_noContactsDiscoveredHint =>
-      'Nodes your radio hears but hasn\'t added yet are listed in Discovered contacts';
+      'Noder som din radio hör men ännu inte har lagt till visas under Upptäckta kontakter';
 
   @override
   String get contacts_manageRepeater => 'Hantera repeater';
@@ -1369,13 +1369,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get channels_hashtag => 'Hashtag';
 
   @override
-  String get channels_addSectionJoin => 'Join existing';
+  String get channels_addSectionJoin => 'Gå med i befintlig';
 
   @override
-  String get channels_addSectionCreate => 'Create new';
+  String get channels_addSectionCreate => 'Skapa ny';
 
   @override
-  String get channels_dragToReorder => 'Drag to reorder';
+  String get channels_dragToReorder => 'Dra för att ordna om';
 
   @override
   String get channels_editChannel => 'Redigera kanal';
@@ -1579,17 +1579,17 @@ class AppLocalizationsSv extends AppLocalizations {
   String get channels_clearRegion => 'Rensa region';
 
   @override
-  String get channels_regionDefaultSuffix => '(default)';
+  String get channels_regionDefaultSuffix => '(standard)';
 
   @override
   String get channels_regionSelectExplanation =>
-      'Flood messages on this channel will only be forwarded by repeaters in the selected region.';
+      'Flood-meddelanden i den här kanalen vidarebefordras bara av repeatrar i den valda regionen.';
 
   @override
-  String get channels_regionEmpty => 'No regions yet.';
+  String get channels_regionEmpty => 'Inga regioner ännu.';
 
   @override
-  String get channels_manageRegions => 'Manage regions';
+  String get channels_manageRegions => 'Hantera regioner';
 
   @override
   String get chat_noMessages => 'Inga meddelanden ännu';
@@ -1652,10 +1652,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get chat_sendGif => 'Skicka GIF';
 
   @override
-  String get chat_removeGif => 'Remove GIF';
+  String get chat_removeGif => 'Ta bort GIF';
 
   @override
-  String get chat_cancelReply => 'Cancel reply';
+  String get chat_cancelReply => 'Avbryt svar';
 
   @override
   String get chat_sendImageLora => 'Skicka bild via MeshCore';
@@ -1966,7 +1966,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get chat_path => 'Rutt';
 
   @override
-  String get chat_viewPathOnMap => 'View path on map';
+  String get chat_viewPathOnMap => 'Visa rutt på kartan';
 
   @override
   String get chat_publicKey => 'Publik nyckel';
@@ -2006,10 +2006,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get chat_newMessages => 'Nya meddelanden';
 
   @override
-  String get chat_today => 'Today';
+  String get chat_today => 'Idag';
 
   @override
-  String get chat_yesterday => 'Yesterday';
+  String get chat_yesterday => 'Igår';
 
   @override
   String get chat_openLink => 'Öppna länk?';
@@ -2057,7 +2057,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get map_centerOnNode => 'Centrera på nod';
 
   @override
-  String get map_centerOnMe => 'Center on my location';
+  String get map_centerOnMe => 'Centrera på min plats';
 
   @override
   String get map_details => 'Detaljer';
@@ -2079,7 +2079,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get map_noNodesLocationHint =>
-      'No nodes with a recent location. Widen the time filter, or set your own location in Settings.';
+      'Inga noder med en aktuell plats. Widga tidsfiltret eller ange din egen plats i Inställningar.';
 
   @override
   String get map_nodesNeedGps =>
@@ -2224,14 +2224,14 @@ class AppLocalizationsSv extends AppLocalizations {
       'Visa upp de antagna nodernas placeringar';
 
   @override
-  String get map_clusterNodes => 'Group nearby nodes';
+  String get map_clusterNodes => 'Gruppera noder i närheten';
 
   @override
-  String get map_groupChip => 'Group';
+  String get map_groupChip => 'Grupp';
 
   @override
   String get map_clusterNodesSubtitle =>
-      'When zoomed out, show nearby nodes as one numbered circle';
+      'Visa noder i närheten som en numrerad cirkel när du zoomar ut';
 
   @override
   String get map_showDiscoveryContacts => 'Visa Discovery-kontakter';
@@ -2255,7 +2255,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get map_manageRepeater => 'Hantera repeater';
 
   @override
-  String get map_manageServer => 'Manage Server';
+  String get map_manageServer => 'Hantera server';
 
   @override
   String get map_tapToAdd => 'Tryck på noder för att lägga till dem i rutten.';
@@ -2461,10 +2461,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get login_enterPassword => 'Ange lösenord';
 
   @override
-  String get login_showPassword => 'Show password';
+  String get login_showPassword => 'Visa lösenord';
 
   @override
-  String get login_hidePassword => 'Hide password';
+  String get login_hidePassword => 'Dölj lösenord';
 
   @override
   String get login_savePassword => 'Spara lösenord';
@@ -2482,7 +2482,7 @@ class AppLocalizationsSv extends AppLocalizations {
       'Ange rummets lösenord för att komma åt inställningar och status.';
 
   @override
-  String get login_advanced => 'Advanced';
+  String get login_advanced => 'Avancerat';
 
   @override
   String get login_routing => 'Ruttning';
@@ -2523,7 +2523,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get common_clear => 'Rensa';
 
   @override
-  String get common_clearSearch => 'Clear search';
+  String get common_clearSearch => 'Rensa sökning';
 
   @override
   String get path_currentPathLabel => 'Aktuell rutt';
@@ -2554,7 +2554,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get repeater_roleAdmin => 'ADMIN';
 
   @override
-  String get repeater_roleGuest => 'GUEST';
+  String get repeater_roleGuest => 'GÄST';
 
   @override
   String get repeater_status => 'Status';
@@ -3077,15 +3077,15 @@ class AppLocalizationsSv extends AppLocalizations {
   String get repeater_refreshPrivacyMode => 'Uppdatera privatläge';
 
   @override
-  String get repeater_refreshAll => 'Refresh all';
+  String get repeater_refreshAll => 'Uppdatera alla';
 
   @override
   String get repeater_settingsNotLoaded =>
-      'Settings haven\'t been loaded from this repeater yet.';
+      'Inställningarna har ännu inte hämtats från den här repeatern.';
 
   @override
   String get repeater_settingsLoadIncomplete =>
-      'Some settings could not be loaded. Use the refresh buttons to retry.';
+      'Vissa inställningar kunde inte hämtas. Använd uppdateringsknapparna för att försöka igen.';
 
   @override
   String repeater_refreshed(String label) {
@@ -4518,21 +4518,21 @@ class AppLocalizationsSv extends AppLocalizations {
       'Lägg till kontakt från urklipp';
 
   @override
-  String get contacts_scanQrCode => 'Scan QR Code';
+  String get contacts_scanQrCode => 'Skanna QR-kod';
 
   @override
   String get contacts_scanQrInstructions =>
-      'Point the camera at a MeshCore contact QR code';
+      'Rikta kameran mot en QR-kod för en MeshCore-kontakt';
 
   @override
-  String get contacts_qrFromGallery => 'Scan QR from Gallery';
+  String get contacts_qrFromGallery => 'Skanna QR från galleriet';
 
   @override
   String get contacts_noQrCodeFound =>
-      'No QR code found in the selected image.';
+      'Ingen QR-kod hittades i den valda bilden.';
 
   @override
-  String get contacts_qrGalleryFailed => 'Could not open the gallery.';
+  String get contacts_qrGalleryFailed => 'Kunde inte öppna galleriet.';
 
   @override
   String get contacts_ShareContact => 'Kopiera kontakt till Urklipp';
@@ -4599,42 +4599,42 @@ class AppLocalizationsSv extends AppLocalizations {
   String get notification_receivedNewMessage => 'Nytt meddelande mottaget';
 
   @override
-  String get notification_actionReply => 'Reply';
+  String get notification_actionReply => 'Svara';
 
   @override
-  String get notification_actionMarkRead => 'Mark as read';
+  String get notification_actionMarkRead => 'Markera som läst';
 
   @override
-  String get notification_actionMuteChannel => 'Mute channel';
+  String get notification_actionMuteChannel => 'Tysta kanalen';
 
   @override
-  String get notification_replyHint => 'Message';
+  String get notification_replyHint => 'Meddelande';
 
   @override
-  String get notification_you => 'You';
+  String get notification_you => 'Du';
 
   @override
-  String get notification_replyFailedTitle => 'Reply not sent';
+  String get notification_replyFailedTitle => 'Svaret skickades inte';
 
   @override
   String get notification_replyNotConnected =>
-      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+      'Ingen anslutning till en radio. Anslut igen i MeshCore Open och skicka ditt svar igen.';
 
   @override
   String get notification_replyTooLong =>
-      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+      'Ditt svar är för långt för att skickas från en notis. Skicka det från MeshCore Open i stället.';
 
   @override
   String get notification_replyUnavailable =>
-      'This conversation is no longer on the connected radio.';
+      'Det här samtalet finns inte längre på den anslutna radion.';
 
   @override
   String get notification_replySendFailed =>
-      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+      'Ditt svar har kanske inte skickats. Kontrollera i MeshCore Open och försök igen.';
 
   @override
   String get notification_replyAppNotRunning =>
-      'MeshCore Open isn\'t running. Open it and send your reply again.';
+      'MeshCore Open är inte igång. Öppna appen och skicka ditt svar igen.';
 
   @override
   String get settings_gpxExportRepeaters =>
@@ -4699,7 +4699,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get snrIndicator_nearByRepeatersDescription =>
-      'Repeaters your radio heard directly, most recently heard first.';
+      'Repeatrar som din radio hörde direkt, senast hörda först.';
 
   @override
   String get contactsSettings_title => 'Kontaktinställningar';
@@ -4809,7 +4809,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get radioStats_sectionSignal => 'Signal';
 
   @override
-  String get radioStats_sectionAirtime => 'Airtime';
+  String get radioStats_sectionAirtime => 'Sändningstid';
 
   @override
   String get radioStats_notConnected =>
@@ -5200,22 +5200,22 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String imageSend_lossyNote(int bytes) {
-    return 'Compressed to about $bytes bytes. The receiver\'s model reconstructs it, so details will differ.';
+    return 'Komprimerat till ungefär $bytes byte. Mottagarens modell rekonstruerar bilden, så detaljerna skiljer sig.';
   }
 
   @override
   String get imageSend_viewOriginal => 'Original';
 
   @override
-  String get imageSend_viewReconstruction => 'What recipients see';
+  String get imageSend_viewReconstruction => 'Vad mottagarna ser';
 
   @override
   String get imageSend_reconstructionUnavailable =>
-      'This device can\'t preview the reconstruction.';
+      'Enheten kan inte förhandsgranska rekonstruktionen.';
 
   @override
   String get imageSend_modelNotDownloaded =>
-      'The image model isn\'t downloaded yet. Download it in Settings to send images.';
+      'Bildmodellen har ännu inte laddats ner. Ladda ner den i Inställningar för att skicka bilder.';
 
   @override
   String get imageSend_originalSize => 'Original';
@@ -5387,27 +5387,27 @@ class AppLocalizationsSv extends AppLocalizations {
   String get receivedImage_tapToProcess => 'Tryck för att bearbeta';
 
   @override
-  String get receivedImage_save => 'Save image';
+  String get receivedImage_save => 'Spara bild';
 
   @override
   String receivedImage_shareCaption(int bytes) {
-    return 'AI-reconstructed from $bytes bytes; fine detail is generated, not transmitted.';
+    return 'AI-rekonstruerad från $bytes byte; finstyrkan genereras och överförs inte.';
   }
 
   @override
-  String get receivedImage_packetInfo => 'Packet info';
+  String get receivedImage_packetInfo => 'Paketinformation';
 
   @override
   String get receivedImage_parityRecovered =>
-      'One packet was rebuilt from the recovery packet.';
+      'Ett paket återskapades från återställningspaketet.';
 
   @override
   String receivedImage_decodeTime(int ms) {
-    return 'Reconstructed in $ms ms';
+    return 'Rekonstruerad på $ms ms';
   }
 
   @override
-  String get receivedImage_saveFailed => 'Couldn\'t save the image';
+  String get receivedImage_saveFailed => 'Kunde inte spara bilden';
 
   @override
   String receivedImage_awaiting(int bytes, int packets) {

@@ -4617,42 +4617,42 @@ class AppLocalizationsNl extends AppLocalizations {
   String get notification_receivedNewMessage => 'Nieuw bericht ontvangen';
 
   @override
-  String get notification_actionReply => 'Reply';
+  String get notification_actionReply => 'Reageren';
 
   @override
-  String get notification_actionMarkRead => 'Mark as read';
+  String get notification_actionMarkRead => 'Markeer als gelezen';
 
   @override
-  String get notification_actionMuteChannel => 'Mute channel';
+  String get notification_actionMuteChannel => 'Kanaal dempen';
 
   @override
-  String get notification_replyHint => 'Message';
+  String get notification_replyHint => 'Bericht';
 
   @override
-  String get notification_you => 'You';
+  String get notification_you => 'Jij';
 
   @override
-  String get notification_replyFailedTitle => 'Reply not sent';
+  String get notification_replyFailedTitle => 'Antwoord niet verzonden';
 
   @override
   String get notification_replyNotConnected =>
-      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+      'Niet verbonden met een radio. Maak opnieuw verbinding in MeshCore Open en verzend je antwoord opnieuw.';
 
   @override
   String get notification_replyTooLong =>
-      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+      'Je antwoord is te lang om vanuit een melding te verzenden. Verzend het vanuit MeshCore Open.';
 
   @override
   String get notification_replyUnavailable =>
-      'This conversation is no longer on the connected radio.';
+      'Dit gesprek staat niet meer op de verbonden radio.';
 
   @override
   String get notification_replySendFailed =>
-      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+      'Je antwoord is mogelijk niet verzonden. Controleer dit in MeshCore Open en probeer het opnieuw.';
 
   @override
   String get notification_replyAppNotRunning =>
-      'MeshCore Open isn\'t running. Open it and send your reply again.';
+      'MeshCore Open is niet actief. Open de app en verzend je antwoord opnieuw.';
 
   @override
   String get settings_gpxExportRepeaters =>

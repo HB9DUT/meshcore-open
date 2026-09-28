@@ -111,36 +111,34 @@ class AppLocalizationsKo extends AppLocalizations {
   String get messageStatus_repeated => '반복 수신됨';
 
   @override
-  String get messageStatus_failedChannel =>
-      'Your radio couldn\'t send this message.';
+  String get messageStatus_failedChannel => '이 라디오로 메시지를 보낼 수 없습니다.';
 
   @override
   String messageStatus_resending(int resends, int maxResends) {
-    return 'Not heard through enough repeaters yet. Resent $resends of $maxResends times.';
+    return '아직 충분한 리피터에서 들리지 않았습니다. $maxResends회 중 $resends회 재전송했습니다.';
   }
 
   @override
   String messageStatus_hopsNotReached(int hops, int required) {
-    return 'Sent, but only heard back through $hops of $required repeaters. It may still have gone further than your radio can hear.';
+    return '전송했지만, $required개 중 $hops개의 리피터에서만 되돌아왔습니다. 이 라디오가 수신할 수 있는 범위보다 더 멀리 갔을 수도 있습니다.';
   }
 
   @override
   String get messageStatus_sentChannel =>
-      'Sent. Channels don\'t confirm delivery, so this only means your radio sent it.';
+      '전송됨. 채널은 전달을 확인하지 않으므로, 이 라디오가 보냈다는 의미만 있습니다.';
 
   @override
-  String get messageStatus_sentDirect =>
-      'Sent. Waiting for the contact to confirm.';
+  String get messageStatus_sentDirect => '전송됨. 연락처의 확인을 기다리는 중입니다.';
 
   @override
   String messageStatus_heardRepeatedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: 'once',
+      other: '$count회',
+      one: '1회',
     );
-    return 'Heard repeated $_temp0. Nearby repeaters passed it on.';
+    return '$_temp0 들림. 가까운 리피터가 전달했습니다.';
   }
 
   @override
@@ -403,20 +401,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_regionEmptyExplanation =>
-      'Regions limit flood messages to repeaters in an area. Fetch them from nearby repeaters or add one by name.';
+      '지역을 설정하면 플러딩 메시지는 그 지역 안의 리피터만 전달합니다. 가까운 리피터에서 가져오거나 이름으로 추가하세요.';
 
   @override
-  String get settings_regionFetchFromRepeaters => 'Fetch from repeaters';
+  String get settings_regionFetchFromRepeaters => '리피터에서 가져오기';
 
   @override
-  String get settings_regionDefault => 'Default region';
+  String get settings_regionDefault => '기본 지역';
 
   @override
-  String get settings_regionDefaultSubtitle =>
-      'Used by channels without their own region';
+  String get settings_regionDefaultSubtitle => '지역이 설정되지 않은 채널에 사용됩니다';
 
   @override
-  String get settings_regionDefaultNone => 'None';
+  String get settings_regionDefaultNone => '없음';
 
   @override
   String get settings_regionManagement_screenTitle => '지역 관리';
@@ -537,7 +534,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_telemetryPerContactHint =>
-      'To allow a contact, open their chat and choose Contact Settings from the menu.';
+      '연락처에 허용하려면 해당 채팅을 열고 메뉴에서 연락처 설정을 선택하세요.';
 
   @override
   String get settings_advertLocation => '어드버트 위치';
@@ -558,7 +555,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_multiAckSubtitle =>
-      'Send extra ACKs for better delivery; uses more airtime';
+      '전달을 개선하기 위해 ACK를 추가로 전송합니다. 방송 시간이 더 필요합니다';
 
   @override
   String get settings_telemetryModeUpdated => '텔레메트리 모드 업데이트 완료';
@@ -674,11 +671,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_presets => '프리셋';
 
   @override
-  String get settings_presetCustom => 'Custom';
+  String get settings_presetCustom => '사용자 지정';
 
   @override
   String get settings_radioMatchWarning =>
-      'All nodes you talk to must use the same frequency, bandwidth, SF and CR.';
+      '통신하는 모든 노드가 동일한 주파수, 대역폭, 확산 계수, 코딩 속도를 사용해야 합니다.';
 
   @override
   String get settings_frequency => '주파수 (MHz)';
@@ -703,7 +700,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String settings_txPowerRangeHelper(int min, int max) {
-    return '$min to $max dBm';
+    return '$min~$max dBm';
   }
 
   @override
@@ -714,7 +711,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String settings_clientRepeatFrequencyNote(String freq) {
-    return 'Frequency set to $freq MHz for off-grid repeat';
+    return '오프그리드 반복용으로 주파수를 $freq MHz로 설정';
   }
 
   @override
@@ -813,24 +810,23 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_pathHashModeHelper =>
-      'Size of each node ID recorded in the path of flood packets this radio sends: 1 byte (256 IDs, up to 64 hops), 2 bytes (65K IDs, up to 32 hops), 3 bytes (16M IDs, up to 21 hops). Larger IDs reduce collisions, but repeaters on firmware older than v1.14 drop packets with 2- or 3-byte IDs.';
+      '이 라디오가 보내는 플러딩 패킷의 경로에 기록되는 각 노드 ID의 크기: 1바이트(256개 ID, 최대 64홉), 2바이트(65,000개 ID, 최대 32홉), 3바이트(160만 개 ID, 최대 21홉). ID가 클수록 충돌이 줄어들지만, v1.14보다 오래된 펌웨어의 리피터는 2바이트 또는 3바이트 ID가 든 패킷을 버립니다.';
 
   @override
   String settings_requiresFirmware(String version) {
-    return 'Requires firmware $version or newer';
+    return '펌웨어 $version 이상이 필요합니다';
   }
 
   @override
-  String get appSettings_channelMinHops =>
-      'Resend channel messages until they travel far enough';
+  String get appSettings_channelMinHops => '충분히 멀리 전달될 때까지 채널 메시지 재전송';
 
   @override
   String get appSettings_channelMinHopsSubtitle =>
-      'If your message isn\'t heard coming back through enough repeaters, send it again. Uses more airtime.';
+      '메시지가 충분한 리피터에서 되돌아와 들리지 않으면 다시 전송합니다. 방송 시간이 더 필요합니다.';
 
   @override
   String appSettings_channelMinHopsCount(int count) {
-    return 'Required hops: $count';
+    return '필요한 홉 수: $count';
   }
 
   @override
@@ -838,10 +834,10 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count회',
+      one: '1회',
     );
-    return 'Resend up to $_temp0';
+    return '$_temp0까지 재전송';
   }
 
   @override
@@ -877,11 +873,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appSettings_messageNotificationsSubtitle => '새로운 메시지를 받을 때 알림 표시';
 
   @override
-  String get appSettings_batteryOptimization => 'Background Activity';
+  String get appSettings_batteryOptimization => '백그라운드 작업';
 
   @override
   String get appSettings_batteryOptimizationSubtitle =>
-      'Set MeshCore Open to \"Don\'t optimize\" in battery settings so messages keep arriving in the background';
+      '배터리 설정에서 MeshCore Open을 \"최적화 안 함\"으로 지정하면 백그라운드에서도 메시지가 계속 수신됩니다';
 
   @override
   String get appSettings_channelMessageNotifications => '채널 메시지 알림';
@@ -1144,7 +1140,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get contacts_storageFull =>
-      'Contact storage on the node is full. New nodes cannot be added until contacts are removed.';
+      '노드의 연락처 저장 공간이 가득 찼습니다. 연락처를 삭제하기 전까지 새 노드를 추가할 수 없습니다.';
 
   @override
   String get contacts_deleteContact => '연락처 삭제';
@@ -1155,27 +1151,27 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get contacts_removeFromContacts => 'Remove from contacts';
+  String get contacts_removeFromContacts => '연락처에서 제거';
 
   @override
   String contacts_removeFromContactsConfirm(String contactName) {
-    return '$contactName will move to Discovered contacts. Chat history will be deleted.';
+    return '$contactName은(는) 발견된 연락처로 이동합니다. 채팅 기록은 삭제됩니다.';
   }
 
   @override
-  String get contacts_keepChatHistory => 'Keep chat history';
+  String get contacts_keepChatHistory => '채팅 기록 유지';
 
   @override
-  String get contacts_remove => 'Remove';
+  String get contacts_remove => '제거';
 
   @override
   String contacts_discoveredNearby(int count) {
-    return 'Discovered nearby ($count)';
+    return '주변에서 발견됨($count)';
   }
 
   @override
   String get contacts_noContactsDiscoveredHint =>
-      'Nodes your radio hears but hasn\'t added yet are listed in Discovered contacts';
+      '이 라디오가 들리지만 아직 추가하지 않은 노드는 발견된 연락처에 표시됩니다';
 
   @override
   String get contacts_manageRepeater => '리피터 관리';
@@ -1324,16 +1320,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get channels_private => '사립';
 
   @override
-  String get channels_hashtag => 'Hashtag';
+  String get channels_hashtag => '해시태그';
 
   @override
-  String get channels_addSectionJoin => 'Join existing';
+  String get channels_addSectionJoin => '기존 채널 참여';
 
   @override
-  String get channels_addSectionCreate => 'Create new';
+  String get channels_addSectionCreate => '새로 만들기';
 
   @override
-  String get channels_dragToReorder => 'Drag to reorder';
+  String get channels_dragToReorder => '끌어서 순서 변경';
 
   @override
   String get channels_editChannel => '채널 편집';
@@ -1531,17 +1527,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get channels_clearRegion => '명확한 지역';
 
   @override
-  String get channels_regionDefaultSuffix => '(default)';
+  String get channels_regionDefaultSuffix => '(기본값)';
 
   @override
   String get channels_regionSelectExplanation =>
-      'Flood messages on this channel will only be forwarded by repeaters in the selected region.';
+      '이 채널의 플러딩 메시지는 선택한 지역 안의 리피터만 전달합니다.';
 
   @override
-  String get channels_regionEmpty => 'No regions yet.';
+  String get channels_regionEmpty => '아직 지역이 없습니다.';
 
   @override
-  String get channels_manageRegions => 'Manage regions';
+  String get channels_manageRegions => '지역 관리';
 
   @override
   String get chat_noMessages => '아직 메시지가 없습니다.';
@@ -1602,10 +1598,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chat_sendGif => 'GIF 보내기';
 
   @override
-  String get chat_removeGif => 'Remove GIF';
+  String get chat_removeGif => 'GIF 제거';
 
   @override
-  String get chat_cancelReply => 'Cancel reply';
+  String get chat_cancelReply => '답장 취소';
 
   @override
   String get chat_sendImageLora => 'MeshCore를 통해 이미지 보내기';
@@ -1908,7 +1904,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chat_path => '경로';
 
   @override
-  String get chat_viewPathOnMap => 'View path on map';
+  String get chat_viewPathOnMap => '지도에서 경로 보기';
 
   @override
   String get chat_publicKey => '공개 키';
@@ -1948,10 +1944,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chat_newMessages => '새로운 메시지';
 
   @override
-  String get chat_today => 'Today';
+  String get chat_today => '오늘';
 
   @override
-  String get chat_yesterday => 'Yesterday';
+  String get chat_yesterday => '어제';
 
   @override
   String get chat_openLink => '링크를 열기?';
@@ -1998,7 +1994,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get map_centerOnNode => '노드 중심으로 보기';
 
   @override
-  String get map_centerOnMe => 'Center on my location';
+  String get map_centerOnMe => '내 위치 중심으로 보기';
 
   @override
   String get map_details => '세부 정보';
@@ -2020,7 +2016,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get map_noNodesLocationHint =>
-      'No nodes with a recent location. Widen the time filter, or set your own location in Settings.';
+      '최근 위치 정보가 있는 노드가 없습니다. 시간 필터를 넓히거나 설정에서 내 위치를 설정하세요.';
 
   @override
   String get map_nodesNeedGps => '노드는 지도에 표시되려면 GPS 좌표를 공유해야 합니다.';
@@ -2161,14 +2157,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get map_showGuessedLocations => '추정된 노드 위치 표시';
 
   @override
-  String get map_clusterNodes => 'Group nearby nodes';
+  String get map_clusterNodes => '주변 노드 묶기';
 
   @override
-  String get map_groupChip => 'Group';
+  String get map_groupChip => '그룹';
 
   @override
-  String get map_clusterNodesSubtitle =>
-      'When zoomed out, show nearby nodes as one numbered circle';
+  String get map_clusterNodesSubtitle => '축소할 때 주변 노드를 번호가 있는 하나의 원으로 표시합니다';
 
   @override
   String get map_showDiscoveryContacts => '디스커버리 담당자 연락처 보기';
@@ -2192,7 +2187,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get map_manageRepeater => '리피터 관리';
 
   @override
-  String get map_manageServer => 'Manage Server';
+  String get map_manageServer => '서버 관리';
 
   @override
   String get map_tapToAdd => '노드에 클릭하여 경로에 추가합니다.';
@@ -2394,10 +2389,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get login_enterPassword => '비밀번호를 입력하세요';
 
   @override
-  String get login_showPassword => 'Show password';
+  String get login_showPassword => '비밀번호 표시';
 
   @override
-  String get login_hidePassword => 'Hide password';
+  String get login_hidePassword => '비밀번호 숨기기';
 
   @override
   String get login_savePassword => '비밀번호 저장';
@@ -2412,7 +2407,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get login_roomDescription => '설정 및 상태에 액세스하려면 방 비밀번호를 입력하세요.';
 
   @override
-  String get login_advanced => 'Advanced';
+  String get login_advanced => '고급';
 
   @override
   String get login_routing => '라우팅';
@@ -2453,7 +2448,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_clear => '지우기';
 
   @override
-  String get common_clearSearch => 'Clear search';
+  String get common_clearSearch => '검색어 지우기';
 
   @override
   String get path_currentPathLabel => '현재 경로';
@@ -2480,10 +2475,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeater_guestTools => '손님용 도구';
 
   @override
-  String get repeater_roleAdmin => 'ADMIN';
+  String get repeater_roleAdmin => '관리자';
 
   @override
-  String get repeater_roleGuest => 'GUEST';
+  String get repeater_roleGuest => '게스트';
 
   @override
   String get repeater_status => '상태';
@@ -2982,15 +2977,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeater_refreshPrivacyMode => '개인 정보 보호 모드 재설정';
 
   @override
-  String get repeater_refreshAll => 'Refresh all';
+  String get repeater_refreshAll => '모두 새로고침';
 
   @override
-  String get repeater_settingsNotLoaded =>
-      'Settings haven\'t been loaded from this repeater yet.';
+  String get repeater_settingsNotLoaded => '이 리피터에서 아직 설정을 불러오지 않았습니다.';
 
   @override
   String get repeater_settingsLoadIncomplete =>
-      'Some settings could not be loaded. Use the refresh buttons to retry.';
+      '일부 설정을 불러오지 못했습니다. 새로고침 버튼을 사용해 다시 시도하세요.';
 
   @override
   String repeater_refreshed(String label) {
@@ -4355,21 +4349,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get contacts_addContactFromClipboard => '복사본에서 연락처 추가';
 
   @override
-  String get contacts_scanQrCode => 'Scan QR Code';
+  String get contacts_scanQrCode => 'QR 코드 스캔';
 
   @override
-  String get contacts_scanQrInstructions =>
-      'Point the camera at a MeshCore contact QR code';
+  String get contacts_scanQrInstructions => '카메라를 MeshCore 연락처 QR 코드에 비추세요';
 
   @override
-  String get contacts_qrFromGallery => 'Scan QR from Gallery';
+  String get contacts_qrFromGallery => '갤러리에서 QR 스캔';
 
   @override
-  String get contacts_noQrCodeFound =>
-      'No QR code found in the selected image.';
+  String get contacts_noQrCodeFound => '선택한 이미지에서 QR 코드를 찾을 수 없습니다.';
 
   @override
-  String get contacts_qrGalleryFailed => 'Could not open the gallery.';
+  String get contacts_qrGalleryFailed => '갤러리를 열 수 없습니다.';
 
   @override
   String get contacts_ShareContact => '연락처를 복사';
@@ -4434,42 +4426,41 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notification_receivedNewMessage => '새로운 메시지를 받았습니다';
 
   @override
-  String get notification_actionReply => 'Reply';
+  String get notification_actionReply => '답장';
 
   @override
-  String get notification_actionMarkRead => 'Mark as read';
+  String get notification_actionMarkRead => '읽음으로 표시';
 
   @override
-  String get notification_actionMuteChannel => 'Mute channel';
+  String get notification_actionMuteChannel => '채널 음소거';
 
   @override
-  String get notification_replyHint => 'Message';
+  String get notification_replyHint => '메시지';
 
   @override
-  String get notification_you => 'You';
+  String get notification_you => '나';
 
   @override
-  String get notification_replyFailedTitle => 'Reply not sent';
+  String get notification_replyFailedTitle => '답장 전송 안 됨';
 
   @override
   String get notification_replyNotConnected =>
-      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+      '라디오에 연결되어 있지 않습니다. MeshCore Open에서 다시 연결한 뒤 답장을 다시 보내세요.';
 
   @override
   String get notification_replyTooLong =>
-      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+      '답장이 너무 길어 알림으로 전송할 수 없습니다. 대신 MeshCore Open에서 보내세요.';
 
   @override
-  String get notification_replyUnavailable =>
-      'This conversation is no longer on the connected radio.';
+  String get notification_replyUnavailable => '이 대화는 연결된 라디오에 더 이상 없습니다.';
 
   @override
   String get notification_replySendFailed =>
-      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+      '답장이 전송되지 않았을 수 있습니다. MeshCore Open에서 확인한 뒤 다시 시도하세요.';
 
   @override
   String get notification_replyAppNotRunning =>
-      'MeshCore Open isn\'t running. Open it and send your reply again.';
+      'MeshCore Open이 실행 중이 아닙니다. 앱을 연 뒤 답장을 다시 보내세요.';
 
   @override
   String get settings_gpxExportRepeaters => 'GPX로 전송/방 관리 서버';
@@ -4527,7 +4518,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get snrIndicator_nearByRepeatersDescription =>
-      'Repeaters your radio heard directly, most recently heard first.';
+      '이 라디오가 직접 들은 리피터입니다. 가장 최근에 들은 순으로 표시됩니다.';
 
   @override
   String get contactsSettings_title => '연락처 설정';
@@ -4627,10 +4618,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioStats_screenTitle => '라디오 통계';
 
   @override
-  String get radioStats_sectionSignal => 'Signal';
+  String get radioStats_sectionSignal => '신호';
 
   @override
-  String get radioStats_sectionAirtime => 'Airtime';
+  String get radioStats_sectionAirtime => '방송 시간';
 
   @override
   String get radioStats_notConnected => '라디오 통계를 확인하기 위해 장치에 연결합니다.';
@@ -5007,22 +4998,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String imageSend_lossyNote(int bytes) {
-    return 'Compressed to about $bytes bytes. The receiver\'s model reconstructs it, so details will differ.';
+    return '약 $bytes바이트로 압축됩니다. 수신 측 모델이 복원하므로 세부 내용이 달라집니다.';
   }
 
   @override
-  String get imageSend_viewOriginal => 'Original';
+  String get imageSend_viewOriginal => '원본';
 
   @override
-  String get imageSend_viewReconstruction => 'What recipients see';
+  String get imageSend_viewReconstruction => '수신자가 보는 화면';
 
   @override
   String get imageSend_reconstructionUnavailable =>
-      'This device can\'t preview the reconstruction.';
+      '이 장치에서는 복원 결과를 미리 볼 수 없습니다.';
 
   @override
   String get imageSend_modelNotDownloaded =>
-      'The image model isn\'t downloaded yet. Download it in Settings to send images.';
+      '이미지 모델이 아직 다운로드되지 않았습니다. 설정에서 다운로드하면 이미지를 보낼 수 있습니다.';
 
   @override
   String get imageSend_originalSize => '원문 없음';
@@ -5188,27 +5179,26 @@ class AppLocalizationsKo extends AppLocalizations {
   String get receivedImage_tapToProcess => '처리하려면 탭을 누르세요.';
 
   @override
-  String get receivedImage_save => 'Save image';
+  String get receivedImage_save => '이미지 저장';
 
   @override
   String receivedImage_shareCaption(int bytes) {
-    return 'AI-reconstructed from $bytes bytes; fine detail is generated, not transmitted.';
+    return '$bytes바이트에서 AI로 복원함. 세부 디테일은 전송된 것이 아니라 생성된 것입니다.';
   }
 
   @override
-  String get receivedImage_packetInfo => 'Packet info';
+  String get receivedImage_packetInfo => '패킷 정보';
 
   @override
-  String get receivedImage_parityRecovered =>
-      'One packet was rebuilt from the recovery packet.';
+  String get receivedImage_parityRecovered => '패킷 1개를 복구 패킷에서 재구성했습니다.';
 
   @override
   String receivedImage_decodeTime(int ms) {
-    return 'Reconstructed in $ms ms';
+    return '$ms밀리초에 재구성됨';
   }
 
   @override
-  String get receivedImage_saveFailed => 'Couldn\'t save the image';
+  String get receivedImage_saveFailed => '이미지를 저장할 수 없습니다';
 
   @override
   String receivedImage_awaiting(int bytes, int packets) {
