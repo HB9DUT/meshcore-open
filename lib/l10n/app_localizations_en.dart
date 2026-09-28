@@ -4575,6 +4575,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_receivedNewMessage => 'Received new message';
 
   @override
+  String get notification_actionReply => 'Reply';
+
+  @override
+  String get notification_actionMarkRead => 'Mark as read';
+
+  @override
+  String get notification_actionMuteChannel => 'Mute channel';
+
+  @override
+  String get notification_replyHint => 'Message';
+
+  @override
+  String get notification_you => 'You';
+
+  @override
+  String get notification_replyFailedTitle => 'Reply not sent';
+
+  @override
+  String get notification_replyNotConnected =>
+      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+
+  @override
+  String get notification_replyTooLong =>
+      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+
+  @override
+  String get notification_replyUnavailable =>
+      'This conversation is no longer on the connected radio.';
+
+  @override
+  String get notification_replySendFailed =>
+      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+
+  @override
+  String get notification_replyAppNotRunning =>
+      'MeshCore Open isn\'t running. Open it and send your reply again.';
+
+  @override
   String get settings_gpxExportRepeaters =>
       'Export repeaters / room server to GPX';
 

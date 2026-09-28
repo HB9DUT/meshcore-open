@@ -361,6 +361,25 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
         centerTitle: false,
         bottom: const SyncProgressAppBarBottom(),
         actions: [
+          Consumer<AppSettingsService>(
+            builder: (context, settings, _) {
+              final muteKey = widget.channel.muteKey;
+              final muted = settings.isChannelMuted(muteKey);
+              return IconButton(
+                tooltip: muted
+                    ? context.l10n.channels_unmuteChannel
+                    : context.l10n.channels_muteChannel,
+                icon: Icon(
+                  muted
+                      ? Icons.notifications_off_outlined
+                      : Icons.notifications_outlined,
+                ),
+                onPressed: () => muted
+                    ? settings.unmuteChannel(muteKey)
+                    : settings.muteChannel(muteKey),
+              );
+            },
+          ),
           IconButton(
             tooltip: context.l10n.channels_regionSelect_Title,
             icon: const Icon(Icons.landscape),

@@ -363,7 +363,7 @@ class _ChannelsScreenState extends State<ChannelsScreen>
   }) {
     final unreadCount = connector.getUnreadCountForChannel(channel);
     final isMuted = context.watch<AppSettingsService>().isChannelMuted(
-      channel.name,
+      channel.muteKey,
     );
     final scheme = Theme.of(context).colorScheme;
 
@@ -623,7 +623,7 @@ class _ChannelsScreenState extends State<ChannelsScreen>
   ) {
     final parentContext = context;
     final settingsService = context.read<AppSettingsService>();
-    final isMuted = settingsService.isChannelMuted(channel.name);
+    final isMuted = settingsService.isChannelMuted(channel.muteKey);
 
     showModalBottomSheet(
       context: parentContext,
@@ -656,9 +656,9 @@ class _ChannelsScreenState extends State<ChannelsScreen>
               onTap: () async {
                 Navigator.pop(sheetContext);
                 if (isMuted) {
-                  await settingsService.unmuteChannel(channel.name);
+                  await settingsService.unmuteChannel(channel.muteKey);
                 } else {
-                  await settingsService.muteChannel(channel.name);
+                  await settingsService.muteChannel(channel.muteKey);
                 }
               },
             ),

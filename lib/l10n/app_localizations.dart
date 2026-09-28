@@ -7954,6 +7954,72 @@ abstract class AppLocalizations {
   /// **'Received new message'**
   String get notification_receivedNewMessage;
 
+  /// No description provided for @notification_actionReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get notification_actionReply;
+
+  /// No description provided for @notification_actionMarkRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read'**
+  String get notification_actionMarkRead;
+
+  /// No description provided for @notification_actionMuteChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute channel'**
+  String get notification_actionMuteChannel;
+
+  /// No description provided for @notification_replyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get notification_replyHint;
+
+  /// No description provided for @notification_you.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get notification_you;
+
+  /// No description provided for @notification_replyFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply not sent'**
+  String get notification_replyFailedTitle;
+
+  /// No description provided for @notification_replyNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.'**
+  String get notification_replyNotConnected;
+
+  /// No description provided for @notification_replyTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reply is too long to send from a notification. Send it from MeshCore Open instead.'**
+  String get notification_replyTooLong;
+
+  /// No description provided for @notification_replyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This conversation is no longer on the connected radio.'**
+  String get notification_replyUnavailable;
+
+  /// No description provided for @notification_replySendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reply may not have been sent. Check in MeshCore Open and try again.'**
+  String get notification_replySendFailed;
+
+  /// No description provided for @notification_replyAppNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'MeshCore Open isn\'t running. Open it and send your reply again.'**
+  String get notification_replyAppNotRunning;
+
   /// No description provided for @settings_gpxExportRepeaters.
   ///
   /// In en, this message translates to:

@@ -40,6 +40,7 @@ import '../services/app_settings_service.dart';
 import '../services/background_service.dart';
 import '../services/timeout_prediction_service.dart';
 import '../services/translation_service.dart';
+import '../services/notification_reply.dart';
 import '../services/notification_service.dart';
 import 'meshcore_connector_usb.dart';
 import 'meshcore_connector_tcp.dart';
@@ -231,6 +232,7 @@ class MeshCoreConnector extends ChangeNotifier {
   StreamSubscription<bool>? _isScanningSubscription;
   StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
   StreamSubscription<List<int>>? _notifySubscription;
+  StreamSubscription<NotificationReply>? _notificationReplySubscription;
   Timer? _notifyListenersTimer;
   Timer? _selfInfoRetryTimer;
   Timer? _reconnectTimer;
@@ -987,6 +989,137 @@ class MeshCoreConnector extends ChangeNotifier {
     }
   }
 
+  /// Handles a reply or mark-as-read action from a message notification
+  /// (notification shade, watch, or Android Auto).
+  Future<void> handleNotificationReply(NotificationReply reply) async {
+    if (reply.action == NotificationReplyAction.mute) {
+      await _appSettingsService?.muteChannel(
+        _channelDisplayName(reply.channelIndex!),
+      );
+      await _notificationService.clearChannelNotification(
+        reply.channelIndex!,
+        getTotalUnreadCount(),
+      );
+      return;
+    }
+    if (reply.action == NotificationReplyAction.markRead) {
+      // markXRead only clears the notification when there were unread
+      // messages; clear it here otherwise so the action always dismisses it.
+      if (reply.isChannel) {
+        final index = reply.channelIndex!;
+        final hadUnread = getUnreadCountForChannelIndex(index) > 0;
+        markChannelRead(index);
+        if (!hadUnread) {
+          await _notificationService.clearChannelNotification(
+            index,
+            getTotalUnreadCount(),
+          );
+        }
+      } else {
+        final key = reply.contactKeyHex!;
+        final hadUnread = getUnreadCountForContactKey(key) > 0;
+        markContactRead(key);
+        if (!hadUnread) {
+          await _notificationService.clearContactNotification(
+            key,
+            getTotalUnreadCount(),
+          );
+        }
+      }
+      return;
+    }
+
+    if (!isConnected) {
+      await _notificationService.showReplyFailed(
+        reply,
+        NotificationReplyFailure.notConnected,
+        badgeCount: getTotalUnreadCount(),
+      );
+      return;
+    }
+
+    final channel = reply.isChannel
+        ? _findChannelByIndex(reply.channelIndex!)
+        : null;
+    final contact = reply.isChannel
+        ? null
+        : getContactByPubKeyHex(reply.contactKeyHex!);
+    if (channel == null && contact == null) {
+      await _notificationService.showReplyFailed(
+        reply,
+        NotificationReplyFailure.unavailable,
+        badgeCount: getTotalUnreadCount(),
+      );
+      return;
+    }
+
+    // Same length limits and Cyr2Lat handling as the chat screens.
+    final parts = splitMessageToFit(reply.text, (part) {
+      if (channel != null) {
+        return utf8
+                .encode(prepareChannelOutboundText(channel.index, part))
+                .length <=
+            maxChannelMessageBytes(selfName);
+      }
+      return utf8.encode(prepareContactOutboundText(contact!, part)).length <=
+          maxContactMessageBytes();
+    });
+    if (parts == null) {
+      await _notificationService.showReplyFailed(
+        reply,
+        NotificationReplyFailure.tooLong,
+        badgeCount: getTotalUnreadCount(),
+      );
+      return;
+    }
+
+    _appDebugLogService?.info(
+      'Sending notification reply in ${parts.length} part(s)',
+      tag: 'Notification',
+    );
+    for (final part in parts) {
+      // sendMessage/sendChannelMessage silently do nothing when disconnected,
+      // so check before every part in case the link dropped mid-reply.
+      if (!isConnected) {
+        await _notificationService.showReplyFailed(
+          reply,
+          NotificationReplyFailure.notConnected,
+          badgeCount: getTotalUnreadCount(),
+        );
+        return;
+      }
+      var text = part;
+      try {
+        final cyr2lat = channel != null
+            ? isChannelCyr2LatEnabled(channel.index)
+            : isContactCyr2LatEnabled(contact!.publicKeyHex);
+        if (cyr2lat) text = Cyr2Lat.encode(text);
+      } catch (_) {}
+      try {
+        if (channel != null) {
+          await sendChannelMessage(channel, text);
+        } else {
+          await sendMessage(contact!, text);
+        }
+      } catch (e) {
+        appLogger.warn('Notification reply send failed: $e');
+        await _notificationService.showReplyFailed(
+          reply,
+          isConnected
+              ? NotificationReplyFailure.sendFailed
+              : NotificationReplyFailure.notConnected,
+          badgeCount: getTotalUnreadCount(),
+        );
+        return;
+      }
+    }
+    await _notificationService.showOwnReply(
+      reply,
+      reply.text,
+      badgeCount: getTotalUnreadCount(),
+    );
+  }
+
   Future<void> setChannelSmazEnabled(int channelIndex, bool enabled) async {
     _channelSmazEnabled[channelIndex] = enabled;
     if (enabled) {
@@ -1137,6 +1270,13 @@ class MeshCoreConnector extends ChangeNotifier {
 
     // Initialize notification service
     _notificationService.initialize();
+    _notificationReplySubscription ??= _notificationService.replies.listen(
+      (reply) => unawaited(
+        handleNotificationReply(reply).catchError((Object e) {
+          appLogger.warn('Notification action failed: $e');
+        }),
+      ),
+    );
     _loadChannelOrder();
 
     // Initialize retry service callbacks
@@ -4936,6 +5076,7 @@ class MeshCoreConnector extends ChangeNotifier {
       _currentCr = reader.readByte();
 
       _selfName = reader.readCString();
+      _notificationService.setSelfName(_selfName);
 
       // The local public key only exists once SELF_INFO has arrived, so the
       // image sender prefix (first 2 bytes, big-endian) is refreshed here.
@@ -6066,13 +6207,10 @@ class MeshCoreConnector extends ChangeNotifier {
     return text;
   }
 
-  String _channelDisplayName(int channelIndex) {
-    for (final channel in _channels) {
-      if (channel.index != channelIndex) continue;
-      return channel.name.isEmpty ? 'Channel $channelIndex' : channel.name;
-    }
-    return 'Channel $channelIndex';
-  }
+  // Falls back to the cached channel list, which stays populated while a
+  // channel refresh has temporarily emptied _channels.
+  String _channelDisplayName(int channelIndex) =>
+      _findChannelByIndex(channelIndex)?.muteKey ?? 'Channel $channelIndex';
 
   void _maybeNotifyChannelMessage(
     ChannelMessage message, {
@@ -6243,12 +6381,9 @@ class MeshCoreConnector extends ChangeNotifier {
                 channel.index,
                 message,
               );
-              final label = channel.name.isEmpty
-                  ? 'Channel ${channel.index}'
-                  : channel.name;
               _maybeNotifyChannelMessage(
                 message,
-                channelName: label,
+                channelName: channel.muteKey,
                 translationResult: translationResult,
               );
             }());
@@ -7400,6 +7535,8 @@ class MeshCoreConnector extends ChangeNotifier {
     _connectionSubscription?.cancel();
     _usbFrameSubscription?.cancel();
     _notifySubscription?.cancel();
+    _notificationReplySubscription?.cancel();
+    _notificationService.releaseReplyPort();
     _notifyListenersTimer?.cancel();
     _reconnectTimer?.cancel();
     _batteryPollTimer?.cancel();
