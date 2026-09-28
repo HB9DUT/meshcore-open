@@ -540,8 +540,12 @@ Uint8List buildSendTextMsgFrame(
 
 // Build CMD_SEND_CHANNEL_TXT_MSG frame
 // Format: [cmd][txt_type][channel_idx][timestamp x4][text...]
-Uint8List buildSendChannelTextMsgFrame(int channelIndex, String text) {
-  final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+Uint8List buildSendChannelTextMsgFrame(
+  int channelIndex,
+  String text, {
+  int? timestamp,
+}) {
+  timestamp ??= DateTime.now().millisecondsSinceEpoch ~/ 1000;
   final writer = BufferWriter();
   writer.writeByte(cmdSendChannelTxtMsg);
   writer.writeByte(txtTypePlain);
@@ -1077,9 +1081,29 @@ Uint8List buildSetFloodScopeFrame(String region) {
     return Uint8List.fromList([cmdSetFloodScope, 0]);
   }
 
-  final name = region.startsWith('#') ? region : '#$region';
-  final hash = crypto.sha256.convert(utf8.encode(name)).bytes;
-  final scope = Uint8List.fromList(hash.sublist(0, 16));
+  final scope = floodScopeKeyForRegion(region);
 
   return Uint8List.fromList([cmdSetFloodScope, 0, ...scope]);
+}
+
+Uint8List floodScopeKeyForRegion(String region) {
+  final name = region.startsWith('#') ? region : '#$region';
+  final hash = crypto.sha256.convert(utf8.encode(name)).bytes;
+  return Uint8List.fromList(hash.sublist(0, 16));
+}
+
+Uint8List floodTransportCode({
+  required Uint8List scopeKey,
+  required int payloadType,
+  required Uint8List payload,
+}) {
+  final input = Uint8List(1 + payload.length)
+    ..[0] = payloadType
+    ..setRange(1, 1 + payload.length, payload);
+  final code = crypto.Hmac(crypto.sha256, scopeKey).convert(input).bytes;
+  if (code[0] == 0 && code[1] == 0) return Uint8List.fromList([1, 0]);
+  if (code[0] == 0xFF && code[1] == 0xFF) {
+    return Uint8List.fromList([0xFE, 0xFF]);
+  }
+  return Uint8List.fromList(code.sublist(0, 2));
 }

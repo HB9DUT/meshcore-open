@@ -111,6 +111,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String get messageStatus_repeated => '何度も聞いた';
 
   @override
+  String get messageStatus_failedChannel => 'ラジオはこのメッセージを送信できませんでした。';
+
+  @override
+  String messageStatus_resending(int resends, int maxResends) {
+    return 'まだ十分に多くのリピータから確認できていません。$maxResends 回中 $resends 回再送信しました。';
+  }
+
+  @override
+  String messageStatus_hopsNotReached(int hops, int required) {
+    return '送信しましたが、$required 個中 $hops 個のリピータからのみ返答を確認できました。ラジオが受信できる範囲より先まで届いている可能性があります。';
+  }
+
+  @override
+  String get messageStatus_sentChannel =>
+      '送信しました。チャンネルは配信を確認しないため、ラジオが送信したのみを意味します。';
+
+  @override
+  String get messageStatus_sentDirect => '送信しました。連絡先の確認を待っています。';
+
+  @override
+  String messageStatus_heardRepeatedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 回',
+      one: '1 回',
+    );
+    return '$_temp0 聞かれました。近くのリピータが転送しました。';
+  }
+
+  @override
   String get urlImage_enable => 'URL画像を有効にする';
 
   @override
@@ -369,6 +400,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_regionSettingsSubtitle => '保存された領域の管理';
 
   @override
+  String get settings_regionEmptyExplanation =>
+      '地域を設定すると、フラッドメッセージはその地域内のリピータだけが転送します。近くのリピータから取得するか、名前を指定して追加してください。';
+
+  @override
+  String get settings_regionFetchFromRepeaters => 'リピータから取得';
+
+  @override
+  String get settings_regionDefault => '既定の地域';
+
+  @override
+  String get settings_regionDefaultSubtitle => '地域が設定されていないチャンネルで使用されます';
+
+  @override
+  String get settings_regionDefaultNone => 'なし';
+
+  @override
   String get settings_regionManagement_screenTitle => '地域管理';
 
   @override
@@ -485,6 +532,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_telemetryEnvironmentMode => 'テレメトリ環境モード';
 
   @override
+  String get settings_telemetryPerContactHint =>
+      '連絡先に許可するには、そのチャットを開いてメニューから「連絡先設定」を選択してください。';
+
+  @override
   String get settings_advertLocation => 'アドバート位置';
 
   @override
@@ -499,6 +550,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settings_multiAck => 'マルチ ACK';
+
+  @override
+  String get settings_multiAckSubtitle => '配信を確実にするため ACK を追加送信します。放送時間が長くなります';
 
   @override
   String get settings_telemetryModeUpdated => 'テレメトリモードが更新されました';
@@ -615,6 +669,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_presets => 'プリセット';
 
   @override
+  String get settings_presetCustom => 'カスタム';
+
+  @override
+  String get settings_radioMatchWarning =>
+      '通信するすべてのノードで、周波数・帯域幅・伝播係数・コーディング速度を揃える必要があります。';
+
+  @override
   String get settings_frequency => '周波数 (MHz)';
 
   @override
@@ -636,13 +697,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_txPower => 'TX 信号電力 (dBm)';
 
   @override
-  String get settings_txPowerHelper => '0 - 22';
+  String settings_txPowerRangeHelper(int min, int max) {
+    return '$min～$max dBm';
+  }
 
   @override
   String get settings_txPowerInvalid => '無効な送信電力 (0-22 dBm)';
 
   @override
   String get settings_clientRepeat => 'オフグリッド中継';
+
+  @override
+  String settings_clientRepeatFrequencyNote(String freq) {
+    return 'オフグリッド中継用に周波数を $freq MHz に設定';
+  }
 
   @override
   String get settings_clientRepeatSubtitle =>
@@ -739,6 +807,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String get repeater_pathHashModeOption3 => '3〜4バイト';
 
   @override
+  String get settings_pathHashModeHelper =>
+      'このラジオが送信するフラッドパケットの経路に記録される各ノード ID のサイズ：1 バイト（256 個の ID、最大 64 ホップ）、2 バイト（65,000 個の ID、最大 32 ホップ）、3 バイト（160 万個の ID、最大 21 ホップ）。ID が大きいほど衝突が減りますが、v1.14 より古いファームウェアのリピータは 2 バイトまたは 3 バイトの ID を含むパケットを破棄します。';
+
+  @override
+  String settings_requiresFirmware(String version) {
+    return 'ファームウェア $version 以降が必要です';
+  }
+
+  @override
+  String get appSettings_channelMinHops => '十分遠くまで届くまでチャンネルメッセージを再送信';
+
+  @override
+  String get appSettings_channelMinHopsSubtitle =>
+      'メッセージが十分な数のリピータから返ってこない場合は、再送信します。放送時間が長くなります。';
+
+  @override
+  String appSettings_channelMinHopsCount(int count) {
+    return '必要なホップ数：$count';
+  }
+
+  @override
+  String appSettings_channelMinHopsRetries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 回',
+      one: '1 回',
+    );
+    return '$_temp0まで再送信';
+  }
+
+  @override
   String get appSettings_enableMessageTracing => 'メッセージ追跡を有効にする';
 
   @override
@@ -769,6 +869,13 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get appSettings_messageNotificationsSubtitle =>
       '新しいメッセージを受信した際に、通知を表示する';
+
+  @override
+  String get appSettings_batteryOptimization => 'バックグラウンド動作';
+
+  @override
+  String get appSettings_batteryOptimizationSubtitle =>
+      'バッテリー設定で MeshCore Open を「最適化しない」に設定すると、バックグラウンドでもメッセージを受信し続けられます';
 
   @override
   String get appSettings_channelMessageNotifications => 'チャネルメッセージの通知';
@@ -1027,12 +1134,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get contacts_noContactsFound => '連絡先またはグループは見つかりませんでした。';
 
   @override
+  String get contacts_storageFull =>
+      'ノードの連絡先ストレージが満杯です。連絡先を削除するまで、新しいノードを追加できません。';
+
+  @override
   String get contacts_deleteContact => '連絡先を削除';
 
   @override
   String contacts_removeConfirm(String contactName) {
     return '$contactName を連絡先から削除しますか？';
   }
+
+  @override
+  String get contacts_removeFromContacts => '連絡先から削除';
+
+  @override
+  String contacts_removeFromContactsConfirm(String contactName) {
+    return '$contactName は発見された連絡先に移動します。チャット履歴は削除されます。';
+  }
+
+  @override
+  String get contacts_keepChatHistory => 'チャット履歴を保持';
+
+  @override
+  String get contacts_remove => '削除';
+
+  @override
+  String contacts_discoveredNearby(int count) {
+    return '近くで発見された連絡先（$count）';
+  }
+
+  @override
+  String get contacts_noContactsDiscoveredHint =>
+      'ラジオが受信したものの、まだ追加していないノードは「発見された連絡先」に表示されます';
 
   @override
   String get contacts_manageRepeater => 'リピータの管理';
@@ -1179,6 +1313,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get channels_private => '非公開';
+
+  @override
+  String get channels_hashtag => 'ハッシュタグ';
+
+  @override
+  String get channels_addSectionJoin => '既存のチャンネルに参加';
+
+  @override
+  String get channels_addSectionCreate => '新規作成';
+
+  @override
+  String get channels_dragToReorder => 'ドラッグして並べ替え';
 
   @override
   String get channels_editChannel => 'チャンネルを編集';
@@ -1376,6 +1522,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get channels_clearRegion => 'クリアな地域';
 
   @override
+  String get channels_regionDefaultSuffix => '（デフォルト）';
+
+  @override
+  String get channels_regionSelectExplanation =>
+      'このチャンネルのフラッドメッセージは、選択した地域内のリピータだけが転送します。';
+
+  @override
+  String get channels_regionEmpty => 'まだ地域がありません。';
+
+  @override
+  String get channels_manageRegions => '地域を管理';
+
+  @override
   String get chat_noMessages => 'まだメッセージは届いていません';
 
   @override
@@ -1432,6 +1591,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chat_sendGif => 'GIF を送信';
+
+  @override
+  String get chat_removeGif => 'GIFを削除';
+
+  @override
+  String get chat_cancelReply => '返信を取り消す';
 
   @override
   String get chat_sendImageLora => 'MeshCore経由で画像を送信';
@@ -1733,6 +1898,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chat_path => '道';
 
   @override
+  String get chat_viewPathOnMap => '地図で経路を表示';
+
+  @override
   String get chat_publicKey => '公開鍵';
 
   @override
@@ -1768,6 +1936,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chat_newMessages => '新しいメッセージ';
+
+  @override
+  String get chat_today => '今日';
+
+  @override
+  String get chat_yesterday => '昨日';
 
   @override
   String get chat_openLink => 'リンクを開きますか？';
@@ -1814,6 +1988,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get map_centerOnNode => 'ノードを中央に表示';
 
   @override
+  String get map_centerOnMe => '現在地を中心に表示';
+
+  @override
   String get map_details => '詳細';
 
   @override
@@ -1830,6 +2007,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get map_noNodesWithLocation => '位置情報を持つノードはありません';
+
+  @override
+  String get map_noNodesLocationHint =>
+      '最近の位置情報を持つノードがありません。時間フィルターを広げるか、設定で現在地を設定してください。';
 
   @override
   String get map_nodesNeedGps => 'ノードを地図に表示するには GPS 座標の共有が必要です';
@@ -1970,6 +2151,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get map_showGuessedLocations => '推測されたノードの位置を表示する';
 
   @override
+  String get map_clusterNodes => '近くのノードをグループ化';
+
+  @override
+  String get map_groupChip => 'グループ';
+
+  @override
+  String get map_clusterNodesSubtitle => '縮小表示時に、近くのノードを番号付きの 1 つの円にまとめて表示します';
+
+  @override
   String get map_showDiscoveryContacts => 'Discovery 連絡先を表示';
 
   @override
@@ -1989,6 +2179,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get map_manageRepeater => 'リピータの管理';
+
+  @override
+  String get map_manageServer => 'サーバーを管理';
 
   @override
   String get map_tapToAdd => 'ノードをタップして経路に追加します。';
@@ -2190,6 +2383,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get login_enterPassword => 'パスワードを入力してください';
 
   @override
+  String get login_showPassword => 'パスワードを表示';
+
+  @override
+  String get login_hidePassword => 'パスワードを非表示';
+
+  @override
   String get login_savePassword => 'パスワードを保存する';
 
   @override
@@ -2201,6 +2400,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get login_roomDescription => '設定やステータスへのアクセスには、部屋のパスワードを入力してください。';
+
+  @override
+  String get login_advanced => '高度な';
 
   @override
   String get login_routing => '経路設定';
@@ -2241,6 +2443,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_clear => 'クリア';
 
   @override
+  String get common_clearSearch => '検索をクリア';
+
+  @override
   String get path_currentPathLabel => '現在の経路';
 
   @override
@@ -2263,6 +2468,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get repeater_guestTools => 'ゲスト向けツール';
+
+  @override
+  String get repeater_roleAdmin => '管理者';
+
+  @override
+  String get repeater_roleGuest => 'ゲスト';
 
   @override
   String get repeater_status => 'ステータス';
@@ -2755,6 +2966,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get repeater_refreshPrivacyMode => 'プライバシーモードをリセットする';
+
+  @override
+  String get repeater_refreshAll => 'すべて更新';
+
+  @override
+  String get repeater_settingsNotLoaded => 'このリピータからまだ設定を読み込んでいません。';
+
+  @override
+  String get repeater_settingsLoadIncomplete =>
+      '一部の設定を読み込めませんでした。更新ボタンから再試行してください。';
 
   @override
   String repeater_refreshed(String label) {
@@ -4116,6 +4337,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get contacts_addContactFromClipboard => 'クリップボードから連絡先を追加する';
 
   @override
+  String get contacts_scanQrCode => 'QRコードをスキャン';
+
+  @override
+  String get contacts_scanQrInstructions => 'カメラを MeshCore の連絡先 QR コードに向けてください';
+
+  @override
+  String get contacts_qrFromGallery => 'ギャラリーからQRをスキャン';
+
+  @override
+  String get contacts_noQrCodeFound => '選択した画像にQRコードが見つかりませんでした。';
+
+  @override
+  String get contacts_qrGalleryFailed => 'ギャラリーを開けませんでした。';
+
+  @override
   String get contacts_ShareContact => '連絡先をクリップボードにコピー';
 
   @override
@@ -4179,6 +4415,43 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notification_receivedNewMessage => '新しいメッセージを受信';
 
   @override
+  String get notification_actionReply => '返信';
+
+  @override
+  String get notification_actionMarkRead => '既読にする';
+
+  @override
+  String get notification_actionMuteChannel => 'チャンネルをミュート';
+
+  @override
+  String get notification_replyHint => 'メッセージ';
+
+  @override
+  String get notification_you => '自分';
+
+  @override
+  String get notification_replyFailedTitle => '返信を送信できませんでした';
+
+  @override
+  String get notification_replyNotConnected =>
+      'ラジオに接続されていません。MeshCore Open で再接続してから、もう一度返信を送信してください。';
+
+  @override
+  String get notification_replyTooLong =>
+      '返信が長すぎて通知から送信できません。MeshCore Open から送信してください。';
+
+  @override
+  String get notification_replyUnavailable => 'この会話は接続中のラジオにありません。';
+
+  @override
+  String get notification_replySendFailed =>
+      '返信が送信されていない可能性があります。MeshCore Open で確認してから再試行してください。';
+
+  @override
+  String get notification_replyAppNotRunning =>
+      'MeshCore Open が起動していません。起動してから、もう一度返信を送信してください。';
+
+  @override
   String get settings_gpxExportRepeaters => 'GPX へのエクスポート用リピータ/ルームサーバー';
 
   @override
@@ -4232,6 +4505,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get snrIndicator_lastSeen => '最後に確認された場所';
+
+  @override
+  String get snrIndicator_nearByRepeatersDescription =>
+      'ラジオが直接受信したリピータ（最近受信した順）';
 
   @override
   String get contactsSettings_title => '連絡先設定';
@@ -4329,6 +4606,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get radioStats_screenTitle => 'ラジオの統計';
+
+  @override
+  String get radioStats_sectionSignal => '信号';
+
+  @override
+  String get radioStats_sectionAirtime => '放送時間';
 
   @override
   String get radioStats_notConnected => 'ラジオの統計情報を表示するために、デバイスに接続してください。';
@@ -4704,6 +4987,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get imageSend_cropNote => '512 × 512にリサイズされました。アスペクト比は保持されませんでした。';
 
   @override
+  String imageSend_lossyNote(int bytes) {
+    return '約 $bytes バイトに圧縮されます。受信側のモデルが復元するため、細部は異なります。';
+  }
+
+  @override
+  String get imageSend_viewOriginal => 'オリジナル';
+
+  @override
+  String get imageSend_viewReconstruction => '受信者の表示';
+
+  @override
+  String get imageSend_reconstructionUnavailable => 'このデバイスでは復元結果をプレビューできません。';
+
+  @override
+  String get imageSend_modelNotDownloaded =>
+      '画像モデルがまだダウンロードされていません。設定でダウンロードすると画像を送信できます。';
+
+  @override
   String get imageSend_originalSize =>
       '原文：\nThe early morning light filtered through the curtains, casting a soft glow on the room.\n\n翻訳：\n早朝の光がカーテンをすり抜け、部屋に柔らかな光を投げかけていた。';
 
@@ -4866,6 +5167,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get receivedImage_tapToProcess => '処理するにはタップしてください';
+
+  @override
+  String get receivedImage_save => '画像を保存';
+
+  @override
+  String receivedImage_shareCaption(int bytes) {
+    return '$bytes バイトから AI で復元。細部は送信されたものではなく、生成されたものです。';
+  }
+
+  @override
+  String get receivedImage_packetInfo => 'パケット情報';
+
+  @override
+  String get receivedImage_parityRecovered => '1 つのパケットを回復パケットから再構築しました。';
+
+  @override
+  String receivedImage_decodeTime(int ms) {
+    return '$ms ミリ秒で再構築';
+  }
+
+  @override
+  String get receivedImage_saveFailed => '画像を保存できませんでした';
 
   @override
   String receivedImage_awaiting(int bytes, int packets) {
