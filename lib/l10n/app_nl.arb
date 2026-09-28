@@ -2941,5 +2941,16 @@
   "settings_publicKeyCopied": "Openbare sleutel gekopieerd",
   "settings_radioSettingsNotApplied": "De radio heeft deze instellingen niet toegepast",
   "urlImage_enable": "URL-afbeeldingen inschakelen",
-  "urlImage_possible": "Mogelijke URL-afbeelding; schakel dit in bij Instellingen."
+  "urlImage_possible": "Mogelijke URL-afbeelding; schakel dit in bij Instellingen.",
+  "notification_actionReply": "Reageren",
+  "notification_actionMarkRead": "Markeer als gelezen",
+  "notification_actionMuteChannel": "Kanaal dempen",
+  "notification_replyHint": "Bericht",
+  "notification_you": "Jij",
+  "notification_replyFailedTitle": "Antwoord niet verzonden",
+  "notification_replyNotConnected": "Niet verbonden met een radio. Maak opnieuw verbinding in MeshCore Open en verzend je antwoord opnieuw.",
+  "notification_replyTooLong": "Je antwoord is te lang om vanuit een melding te verzenden. Verzend het vanuit MeshCore Open.",
+  "notification_replyUnavailable": "Dit gesprek staat niet meer op de verbonden radio.",
+  "notification_replySendFailed": "Je antwoord is mogelijk niet verzonden. Controleer dit in MeshCore Open en probeer het opnieuw.",
+  "notification_replyAppNotRunning": "MeshCore Open is niet actief. Open de app en verzend je antwoord opnieuw."
 }

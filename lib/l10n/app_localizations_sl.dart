@@ -113,35 +113,36 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get messageStatus_failedChannel =>
-      'Your radio couldn\'t send this message.';
+      'Vaše radio ni moglo poslati tega sporočila.';
 
   @override
   String messageStatus_resending(int resends, int maxResends) {
-    return 'Not heard through enough repeaters yet. Resent $resends of $maxResends times.';
+    return 'Še ni slišano skozi dovolj ponoviteljev. Poslano $resends od $maxResends-krat.';
   }
 
   @override
   String messageStatus_hopsNotReached(int hops, int required) {
-    return 'Sent, but only heard back through $hops of $required repeaters. It may still have gone further than your radio can hear.';
+    return 'Poslano, a nazaj slišano le skozi $hops od $required ponoviteljev. Morda je odšlo še dlje, kot vaše radio sliši.';
   }
 
   @override
   String get messageStatus_sentChannel =>
-      'Sent. Channels don\'t confirm delivery, so this only means your radio sent it.';
+      'Poslano. Kanali ne potrjujejo dostave, zato to pomeni le, da je vaše radio poslalo sporočilo.';
 
   @override
-  String get messageStatus_sentDirect =>
-      'Sent. Waiting for the contact to confirm.';
+  String get messageStatus_sentDirect => 'Poslano. Čaka se na potrditev stika.';
 
   @override
   String messageStatus_heardRepeatedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: 'once',
+      other: '$count-krat',
+      few: '$count-krat',
+      two: '2-krat',
+      one: '1-krat',
     );
-    return 'Heard repeated $_temp0. Nearby repeaters passed it on.';
+    return 'Slišano večkrat $_temp0. Bližnji ponovitelji so sporočilo posredovali naprej.';
   }
 
   @override
@@ -418,20 +419,20 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings_regionEmptyExplanation =>
-      'Regions limit flood messages to repeaters in an area. Fetch them from nearby repeaters or add one by name.';
+      'Regije omejujejo sporočila flood na ponovitelje na določenem območju. Pridobite jih iz bližnjih ponoviteljev ali dodajte regijo po imenu.';
 
   @override
-  String get settings_regionFetchFromRepeaters => 'Fetch from repeaters';
+  String get settings_regionFetchFromRepeaters => 'Pridobi iz ponoviteljev';
 
   @override
-  String get settings_regionDefault => 'Default region';
+  String get settings_regionDefault => 'Privzeta regija';
 
   @override
   String get settings_regionDefaultSubtitle =>
-      'Used by channels without their own region';
+      'Uporabljajo jo kanali brez lastne regije';
 
   @override
-  String get settings_regionDefaultNone => 'None';
+  String get settings_regionDefaultNone => 'Brez';
 
   @override
   String get settings_regionManagement_screenTitle => 'Regijonsko upravljanje';
@@ -558,7 +559,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings_telemetryPerContactHint =>
-      'To allow a contact, open their chat and choose Contact Settings from the menu.';
+      'Da stiku dovolite, odprite njegov klepet in v meniju izberite Nastavitve stika.';
 
   @override
   String get settings_advertLocation => 'Lokacija oglasa';
@@ -579,7 +580,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings_multiAckSubtitle =>
-      'Send extra ACKs for better delivery; uses more airtime';
+      'Pošiljajte dodatna potrdila ACK za boljšo dostavo; porabi več časa v etru';
 
   @override
   String get settings_telemetryModeUpdated => 'Način telemetrije posodobljen';
@@ -699,11 +700,11 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_presets => 'Prednastavitve';
 
   @override
-  String get settings_presetCustom => 'Custom';
+  String get settings_presetCustom => 'Po meri';
 
   @override
   String get settings_radioMatchWarning =>
-      'All nodes you talk to must use the same frequency, bandwidth, SF and CR.';
+      'Vsa vozlišča, s katerimi komunicirate, morajo uporabljati enako frekvenco, pasovno širino, SF in CR.';
 
   @override
   String get settings_frequency => 'Frekvenca (MHz)';
@@ -728,7 +729,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String settings_txPowerRangeHelper(int min, int max) {
-    return '$min to $max dBm';
+    return 'Od $min do $max dBm';
   }
 
   @override
@@ -739,7 +740,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String settings_clientRepeatFrequencyNote(String freq) {
-    return 'Frequency set to $freq MHz for off-grid repeat';
+    return 'Frekvenca nastavljena na $freq MHz za ponavljanje brez omrežja';
   }
 
   @override
@@ -838,24 +839,24 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings_pathHashModeHelper =>
-      'Size of each node ID recorded in the path of flood packets this radio sends: 1 byte (256 IDs, up to 64 hops), 2 bytes (65K IDs, up to 32 hops), 3 bytes (16M IDs, up to 21 hops). Larger IDs reduce collisions, but repeaters on firmware older than v1.14 drop packets with 2- or 3-byte IDs.';
+      'Velikost ID vozlišča, zapisanega v poti pošiljanih paketov flood: 1 bajt (256 ID, do 64 skokov), 2 bajta (65 tisoč, do 32 skokov), 3 bajti (16 milijonov, do 21 skokov). Večja ID zmanjšajo trčenja, vendar ponovitelji s programsko opremo, starejšo od v1.14, zavrnejo pakete z 2- ali 3-bajtnimi ID.';
 
   @override
   String settings_requiresFirmware(String version) {
-    return 'Requires firmware $version or newer';
+    return 'Zahteva vdelano programsko opremo $version ali novejšo';
   }
 
   @override
   String get appSettings_channelMinHops =>
-      'Resend channel messages until they travel far enough';
+      'Ponovno pošiljaj sporočila kanala, dokler ne pridejo dovolj daleč';
 
   @override
   String get appSettings_channelMinHopsSubtitle =>
-      'If your message isn\'t heard coming back through enough repeaters, send it again. Uses more airtime.';
+      'Če se vaše sporočilo ne vrne skozi dovolj ponoviteljev, ga pošlite ponovno. Porabi več časa v etru.';
 
   @override
   String appSettings_channelMinHopsCount(int count) {
-    return 'Required hops: $count';
+    return 'Zahtevani skoki: $count';
   }
 
   @override
@@ -863,10 +864,11 @@ class AppLocalizationsSl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count-krat',
+      few: '$count-krat',
+      one: '1-krat',
     );
-    return 'Resend up to $_temp0';
+    return 'Pošlite največ $_temp0';
   }
 
   @override
@@ -904,11 +906,11 @@ class AppLocalizationsSl extends AppLocalizations {
       'Pokaži obvestilo ob prejemu novih sporočil.';
 
   @override
-  String get appSettings_batteryOptimization => 'Background Activity';
+  String get appSettings_batteryOptimization => 'Dejavnost v ozadju';
 
   @override
   String get appSettings_batteryOptimizationSubtitle =>
-      'Set MeshCore Open to \"Don\'t optimize\" in battery settings so messages keep arriving in the background';
+      'V nastavitvah baterije nastavite MeshCore Open na „Ne optimiziraj“, da bodo sporočila še naprej prihajala v ozadju';
 
   @override
   String get appSettings_channelMessageNotifications =>
@@ -1190,7 +1192,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get contacts_storageFull =>
-      'Contact storage on the node is full. New nodes cannot be added until contacts are removed.';
+      'Pomnilnik stikov v vozlišču je poln. Novih vozlišč ni mogoče dodati, dokler ne odstranite stikov.';
 
   @override
   String get contacts_deleteContact => 'Izbriši stik';
@@ -1201,27 +1203,27 @@ class AppLocalizationsSl extends AppLocalizations {
   }
 
   @override
-  String get contacts_removeFromContacts => 'Remove from contacts';
+  String get contacts_removeFromContacts => 'Odstrani iz stikov';
 
   @override
   String contacts_removeFromContactsConfirm(String contactName) {
-    return '$contactName will move to Discovered contacts. Chat history will be deleted.';
+    return '$contactName bo prestavljen med odkriti stike. Zgodovina klepeta bo izbrisana.';
   }
 
   @override
-  String get contacts_keepChatHistory => 'Keep chat history';
+  String get contacts_keepChatHistory => 'Ohrani zgodovino klepeta';
 
   @override
-  String get contacts_remove => 'Remove';
+  String get contacts_remove => 'Odstrani';
 
   @override
   String contacts_discoveredNearby(int count) {
-    return 'Discovered nearby ($count)';
+    return 'Odkriti v bližini ($count)';
   }
 
   @override
   String get contacts_noContactsDiscoveredHint =>
-      'Nodes your radio hears but hasn\'t added yet are listed in Discovered contacts';
+      'Vozlišča, ki jih vaše radio sliši, še pa niste dodali, so navedena med odkritimi stiki';
 
   @override
   String get contacts_manageRepeater => 'Upravljaj Ponovitve';
@@ -1376,13 +1378,13 @@ class AppLocalizationsSl extends AppLocalizations {
   String get channels_hashtag => 'Hashtag';
 
   @override
-  String get channels_addSectionJoin => 'Join existing';
+  String get channels_addSectionJoin => 'Pridruži obstoječemu';
 
   @override
-  String get channels_addSectionCreate => 'Create new';
+  String get channels_addSectionCreate => 'Ustvari novega';
 
   @override
-  String get channels_dragToReorder => 'Drag to reorder';
+  String get channels_dragToReorder => 'Povlecite za preureditev';
 
   @override
   String get channels_editChannel => 'Uredi kanal';
@@ -1588,17 +1590,17 @@ class AppLocalizationsSl extends AppLocalizations {
   String get channels_clearRegion => 'Jasna regija';
 
   @override
-  String get channels_regionDefaultSuffix => '(default)';
+  String get channels_regionDefaultSuffix => '(privzeta)';
 
   @override
   String get channels_regionSelectExplanation =>
-      'Flood messages on this channel will only be forwarded by repeaters in the selected region.';
+      'Sporočila flood na tem kanalu bodo posredovana samo s ponovitelji iz izbrane regije.';
 
   @override
-  String get channels_regionEmpty => 'No regions yet.';
+  String get channels_regionEmpty => 'Regij še ni.';
 
   @override
-  String get channels_manageRegions => 'Manage regions';
+  String get channels_manageRegions => 'Upravljaj regije';
 
   @override
   String get chat_noMessages => 'Še ni sporočil.';
@@ -1660,10 +1662,10 @@ class AppLocalizationsSl extends AppLocalizations {
   String get chat_sendGif => 'Pošlji GIF';
 
   @override
-  String get chat_removeGif => 'Remove GIF';
+  String get chat_removeGif => 'Odstrani GIF';
 
   @override
-  String get chat_cancelReply => 'Cancel reply';
+  String get chat_cancelReply => 'Prekliči odgovor';
 
   @override
   String get chat_sendImageLora => 'Pošlji sliko prek MeshCore';
@@ -1973,7 +1975,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get chat_path => 'Pot';
 
   @override
-  String get chat_viewPathOnMap => 'View path on map';
+  String get chat_viewPathOnMap => 'Pokaži pot na zemljevidu';
 
   @override
   String get chat_publicKey => 'Ključ javnega tipa';
@@ -2013,10 +2015,10 @@ class AppLocalizationsSl extends AppLocalizations {
   String get chat_newMessages => 'Nove novice';
 
   @override
-  String get chat_today => 'Today';
+  String get chat_today => 'Danes';
 
   @override
-  String get chat_yesterday => 'Yesterday';
+  String get chat_yesterday => 'Včeraj';
 
   @override
   String get chat_openLink => 'Odpreti povezavo?';
@@ -2064,7 +2066,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get map_centerOnNode => 'Centriraj na vozlišče';
 
   @override
-  String get map_centerOnMe => 'Center on my location';
+  String get map_centerOnMe => 'Centriraj na mojo lokacijo';
 
   @override
   String get map_details => 'Podrobnosti';
@@ -2087,7 +2089,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get map_noNodesLocationHint =>
-      'No nodes with a recent location. Widen the time filter, or set your own location in Settings.';
+      'Ni vozlišč z zadnjo lokacijo. Razširite časovni filter ali v Nastavitvah nastavite svojo lokacijo.';
 
   @override
   String get map_nodesNeedGps =>
@@ -2231,14 +2233,14 @@ class AppLocalizationsSl extends AppLocalizations {
   String get map_showGuessedLocations => 'Pokaži lokacije domnevnih not.';
 
   @override
-  String get map_clusterNodes => 'Group nearby nodes';
+  String get map_clusterNodes => 'Združi bližnja vozlišča';
 
   @override
-  String get map_groupChip => 'Group';
+  String get map_groupChip => 'Skupine';
 
   @override
   String get map_clusterNodesSubtitle =>
-      'When zoomed out, show nearby nodes as one numbered circle';
+      'Pri manjšem povečanju se bližnja vozlišča prikažejo kot en oštevilčen krog';
 
   @override
   String get map_showDiscoveryContacts => 'Prikaži odkritja kontaktov';
@@ -2262,7 +2264,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get map_manageRepeater => 'Upravljajte Ponovitve';
 
   @override
-  String get map_manageServer => 'Manage Server';
+  String get map_manageServer => 'Upravljaj strežnik';
 
   @override
   String get map_tapToAdd => 'Pritisnite na vozlišča, da jih dodate poti.';
@@ -2471,10 +2473,10 @@ class AppLocalizationsSl extends AppLocalizations {
   String get login_enterPassword => 'Vnesite geslo';
 
   @override
-  String get login_showPassword => 'Show password';
+  String get login_showPassword => 'Prikaži geslo';
 
   @override
-  String get login_hidePassword => 'Hide password';
+  String get login_hidePassword => 'Skrij geslo';
 
   @override
   String get login_savePassword => 'Shrani geslo';
@@ -2492,7 +2494,7 @@ class AppLocalizationsSl extends AppLocalizations {
       'Vnesite geslo v sobo za dostop do nastavitev in statusa.';
 
   @override
-  String get login_advanced => 'Advanced';
+  String get login_advanced => 'Napredno';
 
   @override
   String get login_routing => 'Usmerjanje';
@@ -2533,7 +2535,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get common_clear => 'Ponoviti';
 
   @override
-  String get common_clearSearch => 'Clear search';
+  String get common_clearSearch => 'Počisti iskanje';
 
   @override
   String get path_currentPathLabel => 'Trenutna pot';
@@ -2564,7 +2566,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get repeater_roleAdmin => 'ADMIN';
 
   @override
-  String get repeater_roleGuest => 'GUEST';
+  String get repeater_roleGuest => 'GOST';
 
   @override
   String get repeater_status => 'Stanje';
@@ -3089,15 +3091,15 @@ class AppLocalizationsSl extends AppLocalizations {
       'Ponovno aktiviraj način zasebnosti';
 
   @override
-  String get repeater_refreshAll => 'Refresh all';
+  String get repeater_refreshAll => 'Osveži vse';
 
   @override
   String get repeater_settingsNotLoaded =>
-      'Settings haven\'t been loaded from this repeater yet.';
+      'Nastavitve še niso naložene s tega ponovitelja.';
 
   @override
   String get repeater_settingsLoadIncomplete =>
-      'Some settings could not be loaded. Use the refresh buttons to retry.';
+      'Nekaterih nastavitev ni bilo mogoče naložiti. Za poskus uporabite gumbe za osvežitev.';
 
   @override
   String repeater_refreshed(String label) {
@@ -4537,21 +4539,21 @@ class AppLocalizationsSl extends AppLocalizations {
   String get contacts_addContactFromClipboard => 'Dodaj stik iz odložišča';
 
   @override
-  String get contacts_scanQrCode => 'Scan QR Code';
+  String get contacts_scanQrCode => 'Skeniraj QR kodo';
 
   @override
   String get contacts_scanQrInstructions =>
-      'Point the camera at a MeshCore contact QR code';
+      'Usmerite kamero na QR kodo stika MeshCore';
 
   @override
-  String get contacts_qrFromGallery => 'Scan QR from Gallery';
+  String get contacts_qrFromGallery => 'Skeniraj QR kodo iz galerije';
 
   @override
   String get contacts_noQrCodeFound =>
-      'No QR code found in the selected image.';
+      'V izbrani sliki ni mogoče najti kode QR.';
 
   @override
-  String get contacts_qrGalleryFailed => 'Could not open the gallery.';
+  String get contacts_qrGalleryFailed => 'Galerije ni bilo mogoče odpreti.';
 
   @override
   String get contacts_ShareContact => 'Kopiraj stik v Odložišče';
@@ -4625,42 +4627,42 @@ class AppLocalizationsSl extends AppLocalizations {
   String get notification_receivedNewMessage => 'Prejeto novo sporočilo';
 
   @override
-  String get notification_actionReply => 'Reply';
+  String get notification_actionReply => 'Odgovori';
 
   @override
-  String get notification_actionMarkRead => 'Mark as read';
+  String get notification_actionMarkRead => 'Označi kot prebrano';
 
   @override
-  String get notification_actionMuteChannel => 'Mute channel';
+  String get notification_actionMuteChannel => 'Utišaj kanal';
 
   @override
-  String get notification_replyHint => 'Message';
+  String get notification_replyHint => 'Sporočilo';
 
   @override
-  String get notification_you => 'You';
+  String get notification_you => 'Vi';
 
   @override
-  String get notification_replyFailedTitle => 'Reply not sent';
+  String get notification_replyFailedTitle => 'Odgovor ni bil poslan';
 
   @override
   String get notification_replyNotConnected =>
-      'Not connected to a radio. Reconnect in MeshCore Open and send your reply again.';
+      'Ni povezave z radiom. Ponovno se povežite v MeshCore Open in ponovno pošite odgovor.';
 
   @override
   String get notification_replyTooLong =>
-      'Your reply is too long to send from a notification. Send it from MeshCore Open instead.';
+      'Vaš odgovor je predolg za pošiljanje iz obvestila. Pošite ga namesto tega iz MeshCore Open.';
 
   @override
   String get notification_replyUnavailable =>
-      'This conversation is no longer on the connected radio.';
+      'Ta pogovor ni več na povezanem radiu.';
 
   @override
   String get notification_replySendFailed =>
-      'Your reply may not have been sent. Check in MeshCore Open and try again.';
+      'Vaš odgovor morda ni bil poslan. Preverite v MeshCore Open in poskusite znova.';
 
   @override
   String get notification_replyAppNotRunning =>
-      'MeshCore Open isn\'t running. Open it and send your reply again.';
+      'MeshCore Open ne teče. Odprite ga in ponovno pošite odgovor.';
 
   @override
   String get settings_gpxExportRepeaters =>
@@ -4723,7 +4725,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get snrIndicator_nearByRepeatersDescription =>
-      'Repeaters your radio heard directly, most recently heard first.';
+      'Ponovitelji, ki jih je vaše radio slišalo neposredno, najprej nazadnje slišani.';
 
   @override
   String get contactsSettings_title => 'Nastavitve stikov';
@@ -4833,7 +4835,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get radioStats_sectionSignal => 'Signal';
 
   @override
-  String get radioStats_sectionAirtime => 'Airtime';
+  String get radioStats_sectionAirtime => 'Čas v etru';
 
   @override
   String get radioStats_notConnected =>
@@ -5227,22 +5229,22 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String imageSend_lossyNote(int bytes) {
-    return 'Compressed to about $bytes bytes. The receiver\'s model reconstructs it, so details will differ.';
+    return 'Stisnjeno na približno $bytes bajtov. Model prejemnika sliko rekonstruira, zato bodo podrobnosti različne.';
   }
 
   @override
-  String get imageSend_viewOriginal => 'Original';
+  String get imageSend_viewOriginal => 'Izvirnik';
 
   @override
-  String get imageSend_viewReconstruction => 'What recipients see';
+  String get imageSend_viewReconstruction => 'Kaj vidijo prejemniki';
 
   @override
   String get imageSend_reconstructionUnavailable =>
-      'This device can\'t preview the reconstruction.';
+      'Ta naprava ne more prikazati predogleda rekonstrukcije.';
 
   @override
   String get imageSend_modelNotDownloaded =>
-      'The image model isn\'t downloaded yet. Download it in Settings to send images.';
+      'Obrazni model še ni prenesen. Prenesite ga v Nastavitvah, da boste lahko pošiljali slike.';
 
   @override
   String get imageSend_originalSize =>
@@ -5415,27 +5417,27 @@ class AppLocalizationsSl extends AppLocalizations {
   String get receivedImage_tapToProcess => 'Kliknij za obravnavanje';
 
   @override
-  String get receivedImage_save => 'Save image';
+  String get receivedImage_save => 'Shrani sliko';
 
   @override
   String receivedImage_shareCaption(int bytes) {
-    return 'AI-reconstructed from $bytes bytes; fine detail is generated, not transmitted.';
+    return 'Z umetno inteligenco rekonstruirano iz $bytes bajtov; drobni detajli so generirani, ne poslani.';
   }
 
   @override
-  String get receivedImage_packetInfo => 'Packet info';
+  String get receivedImage_packetInfo => 'Podatki o paketu';
 
   @override
   String get receivedImage_parityRecovered =>
-      'One packet was rebuilt from the recovery packet.';
+      'En paket je bil rekonstruiran iz obnovitvenega paketa.';
 
   @override
   String receivedImage_decodeTime(int ms) {
-    return 'Reconstructed in $ms ms';
+    return 'Rekonstruirano v $ms ms';
   }
 
   @override
-  String get receivedImage_saveFailed => 'Couldn\'t save the image';
+  String get receivedImage_saveFailed => 'Slike ni bilo mogoče shraniti';
 
   @override
   String receivedImage_awaiting(int bytes, int packets) {
