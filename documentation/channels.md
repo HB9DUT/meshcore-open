@@ -73,6 +73,7 @@ Tap a channel card to open the channel chat screen.
 - Channel name
 - Subtitle: channel type and effective region when set, with `(default)` when inherited
 - Tap the title or landscape icon to select a region; see [Regions](regions.md)
+- Bell icon: mute or unmute notifications for this channel (crossed-out bell when muted)
 
 ### Message Display
 

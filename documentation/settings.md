@@ -113,6 +113,8 @@ A dedicated sub-screen for app-level preferences (nothing here is sent to the de
 - **Channel message notifications**: New channel message alerts
 - **Advertisement notifications**: New node discovery alerts
 
+Individual channels can be muted from the channel chat bell icon, the channel list, or the channel notification. Replying from notifications, watches, and Android Auto is described in [Notifications](notifications.md).
+
 ### Messaging
 - **Clear Path on Max Retry**: Erases the stored routing path after all retries fail
 - **Jump to Oldest Unread**: When opening a chat, scrolls to the oldest unread message instead of the newest
